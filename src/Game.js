@@ -17,6 +17,7 @@ class Room {
         this.id = id;
         this.players = [];
         this.wolfsID = [];
+        this.wolfsTxt = [];
         this.villagersTxt = [];
         this.playersTxt = [];
         this.playersRole = [];
