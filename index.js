@@ -35,28 +35,33 @@ async function roomWolfChatAll(roomID, sendID, content) {
   })
 }
 async function roomRoleChat(roomID) {
-  const start = async () => {
-    await asyncForEach(gamef.getRoom(roomID).players, async (m) => {
-      if (m && gamef.getRoom(roomID).alivePlayer[m.joinID]) {
-        console.log(`$ ROOM ${roomID} >  Chat with ${gamef.roleTxt[m.role]} : ${m.first_name}`);
+
+  await asyncForEach(gamef.getRoom(roomID).players, async (m) => {
+    if (m && gamef.getRoom(roomID).alivePlayer[m.joinID]) {
+      const start = async () => {
+        console.log(`$ ROOM ${roomID + 1} > ROLE Chat with ${gamef.roleTxt[m.role]} : ${m.first_name}`);
+        let wolfList = gamef.getRoom(roomID).wolfsTxt.join(' ; ');
+        let villagersList = gamef.getRoom(roomID).villagersTxt.join(' ; ');
+        let playersList = gamef.getRoom(roomID).playersTxt.join(' ; ');
         if (m.role == -1) {//SÓI
-          bot.say(m.joinID, ['Sói ơi dậy đi! Đêm nay sói muốn cắn ai?', '/vote <id> để cắn 1 ai đó', 'ID của SÓI: ' + gamef.getRoom(roomID).wolfsTxt.join(' ; '), 'ID của DÂN: ' + gamef.getRoom(roomID).villagersTxt.join(' ; ')]);
+          bot.say(m.joinID, ['Sói ơi dậy đi! Đêm nay sói muốn cắn ai?', '/vote <id> để cắn 1 ai đó', 'ID của SÓI: '+wolfList, 'ID của DÂN: '+villagersList]);
         } else if (m.role == 1) { // tiên tri
-          bot.say(m.joinID, ['Tiên tri dậy đi! Tiên tri muốn kiếm tra ai?', '/see <id> để kiểm tra', gamef.getRoom(roomID).playersTxt.join(' ; ')]);
+          bot.say(m.joinID, ['Tiên tri dậy đi! Tiên tri muốn kiếm tra ai?', '/see <id> để kiểm tra', playersList]);
         } else if (m.role == 2) { // Bảo vệ
-          bot.say(m.joinID, ['Bảo vệ dậy đi! Đêm nay bạn muốn bảo vệ ai?', '/save <id> để bảo vệ', gamef.getRoom(roomID).playersTxt.join(' ; ')]);
+          bot.say(m.joinID, ['Bảo vệ dậy đi! Đêm nay bạn muốn bảo vệ ai?', '/save <id> để bảo vệ', playersList]);
         } else {
           bot.say(m.joinID, "Bạn là DÂN! Ngủ tiếp đi :))");
           let userRoom = gamef.getUserRoom(m.joinID);
           gamef.getRoom(userRoom).roleDoneBy(m.joinID);
         }
-      } else {
-        bot.say(m.joinID, "Bạn đã chết :))");
-        gamef.getRoom(userRoom).roleDoneBy(m.joinID);
       }
-    })
-  }
-  start();
+      start();
+    } else {
+      bot.say(m.joinID, "Bạn đã chết :))");
+      gamef.getRoom(userRoom).roleDoneBy(m.joinID);
+    }
+  })
+
 }
 
 app.set('port', (8080 || process.env.PORT))
@@ -290,7 +295,7 @@ bot.on('message', (payload, chat) => {
                   } else {
                     roomChatAll(userRoom, 0, `Đêm hôm qua không ai chết cả! Mọi người có 5 phút thảo luận! /vote <id> để treo cổ 1 người`);
                   }
-                  let time = new Date(Date.now() + 5*60*1000);
+                  let time = new Date(Date.now() + 5 * 60 * 1000);
                   var j = schedule.scheduleJob(time, function () {
                     roomChatAll(userRoom, 0, `Đã hết thời gian, mọi người vote một người để treo cổ!`);
                     console.log(`$ ROOM ${userRoom} > END OF DISCUSSION!`);
