@@ -382,7 +382,18 @@ bot.on('postback:RESET_ROOM', (payload, chat) => {
     chat.say('Bạn không có quyền thực hiện yêu cầu này!');
   }
 });
-
+// listen HELP button
+bot.on('postback:HELP', (payload, chat) => {
+  chat.getUserProfile().then((user) => {
+    chat.say([`Xin chào ${user.first_name}!`,
+      `Để bắt đầu, bạn hãy mở MENU (nút 3 dấu gạch ngang) bên dưới.`,
+      `Chọn menu: Tham gia > Tham gia phòng chơi...`,
+      `rồi chọn một phòng chơi từ danh sách để tham gia một phòng!`,
+      `Sau khi tham gia thành công, bạn có thể chat với các người chơi khác trong phòng`,
+      `Tham gia > 'Sẵn sàng!' để thể hiện bạn sẽ tham gia chơi, còn không, hãy chọn 'Rời phòng chơi' để tránh ảnh hưởng người chơi khác`,
+      `Khi tất cả mọi người đã sẵn sàng, trò chơi sẽ bắt đầu! `]);
+  })
+});
 // listen to HELP
 bot.hear(['help', 'menu', 'hướng dẫn', 'Trợ giúp'], (payload, chat) => {
   chat.getUserProfile().then((user) => {
