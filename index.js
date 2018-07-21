@@ -127,17 +127,13 @@ const actionButtons = [
     ]
   },
   {
-    type: 'nested', title: 'Chơi...',
+    type: 'nested', title: 'Tiện ích khi chơi',
     call_to_actions: [
-      { type: 'postback', title: 'Xem danh sách người chơi', payload: 'VIEW_PLAYER_IN_ROOM' },
+      { type: 'postback', title: 'Các người chơi cùng phòng', payload: 'VIEW_PLAYER_IN_ROOM' },
+      { type: 'postback', title: '(ADMIN ONLY) RESET ROOM', payload: 'RESET_ROOM' },
     ]
   },
-  {
-    type: 'nested', title: 'Quản trị',
-    call_to_actions: [
-      { type: 'postback', title: 'RESET các phòng chơi', payload: 'RESET_ROOM' },
-    ]
-  }
+  { type: 'postback', title: 'Trợ giúp', payload: 'HELP' },
 ];
 bot.setPersistentMenu(actionButtons, false);
 
@@ -267,18 +263,6 @@ bot.on('postback:LEAVE_ROOM', (payload, chat) => {
     chat.say(`Bạn chưa tham gia phòng nào!`);
   }
 });
-
-// listen RESET ROOM message
-bot.on('postback:RESET_ROOM', (payload, chat) => {
-  let userId = payload.sender.id;
-  if (userId == 2643770348982136) {
-    gamef.resetRoom();
-    chat.say('Đã tạo lại 5 phòng chơi!');
-    console.log('$ ROOM > RESET_ALL');
-  } else {
-    chat.say('Bạn không có quyền thực hiện yêu cầu này!');
-  }
-});
 // listen for ROOM CHAT and VOTE
 bot.on('message', (payload, chat) => {
   const joinID = payload.sender.id;
@@ -380,8 +364,27 @@ bot.on('message', (payload, chat) => {
   }
   console.log(`$ ROOM ${userRoom + 1} > ${joinID} chat: ${chatTxt}`);
 });
+// listen VIEW_PLAYER_IN_ROOM message
+bot.on('postback:VIEW_PLAYER_IN_ROOM', (payload, chat) => {
+  let joinID = payload.sender.id;
+  let userRoom = gamef.getUserRoom(joinID);
+  let playersInRoomTxt = gamef.getRoom(userRoom).playersTxt.join(' ; ');
+  chat.say([`Danh sách người chơi trong phòng ${userRoom+1}: `,playersInRoomTxt]);
+});
+// listen RESET ROOM message
+bot.on('postback:RESET_ROOM', (payload, chat) => {
+  let joinID = payload.sender.id;
+  if (joinID == 2643770348982136) {
+    gamef.resetRoom();
+    chat.say('Đã tạo lại 5 phòng chơi!');
+    console.log('$ ROOM > RESET_ALL');
+  } else {
+    chat.say('Bạn không có quyền thực hiện yêu cầu này!');
+  }
+});
+
 // listen to HELP
-bot.hear(['help', 'menu', 'hướng dẫn'], (payload, chat) => {
+bot.hear(['help', 'menu', 'hướng dẫn', 'Trợ giúp'], (payload, chat) => {
   chat.getUserProfile().then((user) => {
     chat.say([`Xin chào ${user.first_name}!`,
       `Để bắt đầu, bạn hãy mở MENU (nút 3 dấu gạch ngang) bên dưới.`,
