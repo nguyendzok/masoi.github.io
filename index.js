@@ -23,7 +23,7 @@ async function asyncForEach(array, callback) {
 async function roomChatAll(roomID, sendID, content) {
   await asyncForEach(gamef.getRoom(roomID).players, async (m) => {
     if (m && m.joinID != sendID) {
-      await bot.say(m.joinID, `${content}`);
+      await bot.say(m.joinID, content);
     }
   })
 }
@@ -38,6 +38,7 @@ async function roomRoleChat(roomID) {
   const start = async () => {
     await asyncForEach(gamef.getRoom(roomID).players, async (m) => {
       if (m && gamef.getRoom(roomID).alivePlayer[m.joinID]) {
+        console.log(`$ ROOM ${roomID} >  Chat with ${gamef.roleTxt[m.role]} : ${m.first_name}`);
         if (m.role == -1) {//SÓI
           bot.say(m.joinID, ['Sói ơi dậy đi! Đêm nay sói muốn cắn ai?', '/vote <id> để cắn 1 ai đó', 'ID của SÓI: ' + gamef.getRoom(roomID).wolfsTxt.join(' ; '), 'ID của DÂN: ' + gamef.getRoom(roomID).villagersTxt.join(' ; ')]);
         } else if (m.role == 1) { // tiên tri

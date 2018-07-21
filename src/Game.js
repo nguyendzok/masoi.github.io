@@ -118,8 +118,16 @@ class Game {
     constructor() {
         this.room = [];
         this.userRoom = [];
+        this.roleTxt = [];
         this.MIN_PLAYER = 3;
         this.resetRoom();
+        this.setRoleTxt();
+    }
+    setRoleTxt(){
+        this.roleTxt[0] = 'DÂN';
+        this.roleTxt[-1] = 'SÓI';
+        this.roleTxt[1] = 'TIÊN TRI';
+        this.roleTxt[2] = 'Bảo vệ';
     }
     getUserRoom(joinID) {
         return this.userRoom[joinID];
