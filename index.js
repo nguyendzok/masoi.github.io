@@ -23,7 +23,7 @@ async function asyncForEach(array, callback) {
 async function roomChatAll(roomID, sendID, content) {
   await asyncForEach(gamef.getRoom(roomID).players, async (m) => {
     if (m && m.joinID != sendID) {
-      await bot.say(m.joinID, content)
+      await bot.say(m.joinID, `${content}`);
     }
   })
 }
@@ -205,7 +205,7 @@ bot.on('postback:READY_ROOM', (payload, chat) => {
                 console.log(`$ ROOM ${userRoom + 1} > GAME_START`);
                 gamef.getRoom(userRoom).setInGame();
                 gamef.roleRandom(userRoom);
-                await roomChatAll(userRoom, 0, "Tất cả mọi người đã sẵn sàng! Game sẽ bắt đầu...");
+                await roomChatAll(userRoom, 0, `Tất cả mọi người đã sẵn sàng! Game sẽ bắt đầu...`);
                 //while(){
                 gamef.getRoom(userRoom).dayNightSwitch();
                 await roomChatAll(userRoom, 0, `Đêm thứ ${gamef.getRoom(userRoom).day}`);
