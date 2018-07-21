@@ -58,7 +58,7 @@ async function roomRoleChat(roomID) {
   start();
 }
 
-app.set('port', (process.env.PORT || 5000))
+app.set('port', 8080)
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 
@@ -481,4 +481,4 @@ bot.hear(['menu'], (payload, chat) => {
 //   })
 // })
 
-bot.start()
+bot.start(process.env.PORT || 3000);
