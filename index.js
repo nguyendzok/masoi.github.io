@@ -61,7 +61,28 @@ async function roomRoleChat(roomID) {
       gamef.getRoom(userRoom).roleDoneBy(m.joinID);
     }
   })
+}
 
+function roleDoneCheck() {
+  return gamef.getRoom(userRoom).roleIsDone((isDone) => {
+    if (isDone) {
+      roomChatAll(userRoom, 0, `Trời sáng rồi mọi người dậy đi`);
+      let deathID = gamef.getRoom(userRoom).deathID;
+      gamef.getRoom(userRoom).dayNightSwitch();
+      if (deathID != -1) {
+        let deathTxt = gamef.getRoom(userRoom).playersTxt[deathID];
+        gamef.getRoom(userRoom).kill();
+        roomChatAll(userRoom, 0, `Đêm hôm qua ${deathTxt} đã bị cắn! Mọi người có 5 phút thảo luận! /vote <id> để treo cổ 1 người`);
+      } else {
+        roomChatAll(userRoom, 0, `Đêm hôm qua không ai chết cả! Mọi người có 5 phút thảo luận! /vote <id> để treo cổ 1 người`);
+      }
+      let time = new Date(Date.now() + 5 * 60 * 1000);
+      var j = schedule.scheduleJob(time, function () {
+        roomChatAll(userRoom, 0, `Đã hết thời gian, mọi người vote một người để treo cổ!`);
+        console.log(`$ ROOM ${userRoom} > END OF DISCUSSION!`);
+      });
+    }
+  });
 }
 
 app.set('port', (8080 || process.env.PORT))
@@ -283,25 +304,7 @@ bot.on('message', (payload, chat) => {
               await roomWolfChatAll(userRoom, joinID, user.first_name + ' đã vote cắn ' + voteKill);
               await gamef.getRoom(userRoom).vote(joinID, voteID);
               // kiểm tra đã VOTE xong chưa?
-              gamef.getRoom(userRoom).roleIsDone((isDone) => {
-                if (isDone) {
-                  roomChatAll(userRoom, 0, `Trời sáng rồi mọi người dậy đi`);
-                  let deathID = gamef.getRoom(userRoom).deathID;
-                  gamef.getRoom(userRoom).dayNightSwitch();
-                  if (deathID != -1) {
-                    let deathTxt = gamef.getRoom(userRoom).playersTxt[deathID];
-                    gamef.getRoom(userRoom).kill();
-                    roomChatAll(userRoom, 0, `Đêm hôm qua ${deathTxt} đã bị cắn! Mọi người có 5 phút thảo luận! /vote <id> để treo cổ 1 người`);
-                  } else {
-                    roomChatAll(userRoom, 0, `Đêm hôm qua không ai chết cả! Mọi người có 5 phút thảo luận! /vote <id> để treo cổ 1 người`);
-                  }
-                  let time = new Date(Date.now() + 5 * 60 * 1000);
-                  var j = schedule.scheduleJob(time, function () {
-                    roomChatAll(userRoom, 0, `Đã hết thời gian, mọi người vote một người để treo cổ!`);
-                    console.log(`$ ROOM ${userRoom} > END OF DISCUSSION!`);
-                  });
-                }
-              });
+              roleDoneCheck();
             }
             start();
           }
@@ -311,6 +314,8 @@ bot.on('message', (payload, chat) => {
             let role = gamef.getRoom(userRoom).getRoleByID(voteID);
             chat.say(`${voteID} là ${role == -1 ? 'SÓI' : role == 2 ? 'BẢO VỆ' : role == 0 ? 'DÂN' : role == 1 ? 'TIÊN TRI, Bạn đùa tớ à :v' : 'RoleErr: Lỗi rùi, ahuhu!!!'}`);
             gamef.getRoom(userRoom).roleDoneBy(joinID);
+            // kiểm tra đã VOTE xong chưa?
+            roleDoneCheck();
           } else {
             chat.say(`Bạn không thể trò chuyện trong đêm!`);
           }
@@ -322,6 +327,8 @@ bot.on('message', (payload, chat) => {
             } else {
               chat.say(`Bạn đã bảo vệ ${gamef.getRoom(userRoom).playersTxt[voteID]}!`);
               gamef.getRoom(userRoom).roleDoneBy(joinID);
+              // kiểm tra đã VOTE xong chưa?
+              roleDoneCheck();
             }
           } else {
             chat.say(`Bạn không thể trò chuyện trong đêm!`);
