@@ -44,7 +44,7 @@ async function roomRoleChat(roomID) {
         let villagersList = gamef.getRoom(roomID).villagersTxt.join(' ; ');
         let playersList = gamef.getRoom(roomID).playersTxt.join(' ; ');
         if (m.role == -1) {//SÓI
-          bot.say(m.joinID, ['Sói ơi dậy đi! Đêm nay sói muốn cắn ai?', '/vote <id> để cắn 1 ai đó', 'ID của SÓI: '+wolfList, 'ID của DÂN: '+villagersList]);
+          bot.say(m.joinID, ['Sói ơi dậy đi! Đêm nay sói muốn cắn ai?', '/vote <id> để cắn 1 ai đó', 'ID của SÓI: ' + wolfList, 'ID của DÂN: ' + villagersList]);
         } else if (m.role == 1) { // tiên tri
           bot.say(m.joinID, ['Tiên tri dậy đi! Tiên tri muốn kiếm tra ai?', '/see <id> để kiểm tra', playersList]);
         } else if (m.role == 2) { // Bảo vệ
