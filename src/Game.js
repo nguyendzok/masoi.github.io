@@ -194,14 +194,19 @@ class Game {
         this.room[roomID].players[0].role = -1; // SÓI
         this.room[roomID].players[1].role = 1; // TIÊN TRI
         this.room[roomID].players[2].role = 2; // BẢO VỆ
+        if (this.room[roomID].players > 3){
+            this.room[roomID].players[3].role = -1; // SÓI
+        }
 
-        this.room[roomID].playersRole[2643770348982136] = -1;
-        this.room[roomID].playersRole[1886739948015882] = 1;
-        this.room[roomID].playersRole[1872318416198293] = 2;
-
-        this.room[roomID].wolfsID = [2643770348982136];
-        this.room[roomID].wolfsTxt = ['0: Duy'];
-        this.room[roomID].villagersTxt = ['1: Nguyên','2: Xa'];
+        this.room[roomID].players.forEach(p => {
+            this.room[roomID].playersRole[p.joinID] = p.role;
+            if (p.role === -1){
+                this.room[roomID].wolfsID.push(p.joinID);
+                this.room[roomID].wolfsTxt.push(p.id+': '+p.first_name);
+            } else if (p.role === 0) {
+                this.room[roomID].villagersTxt.push(p.id+': '+p.first_name);
+            }
+        });
     }
 }
 
