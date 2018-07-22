@@ -14,6 +14,7 @@ class Player {
 }
 class Room {
     constructor(id) {
+        //info
         this.id = id;
         this.players = [];
         this.wolfsID = [];
@@ -21,15 +22,18 @@ class Room {
         this.villagersTxt = [];
         this.playersTxt = [];
         this.playersRole = [];
-        this.roleDone = [];
-        this.voteList = [];
-        this.alivePlayer = [];
-        this.deathID = -1; // -1 là không ai cả
-        this.saveID = -1; // -1 là không ai cả
+        //status
         this.ingame = false;
         this.day = 0;
         this.isNight = false;
         this.chatON = true;
+        this.wolfsCount = 0;
+        this.villagersCount = 0;
+        this.roleDone = [];
+        this.voteList = [];
+        this.alivePlayer = []; 
+        this.deathID = -1; // -1 là không ai cả
+        this.saveID = -1; // -1 là không ai cả
     }
     addPlayer(player) {
         this.players.push(player);
@@ -61,7 +65,8 @@ class Room {
         this.roleDoneCount++;
     }
     kill() {
-        if (this.deathID != -1 && this.deathID != this.saveID) {
+        console.log(`$ ROOM ${this.id+1} > KILL ${this.deathID} > SAVE ${this.saveID} !!!`)
+        if (this.deathID != -1 && (!this.isNight || (this.isNight && this.deathID != this.saveID))) {
             this.alivePlayer[this.players[this.deathID].joinID] = false;
             this.playersTxt[this.deathID] = '[CHẾT]' + this.playersTxt[this.deathID];
             return true;
@@ -72,6 +77,7 @@ class Room {
     save(voteID) {
         if (this.saveID != voteID) {
             this.saveID = voteID;
+            this.roleDoneBy(joinID);
             return true;
         } else {
             return false;
@@ -109,14 +115,16 @@ class Room {
         this.chatON = true;
     }
     vote(joinID, voteID) {
-        if (!this.roleDone[joinID]) {
+        if (!this.roleDone[joinID] && this.alivePlayer[voteID]) {
             if (this.voteList[voteID]) {
                 this.voteList[voteID]++;
-                console.log(`$ ROOM ${this.id + 1} > ${joinID} VOTE ${voteID}`)
             } else {
                 this.voteList[voteID] = 1;
             }
             this.roleDoneBy(joinID);
+            return true;
+        } else {
+            return false;
         }
     }
     chatOFF(){
@@ -131,9 +139,9 @@ class Game {
         this.roleTxt = [];
         this.MIN_PLAYER = 3;
         this.resetRoom();
-        this.setRoleTxt();
+        this.setRoleTxt(); //không cần lắm
     }
-    setRoleTxt(){
+    setRoleTxt(){ //không cần lắm
         this.roleTxt[0] = 'DÂN';
         this.roleTxt[-1] = 'SÓI';
         this.roleTxt[1] = 'TIÊN TRI';
@@ -213,8 +221,10 @@ class Game {
             if (p.role === -1){
                 this.room[roomID].wolfsID.push(p.joinID);
                 this.room[roomID].wolfsTxt.push(p.id+': '+p.first_name);
+                this.room[roomID].wolfsCount++;
             } else {
                 this.room[roomID].villagersTxt.push(p.id+': '+p.first_name);
+                this.room[roomID].villagersCount++;
             }
         });
     }

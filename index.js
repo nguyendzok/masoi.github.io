@@ -67,16 +67,17 @@ function roleDoneCheck(userRoom) {
     if (isDone) {
       roomChatAll(userRoom, 0, `Trời sáng rồi mọi người dậy đi`);
       let deathID = gamef.getRoom(userRoom).deathID;
-      gamef.getRoom(userRoom).dayNightSwitch();
       if (gamef.getRoom(userRoom).kill()) {
         let deathTxt = gamef.getRoom(userRoom).playersTxt[deathID];
         roomChatAll(userRoom, 0, `Đêm hôm qua ${deathTxt} đã bị cắn! Mọi người có 5 phút thảo luận! /vote <id> để treo cổ 1 người`);
       } else {
         roomChatAll(userRoom, 0, `Đêm hôm qua không ai chết cả! Mọi người có 5 phút thảo luận! /vote <id> để treo cổ 1 người`);
       }
+      gamef.getRoom(userRoom).dayNightSwitch();
       let time = new Date(Date.now() + 5 * 60 * 1000);
+      let playersList = gamef.getRoom(roomID).playersTxt.join(' ; ');
       var j = schedule.scheduleJob(time, function () {
-        roomChatAll(userRoom, 0, `Đã hết thời gian, mọi người vote một người để treo cổ!`);
+        roomChatAll(userRoom, 0, [`Đã hết thời gian, mọi người vote một người để treo cổ!`, playersList]);
         gamef.getRoom(userRoom).chatOFF();
         console.log(`$ ROOM ${userRoom + 1} > END OF DISCUSSION!`);
       });
@@ -269,10 +270,14 @@ bot.on('message', (payload, chat) => {
           } else {// SÓI VOTE
             let voteID = chatTxt.match(/[0-9]+/g)[0];
             const start = async () => {
-              let voteKill = gamef.getRoom(userRoom).playersTxt[voteID];
-              await chat.say(`Bạn đã vote cắn ${voteKill}`);
-              await roomWolfChatAll(userRoom, joinID, user.first_name + ' đã vote cắn ' + voteKill);
-              await gamef.getRoom(userRoom).vote(joinID, voteID);
+              //vote
+              if (gamef.getRoom(userRoom).vote(joinID, voteID)) {
+                let voteKill = gamef.getRoom(userRoom).playersTxt[voteID];
+                await chat.say(`Bạn đã vote cắn ${voteKill}`);
+                await roomWolfChatAll(userRoom, joinID, user.first_name + ' đã vote cắn ' + voteKill);
+              } else {
+                chat.say("Bạn không thể thực hiện vote 2 lần hoặc vote người chơi đã chết!");
+              }
               // kiểm tra đã VOTE xong chưa?
               roleDoneCheck(userRoom);
             }
@@ -292,11 +297,10 @@ bot.on('message', (payload, chat) => {
         } else if (userRole == 2) { // là bảo vệ
           if (chatTxt.match(/\/save.[0-9]+/g)) {//save
             let voteID = chatTxt.match(/[0-9]+/g)[0];
-            if (!gamef.getRoom(userRoom).save(voteID)) {
+            if (!gamef.getRoom(userRoom).save(joinID,voteID)) {
               chat.say(`Bạn không thể bảo vệ 1 người 2 đêm liên tiếp!`);
             } else {
               chat.say(`Bạn đã bảo vệ ${gamef.getRoom(userRoom).playersTxt[voteID]}!`);
-              gamef.getRoom(userRoom).roleDoneBy(joinID);
               // kiểm tra đã VOTE xong chưa?
               roleDoneCheck(userRoom);
             }
@@ -309,6 +313,8 @@ bot.on('message', (payload, chat) => {
           if (!chatTxt.match(/\/vote.[0-9]+/g)) {
             if (gamef.getRoom(userRoom).chatON) {
               roomChatAll(userRoom, joinID, user.first_name + ': ' + chatTxt);
+            } else {
+              chat.say([`Đã hết thời gian thảo luận, vui lòng vote 1 người để treo cổ?`, `Chat với nội dung: /vote <id>`, `VD: /vote 1`]);
             }
           } else {
             // VOTE TREO CỔ
@@ -375,7 +381,10 @@ bot.on('postback:HELP', (payload, chat) => {
       `Chọn một phòng chơi từ danh sách để tham gia một phòng!`,
       `Sau khi tham gia thành công, bạn có thể chat với các người chơi khác trong phòng`,
       `Tham gia > 'Sẵn sàng!' để thể hiện bạn sẽ tham gia chơi, còn không, hãy chọn 'Rời phòng chơi' để tránh ảnh hưởng người chơi khác`,
-      `Khi tất cả mọi người đã sẵn sàng (ít nhất 3 người), trò chơi sẽ bắt đầu! `]);
+      `Khi tất cả mọi người đã sẵn sàng (ít nhất 3 người), trò chơi sẽ bắt đầu! `,
+      `Trong khi chơi, bạn sẽ vote bằng cách chat với nội dung: /vote <id>`,
+      `VD: /vote 1 `,
+      `Bạn có thể xem <id> người chơi từ menu: Tiện ích khi chơi... > Các người chơi cùng phòng `]);
   })
 });
 // listen to HELP
@@ -387,7 +396,10 @@ bot.hear(['help', 'menu', 'hướng dẫn', 'trợ giúp'], (payload, chat) => {
       `Chọn một phòng chơi từ danh sách để tham gia một phòng!`,
       `Sau khi tham gia thành công, bạn có thể chat với các người chơi khác trong phòng`,
       `Tham gia > 'Sẵn sàng!' để thể hiện bạn sẽ tham gia chơi, còn không, hãy chọn 'Rời phòng chơi' để tránh ảnh hưởng người chơi khác`,
-      `Khi tất cả mọi người đã sẵn sàng (ít nhất 3 người), trò chơi sẽ bắt đầu! `]);
+      `Khi tất cả mọi người đã sẵn sàng (ít nhất 3 người), trò chơi sẽ bắt đầu! `,
+      `Trong khi chơi, bạn sẽ vote bằng cách chat với nội dung: /vote <id>`,
+      `VD: /vote 1 `,
+      `Bạn có thể xem <id> người chơi từ menu: Tiện ích khi chơi... > Các người chơi cùng phòng `]);
   })
 })
 
