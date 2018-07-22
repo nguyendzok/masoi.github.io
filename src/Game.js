@@ -1,3 +1,4 @@
+var schedule = require('node-schedule');
 class Player {
     constructor(p) {
         this.id = p.id;

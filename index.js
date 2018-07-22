@@ -69,9 +69,9 @@ function roleDoneCheck(userRoom) {
       let deathID = gamef.getRoom(userRoom).deathID;
       if (gamef.getRoom(userRoom).kill()) {
         let deathTxt = gamef.getRoom(userRoom).playersTxt[deathID];
-        roomChatAll(userRoom, 0, `Đêm hôm qua ${deathTxt} đã bị cắn! Mọi người có 5 phút thảo luận! /vote <id> để treo cổ 1 người`);
+        roomChatAll(userRoom, 0, `Đêm hôm qua ${deathTxt} đã bị cắn! Mọi người có 1 phút thảo luận! /vote <id> để treo cổ 1 người`);
       } else {
-        roomChatAll(userRoom, 0, `Đêm hôm qua không ai chết cả! Mọi người có 5 phút thảo luận! /vote <id> để treo cổ 1 người`);
+        roomChatAll(userRoom, 0, `Đêm hôm qua không ai chết cả! Mọi người có 1 phút thảo luận! /vote <id> để treo cổ 1 người`);
       }
       gamef.getRoom(userRoom).dayNightSwitch();
       
@@ -81,7 +81,7 @@ function roleDoneCheck(userRoom) {
       //   gamef.getRoom(userRoom).chatOFF();
       //   console.log(`$ ROOM ${userRoom + 1} > END OF DISCUSSION!`);
       // });
-      let time = new Date(Date.now() + 5 * 60 * 1000);
+      let time = new Date(Date.now() + 1 * 60 * 1000);
       gamef.getRoom(userRoom).addSchedule(time, () => {
         roomChatAll(userRoom, 0, [`Đã hết thời gian, mọi người vote một người để treo cổ!`, playersList]);
         gamef.getRoom(userRoom).chatOFF();
