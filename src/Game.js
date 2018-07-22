@@ -22,6 +22,7 @@ class Room {
         this.villagersTxt = [];
         this.playersTxt = [];
         this.playersRole = [];
+        this.timerSchedule = null;
         //status
         this.ingame = false;
         this.day = 0;
@@ -42,6 +43,12 @@ class Room {
     }
     deletePlayer(joinID) {
         this.getPlayer(joinID) = undefined;
+    }
+    addSchedule(time,callback){
+        this.timerSchedule = schedule.scheduleJob(time, callback);
+    }
+    cancelSchedule(){
+        this.timerSchedule.cancel();
     }
     newPlayerID() {
         return this.players.length > 0 ? (this.players[this.players.length - 1].id + 1) : 0;
@@ -75,7 +82,7 @@ class Room {
         }
     }
     save(joinID, voteID) {
-        if (this.saveID != voteID) {
+        if (this.saveID != voteID && this.alivePlayer[this.players[voteID].joinID]) {
             this.saveID = voteID;
             this.roleDoneBy(joinID);
             return true;

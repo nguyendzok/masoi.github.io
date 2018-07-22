@@ -74,9 +74,15 @@ function roleDoneCheck(userRoom) {
         roomChatAll(userRoom, 0, `Đêm hôm qua không ai chết cả! Mọi người có 5 phút thảo luận! /vote <id> để treo cổ 1 người`);
       }
       gamef.getRoom(userRoom).dayNightSwitch();
+      
+      let playersList = gamef.getRoom(userRoom).playersTxt.join(' ; ');
+      // var j = schedule.scheduleJob(time, function () {
+      //   roomChatAll(userRoom, 0, [`Đã hết thời gian, mọi người vote một người để treo cổ!`, playersList]);
+      //   gamef.getRoom(userRoom).chatOFF();
+      //   console.log(`$ ROOM ${userRoom + 1} > END OF DISCUSSION!`);
+      // });
       let time = new Date(Date.now() + 5 * 60 * 1000);
-      let playersList = gamef.getRoom(roomID).playersTxt.join(' ; ');
-      var j = schedule.scheduleJob(time, function () {
+      gamef.getRoom(userRoom).addSchedule(time, () => {
         roomChatAll(userRoom, 0, [`Đã hết thời gian, mọi người vote một người để treo cổ!`, playersList]);
         gamef.getRoom(userRoom).chatOFF();
         console.log(`$ ROOM ${userRoom + 1} > END OF DISCUSSION!`);
@@ -331,6 +337,7 @@ bot.on('message', (payload, chat) => {
               // kiểm tra đã VOTE XONG chưa?
               gamef.getRoom(userRoom).roleIsDone((isDone) => {
                 if (isDone) {
+                  gamef.getRoom(userRoom).cancelSchedule();
                   const newStart = async () => {
                     let deathID = gamef.getRoom(userRoom).deathID;
                     if (deathID != -1) {
