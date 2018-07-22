@@ -1,19 +1,19 @@
-const express = require('express')
-const bodyParser = require('body-parser')
-const request = require('request')
-const app = express()
-const Cosmic = require('cosmicjs')
+// const express = require('express')
+// const bodyParser = require('body-parser')
+// const request = require('request')
+// const app = express()
+// const Cosmic = require('cosmicjs')
 const BootBot = require('bootbot')
-require('dotenv').config()
-const chrono = require('chrono-node')
+// require('dotenv').config()
+// const chrono = require('chrono-node')
 var schedule = require('node-schedule')
-const EventEmitter = require('events').EventEmitter
+// const EventEmitter = require('events').EventEmitter
 // var async = require("async");
 // var Q = require("q");
 const { Game, Room, Player } = require('./src/Game.js');
 var gamef = new Game();
 
-const eventEmitter = new EventEmitter()
+// const eventEmitter = new EventEmitter()
 
 async function asyncForEach(array, callback) {
   for (let index = 0; index < array.length; index++) {
@@ -85,25 +85,6 @@ function roleDoneCheck(userRoom) {
   });
 }
 
-app.set('port', (8080 || process.env.PORT))
-app.use(bodyParser.urlencoded({ extended: false }))
-app.use(bodyParser.json())
-
-app.get('/', function (req, res) {
-  res.send("Server MA SÓI đang chạy...")
-})
-
-app.get('/webhook/', function (req, res) {
-  if (req.query['hub.verify_token'] === process.env.VERIFY_TOKEN) {
-    return res.send(req.query['hub.challenge'])
-  }
-  res.send('wrong token')
-})
-
-app.listen(app.get('port'), function () {
-  console.log('Started on port', app.get('port'))
-})
-
 const bot = new BootBot({
   accessToken: process.env.ACCESS_TOKEN,
   verifyToken: process.env.VERIFY_TOKEN,
@@ -127,7 +108,7 @@ const actionButtons = [
     ]
   },
   {
-    type: 'nested', title: 'Tiện ích khi chơi',
+    type: 'nested', title: 'Tiện ích khi chơi...',
     call_to_actions: [
       { type: 'postback', title: 'Các người chơi cùng phòng', payload: 'VIEW_PLAYER_IN_ROOM' },
       { type: 'postback', title: '(ADMIN ONLY) RESET ROOM', payload: 'RESET_ROOM' },
@@ -387,11 +368,11 @@ bot.on('postback:HELP', (payload, chat) => {
   chat.getUserProfile().then((user) => {
     chat.say([`Xin chào ${user.first_name}!`,
       `Để bắt đầu, bạn hãy mở MENU (nút 3 dấu gạch ngang) bên dưới.`,
-      `Chọn menu: Tham gia > Tham gia phòng chơi...`,
-      `rồi chọn một phòng chơi từ danh sách để tham gia một phòng!`,
+      `Chọn menu: Tham gia... > Tham gia phòng chơi`,
+      `Chọn một phòng chơi từ danh sách để tham gia một phòng!`,
       `Sau khi tham gia thành công, bạn có thể chat với các người chơi khác trong phòng`,
       `Tham gia > 'Sẵn sàng!' để thể hiện bạn sẽ tham gia chơi, còn không, hãy chọn 'Rời phòng chơi' để tránh ảnh hưởng người chơi khác`,
-      `Khi tất cả mọi người đã sẵn sàng, trò chơi sẽ bắt đầu! `]);
+      `Khi tất cả mọi người đã sẵn sàng (ít nhất 3 người), trò chơi sẽ bắt đầu! `]);
   })
 });
 // listen to HELP
@@ -399,13 +380,33 @@ bot.hear(['help', 'menu', 'hướng dẫn', 'Trợ giúp'], (payload, chat) => {
   chat.getUserProfile().then((user) => {
     chat.say([`Xin chào ${user.first_name}!`,
       `Để bắt đầu, bạn hãy mở MENU (nút 3 dấu gạch ngang) bên dưới.`,
-      `Chọn menu: Tham gia > Tham gia phòng chơi...`,
-      `rồi chọn một phòng chơi từ danh sách để tham gia một phòng!`,
+      `Chọn menu: Tham gia... > Tham gia phòng chơi`,
+      `Chọn một phòng chơi từ danh sách để tham gia một phòng!`,
       `Sau khi tham gia thành công, bạn có thể chat với các người chơi khác trong phòng`,
       `Tham gia > 'Sẵn sàng!' để thể hiện bạn sẽ tham gia chơi, còn không, hãy chọn 'Rời phòng chơi' để tránh ảnh hưởng người chơi khác`,
-      `Khi tất cả mọi người đã sẵn sàng, trò chơi sẽ bắt đầu! `]);
+      `Khi tất cả mọi người đã sẵn sàng (ít nhất 3 người), trò chơi sẽ bắt đầu! `]);
   })
 })
+
+
+// app.set('port', (8080 || process.env.PORT))
+// app.use(bodyParser.urlencoded({ extended: false }))
+// app.use(bodyParser.json())
+
+// app.get('/', function (req, res) {
+//   res.send("Server MA SÓI đang chạy...")
+// })
+
+// app.get('/webhook/', function (req, res) {
+//   if (req.query['hub.verify_token'] === process.env.VERIFY_TOKEN) {
+//     return res.send(req.query['hub.challenge'])
+//   }
+//   res.send('wrong token')
+// })
+
+// app.listen(app.get('port'), function () {
+//   console.log('Started on port', app.get('port'))
+// })
 
 // bot.hear(['help'], (payload, chat) => {
 //   // Send a text message with buttons

@@ -92,6 +92,7 @@ class Room {
         }
     }
     dayNightSwitch() {
+        console.log(`$ ROOM ${this.id+1} > DAY <=> NIGHT SWITCH`);
         if (!this.isNight) {
             this.day++;
         }
