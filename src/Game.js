@@ -74,7 +74,7 @@ class Room {
             return false;
         }
     }
-    save(voteID) {
+    save(joinID, voteID) {
         if (this.saveID != voteID) {
             this.saveID = voteID;
             this.roleDoneBy(joinID);

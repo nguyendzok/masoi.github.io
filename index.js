@@ -95,8 +95,10 @@ const bot = new BootBot({
 bot.setGreetingText("Chào mừng bạn đến với Phạm Ngọc Duy GAME bot, hãy bắt đầu trò chơi :3")
 bot.setGetStartedButton((payload, chat) => {
   chat.say('MA SÓI GAME');
-  chat.say('Hãy bắt đầu bằng cách tham gia 1 phòng chơi');
-  userId = payload.sender.id;
+  chat.say({
+    text: `Chào mừng bạn đến với Ma sói game bot, để bắt đầu hãy chat 'help' hoặc 'trợ giúp' để được hướng dẫn cách chơi!'`,
+    quickReplies: ['help', 'trợ giúp'],
+  });
 });
 const actionButtons = [
   {
