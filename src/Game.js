@@ -204,7 +204,7 @@ class Game {
             if (p.role === -1){
                 this.room[roomID].wolfsID.push(p.joinID);
                 this.room[roomID].wolfsTxt.push(p.id+': '+p.first_name);
-            } else if (p.role === 0) {
+            } else {
                 this.room[roomID].villagersTxt.push(p.id+': '+p.first_name);
             }
         });

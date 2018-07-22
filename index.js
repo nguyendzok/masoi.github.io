@@ -46,7 +46,7 @@ async function roomRoleChat(roomID) {
         if (m.role == -1) {//SÓI
           bot.say(m.joinID, ['Sói ơi dậy đi! Đêm nay sói muốn cắn ai?', '/vote <id> để cắn 1 ai đó', 'ID của SÓI: ' + wolfList, 'ID của DÂN: ' + villagersList]);
         } else if (m.role == 1) { // tiên tri
-          bot.say(m.joinID, ['Tiên tri dậy đi! Tiên tri muốn kiếm tra ai?', '/see <id> để kiểm tra', playersList]);
+          bot.say(m.joinID, ['Tiên tri dậy đi! Tiên tri muốn kiểm tra ai?', '/see <id> để kiểm tra', playersList]);
         } else if (m.role == 2) { // Bảo vệ
           bot.say(m.joinID, ['Bảo vệ dậy đi! Đêm nay bạn muốn bảo vệ ai?', '/save <id> để bảo vệ', playersList]);
         } else {
@@ -63,7 +63,7 @@ async function roomRoleChat(roomID) {
   })
 }
 
-function roleDoneCheck() {
+function roleDoneCheck(userRoom) {
   return gamef.getRoom(userRoom).roleIsDone((isDone) => {
     if (isDone) {
       roomChatAll(userRoom, 0, `Trời sáng rồi mọi người dậy đi`);
@@ -79,7 +79,7 @@ function roleDoneCheck() {
       let time = new Date(Date.now() + 5 * 60 * 1000);
       var j = schedule.scheduleJob(time, function () {
         roomChatAll(userRoom, 0, `Đã hết thời gian, mọi người vote một người để treo cổ!`);
-        console.log(`$ ROOM ${userRoom} > END OF DISCUSSION!`);
+        console.log(`$ ROOM ${userRoom+1} > END OF DISCUSSION!`);
       });
     }
   });
@@ -292,7 +292,7 @@ bot.on('message', (payload, chat) => {
               await roomWolfChatAll(userRoom, joinID, user.first_name + ' đã vote cắn ' + voteKill);
               await gamef.getRoom(userRoom).vote(joinID, voteID);
               // kiểm tra đã VOTE xong chưa?
-              roleDoneCheck();
+              roleDoneCheck(userRoom);
             }
             start();
           }
@@ -303,7 +303,7 @@ bot.on('message', (payload, chat) => {
             chat.say(`${voteID} là ${role == -1 ? 'SÓI' : role == 2 ? 'BẢO VỆ' : role == 0 ? 'DÂN' : role == 1 ? 'TIÊN TRI, Bạn đùa tớ à :v' : 'RoleErr: Lỗi rùi, ahuhu!!!'}`);
             gamef.getRoom(userRoom).roleDoneBy(joinID);
             // kiểm tra đã VOTE xong chưa?
-            roleDoneCheck();
+            roleDoneCheck(userRoom);
           } else {
             chat.say(`Bạn không thể trò chuyện trong đêm!`);
           }
@@ -316,7 +316,7 @@ bot.on('message', (payload, chat) => {
               chat.say(`Bạn đã bảo vệ ${gamef.getRoom(userRoom).playersTxt[voteID]}!`);
               gamef.getRoom(userRoom).roleDoneBy(joinID);
               // kiểm tra đã VOTE xong chưa?
-              roleDoneCheck();
+              roleDoneCheck(userRoom);
             }
           } else {
             chat.say(`Bạn không thể trò chuyện trong đêm!`);
