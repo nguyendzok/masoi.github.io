@@ -29,6 +29,7 @@ class Room {
         this.ingame = false;
         this.day = 0;
         this.isNight = false;
+        this.chatON = true;
     }
     addPlayer(player) {
         this.players.push(player);
@@ -63,6 +64,9 @@ class Room {
         if (this.deathID != -1 && this.deathID != this.saveID) {
             this.alivePlayer[this.players[this.deathID].joinID] = false;
             this.playersTxt[this.deathID] = '[CHẾT]' + this.playersTxt[this.deathID];
+            return true;
+        } else {
+            return false;
         }
     }
     save(voteID) {
@@ -102,6 +106,7 @@ class Room {
         this.roleDoneCount = 0;
         this.deathID = -1;
         this.saveID = -1;
+        this.chatON = true;
     }
     vote(joinID, voteID) {
         if (!this.roleDone[joinID]) {
@@ -113,6 +118,9 @@ class Room {
             }
             this.roleDoneBy(joinID);
         }
+    }
+    chatOFF(){
+        this.chatON = false;
     }
 }
 

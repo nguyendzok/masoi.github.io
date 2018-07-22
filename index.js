@@ -51,14 +51,13 @@ async function roomRoleChat(roomID) {
           bot.say(m.joinID, ['Bảo vệ dậy đi! Đêm nay bạn muốn bảo vệ ai?', '/save <id> để bảo vệ', playersList]);
         } else {
           bot.say(m.joinID, "Bạn là DÂN! Ngủ tiếp đi :))");
-          let userRoom = gamef.getUserRoom(m.joinID);
-          gamef.getRoom(userRoom).roleDoneBy(m.joinID);
+          gamef.getRoom(roomID).roleDoneBy(m.joinID);
         }
       }
       start();
     } else {
       bot.say(m.joinID, "Bạn đã chết :))");
-      gamef.getRoom(userRoom).roleDoneBy(m.joinID);
+      gamef.getRoom(roomID).roleDoneBy(m.joinID);
     }
   })
 }
@@ -69,9 +68,8 @@ function roleDoneCheck(userRoom) {
       roomChatAll(userRoom, 0, `Trời sáng rồi mọi người dậy đi`);
       let deathID = gamef.getRoom(userRoom).deathID;
       gamef.getRoom(userRoom).dayNightSwitch();
-      if (deathID != -1) {
+      if (gamef.getRoom(userRoom).kill()) {
         let deathTxt = gamef.getRoom(userRoom).playersTxt[deathID];
-        gamef.getRoom(userRoom).kill();
         roomChatAll(userRoom, 0, `Đêm hôm qua ${deathTxt} đã bị cắn! Mọi người có 5 phút thảo luận! /vote <id> để treo cổ 1 người`);
       } else {
         roomChatAll(userRoom, 0, `Đêm hôm qua không ai chết cả! Mọi người có 5 phút thảo luận! /vote <id> để treo cổ 1 người`);
@@ -79,7 +77,8 @@ function roleDoneCheck(userRoom) {
       let time = new Date(Date.now() + 5 * 60 * 1000);
       var j = schedule.scheduleJob(time, function () {
         roomChatAll(userRoom, 0, `Đã hết thời gian, mọi người vote một người để treo cổ!`);
-        console.log(`$ ROOM ${userRoom+1} > END OF DISCUSSION!`);
+        gamef.getRoom(userRoom).chatOFF();
+        console.log(`$ ROOM ${userRoom + 1} > END OF DISCUSSION!`);
       });
     }
   });
@@ -252,8 +251,8 @@ bot.on('message', (payload, chat) => {
 
   if (userRoom == undefined) {
     chat.say({
-      text: `Hãy chat 'help' hoặc 'hướng dẫn' để được giúp đỡ!`,
-      quickReplies: ['help', 'hướng dẫn']
+      text: `Hãy chat 'help' hoặc 'trợ giúp' để được giúp đỡ!`,
+      quickReplies: ['help', 'trợ giúp']
     });
     return;
   }
@@ -264,7 +263,9 @@ bot.on('message', (payload, chat) => {
         let userRole = gamef.getRoom(userRoom).getRole(joinID);
         if (userRole == -1) {// là SÓI
           if (!chatTxt.match(/\/vote.[0-9]+/g)) {//chat
-            roomWolfChatAll(userRoom, joinID, user.first_name + ': ' + chatTxt);
+            if (gamef.getRoom(userRoom).chatON) {
+              roomWolfChatAll(userRoom, joinID, user.first_name + ': ' + chatTxt);
+            }
           } else {// SÓI VOTE
             let voteID = chatTxt.match(/[0-9]+/g)[0];
             const start = async () => {
@@ -306,7 +307,9 @@ bot.on('message', (payload, chat) => {
       } else {
         if (!gamef.getRoom(userRoom).isNight) {// ban NGÀY, mọi người thảo luận
           if (!chatTxt.match(/\/vote.[0-9]+/g)) {
-            roomChatAll(userRoom, joinID, user.first_name + ': ' + chatTxt);
+            if (gamef.getRoom(userRoom).chatON) {
+              roomChatAll(userRoom, joinID, user.first_name + ': ' + chatTxt);
+            }
           } else {
             // VOTE TREO CỔ
             let voteID = chatTxt.match(/[0-9]+/g)[0];
@@ -350,7 +353,7 @@ bot.on('postback:VIEW_PLAYER_IN_ROOM', (payload, chat) => {
   let joinID = payload.sender.id;
   let userRoom = gamef.getUserRoom(joinID);
   let playersInRoomTxt = gamef.getRoom(userRoom).playersTxt.join(' ; ');
-  chat.say([`Danh sách người chơi trong phòng ${userRoom+1}: `,playersInRoomTxt]);
+  chat.say([`Danh sách người chơi trong phòng ${userRoom + 1}: `, playersInRoomTxt]);
 });
 // listen RESET ROOM message
 bot.on('postback:RESET_ROOM', (payload, chat) => {
@@ -376,7 +379,7 @@ bot.on('postback:HELP', (payload, chat) => {
   })
 });
 // listen to HELP
-bot.hear(['help', 'menu', 'hướng dẫn', 'Trợ giúp'], (payload, chat) => {
+bot.hear(['help', 'menu', 'hướng dẫn', 'trợ giúp'], (payload, chat) => {
   chat.getUserProfile().then((user) => {
     chat.say([`Xin chào ${user.first_name}!`,
       `Để bắt đầu, bạn hãy mở MENU (nút 3 dấu gạch ngang) bên dưới.`,
