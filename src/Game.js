@@ -115,7 +115,7 @@ class Room {
         this.chatON = true;
     }
     vote(joinID, voteID) {
-        if (!this.roleDone[joinID] && this.alivePlayer[voteID]) {
+        if (!this.roleDone[joinID] && this.alivePlayer[this.players[voteID].id]) {
             if (this.voteList[voteID]) {
                 this.voteList[voteID]++;
             } else {

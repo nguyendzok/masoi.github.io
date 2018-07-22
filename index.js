@@ -94,11 +94,13 @@ const bot = new BootBot({
 // bot config
 bot.setGreetingText("Chào mừng bạn đến với Phạm Ngọc Duy GAME bot, hãy bắt đầu trò chơi :3")
 bot.setGetStartedButton((payload, chat) => {
-  chat.say('MA SÓI GAME');
-  chat.say({
-    text: `Chào mừng bạn đến với Ma sói game bot, để bắt đầu hãy chat 'help' hoặc 'trợ giúp' để được hướng dẫn cách chơi!'`,
-    quickReplies: ['help', 'trợ giúp'],
-  });
+  chat.say('MA SÓI GAME').then(() => {
+    chat.say({
+      text: `Chào mừng bạn, để bắt đầu hãy chat 'help' hoặc 'trợ giúp' để được hướng dẫn cách chơi!'`,
+      quickReplies: ['help', 'trợ giúp'],
+    });
+  })
+
 });
 const actionButtons = [
   {
@@ -299,7 +301,7 @@ bot.on('message', (payload, chat) => {
         } else if (userRole == 2) { // là bảo vệ
           if (chatTxt.match(/\/save.[0-9]+/g)) {//save
             let voteID = chatTxt.match(/[0-9]+/g)[0];
-            if (!gamef.getRoom(userRoom).save(joinID,voteID)) {
+            if (!gamef.getRoom(userRoom).save(joinID, voteID)) {
               chat.say(`Bạn không thể bảo vệ 1 người 2 đêm liên tiếp!`);
             } else {
               chat.say(`Bạn đã bảo vệ ${gamef.getRoom(userRoom).playersTxt[voteID]}!`);
@@ -329,20 +331,20 @@ bot.on('message', (payload, chat) => {
               // kiểm tra đã VOTE XONG chưa?
               gamef.getRoom(userRoom).roleIsDone((isDone) => {
                 if (isDone) {
-                  let deathID = gamef.getRoom(userRoom).deathID;
-                  if (deathID != -1) {
-                    let deathTxt = gamef.getRoom(userRoom).playersTxt[deathID];
-                    gamef.getRoom(userRoom).kill();
-                    roomChatAll(userRoom, 0, `Đã treo cổ ${deathTxt}! Mọi người đi ngủ`);
-                  } else {
-                    roomChatAll(userRoom, 0, `Không ai bị treo cổ! Mọi người đi ngủ`);
-                  }
-                  const newNightStart = async () => {
+                  const newStart = async () => {
+                    let deathID = gamef.getRoom(userRoom).deathID;
+                    if (deathID != -1) {
+                      let deathTxt = gamef.getRoom(userRoom).playersTxt[deathID];
+                      gamef.getRoom(userRoom).kill();
+                      roomChatAll(userRoom, 0, `Đã treo cổ ${deathTxt}! Mọi người đi ngủ`);
+                    } else {
+                      roomChatAll(userRoom, 0, `Không ai bị treo cổ! Mọi người đi ngủ`);
+                    }
                     gamef.getRoom(userRoom).dayNightSwitch();
                     await roomChatAll(userRoom, 0, `Đêm thứ ${gamef.getRoom(userRoom).day}`);
                     await roomRoleChat(userRoom);
                   }
-                  newNightStart();
+                  newStart();
                 }
               });
             }
