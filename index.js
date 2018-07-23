@@ -63,7 +63,10 @@ async function roomRoleChat(roomID) {
 }
 function yesNoVoteCheck(userRoom) {
   gamef.getRoom(userRoom).roleIsDone((isDone) => {
-    if (isDone && gamef.getRoom(userRoom).saveOrKillVote < 0) {
+    if (!isDone){
+      return;
+    }
+    if (gamef.getRoom(userRoom).saveOrKillVote < 0) {
       let deathTxt = gamef.getRoom(userRoom).playersTxt[deathID];
       gamef.getRoom(userRoom).kill();
       roomChatAll(userRoom, 0, `Đã treo cổ ${deathTxt}! Mọi người đi ngủ`);
@@ -72,6 +75,16 @@ function yesNoVoteCheck(userRoom) {
       roomChatAll(userRoom, 0, `Đã tha chết cho ${deathTxt}! Mọi người đi ngủ`);
       gamef.getRoom(userRoom).newLog(`Mọi người tha chết cho ${deathTxt}!`);
     }
+    gameIsNotEndCheck(userRoom, () => {
+      const start2 = async () => {
+        // Đêm tiếp theo
+        gamef.getRoom(userRoom).dayNightSwitch();
+        await roomChatAll(userRoom, 0, `Đêm thứ ${gamef.getRoom(userRoom).day}`);
+        gamef.getRoom(userRoom).newLog(`Đêm thứ ${gamef.getRoom(userRoom).day}`);
+        await roomRoleChat(userRoom);
+      };
+      start2();
+    });
   })
 }
 function roleDoneCheck(userRoom) {
@@ -360,7 +373,7 @@ bot.on('message', (payload, chat) => {
         if (!gamef.getRoom(userRoom).isNight) {// ban NGÀY, mọi người thảo luận
           if (!chatTxt.match(/\/vote.[0-9]+/g)) {
             if (!chatTxt.match(/\/yes/g) && !chatTxt.match(/\/no/g)) {
-              if (gamef.getRoom(userRoom).chatON || (gamef.getRoom(userRoom).deathID!=-1 && gamef.getRoom(userRoom).deathID === gamef.getRoom(userRoom).getPlayer(joinID).id)) { //check xem còn bật chat không?
+              if (gamef.getRoom(userRoom).chatON || (gamef.getRoom(userRoom).deathID != -1 && gamef.getRoom(userRoom).deathID === gamef.getRoom(userRoom).getPlayer(joinID).id)) { //check xem còn bật chat không?
                 roomChatAll(userRoom, joinID, user.first_name + ': ' + chatTxt);
               } else {
                 chat.say([`Đã hết thời gian thảo luận, vui lòng vote 1 người để treo cổ?`, `/vote <id>`, `VD: /vote 1`]);
@@ -411,16 +424,6 @@ bot.on('message', (payload, chat) => {
                     } else {
                       await roomChatAll(userRoom, 0, `Không ai bị treo cổ do có số vote bằng nhau! Mọi người đi ngủ`);
                     }
-                    gameIsNotEndCheck(userRoom, () => {
-                      const start2 = async () => {
-                        // Đêm tiếp theo
-                        gamef.getRoom(userRoom).dayNightSwitch();
-                        await roomChatAll(userRoom, 0, `Đêm thứ ${gamef.getRoom(userRoom).day}`);
-                        gamef.getRoom(userRoom).newLog(`Đêm thứ ${gamef.getRoom(userRoom).day}`);
-                        await roomRoleChat(userRoom);
-                      };
-                      start2();
-                    });
                   }
                   newStart();
                 }
