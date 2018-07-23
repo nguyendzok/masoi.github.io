@@ -39,7 +39,7 @@ async function roomRoleChat(roomID) {
   await asyncForEach(gamef.getRoom(roomID).players, async (m) => {
     if (m && gamef.getRoom(roomID).alivePlayer[m.joinID]) {
       const start = async () => {
-        console.log(`$ ROOM ${roomID + 1} > ROLE Chat with ${gamef.roleTxt[m.role]} : ${m.first_name}`);
+        console.log(`$ ROOM ${roomID + 1} > ${gamef.roleTxt[m.role]} > ${m.first_name}`);
         let wolfList = gamef.getRoom(roomID).wolfsTxt.join(' ; ');
         let villagersList = gamef.getRoom(roomID).villagersTxt.join(' ; ');
         let playersList = gamef.getRoom(roomID).playersTxt.join(' ; ');
@@ -69,13 +69,14 @@ function roleDoneCheck(userRoom) {
       let deathID = gamef.getRoom(userRoom).deathID;
       if (gamef.getRoom(userRoom).kill()) {
         let deathTxt = gamef.getRoom(userRoom).playersTxt[deathID];
-        roomChatAll(userRoom, 0, [`Đêm hôm qua ${deathTxt} đã bị cắn!`, `Mọi người có 1 phút thảo luận!`, `/vote <id> để treo cổ 1 người`]);
+        roomChatAll(userRoom, 0, `Đêm hôm qua ${deathTxt.substr(6,deathTxt.length-6)} đã bị cắn!`);
         console.log(`$ ROOM ${userRoom + 1} > ${deathTxt} DIED!`);
       } else {
         console.log(`$ ROOM ${userRoom + 1} > NOBODY DIED!`);
-        roomChatAll(userRoom, 0, [`Đêm hôm qua không ai chết cả!`, `Mọi người có 1 phút thảo luận!`, `/vote <id> để treo cổ 1 người`]);
+        roomChatAll(userRoom, 0, `Đêm hôm qua không ai chết cả!`);
       }
       gameIsNotEndCheck(userRoom, () => {
+        roomChatAll(userRoom, 0, [`Mọi người có 1 phút thảo luận!`, `/vote <id> để treo cổ 1 người`]);
         gamef.getRoom(userRoom).dayNightSwitch();
 
         let playersList = gamef.getRoom(userRoom).playersTxt.join(' ; ');
@@ -282,7 +283,7 @@ bot.on('message', (payload, chat) => {
     return;
   }
 
-  if (gamef.getRoom(userRoom).alivePlayer[joinID]) { // nếu còn sống
+  if (gamef.getRoom(userRoom).alivePlayer[joinID]===undefined || gamef.getRoom(userRoom).alivePlayer[joinID]) { // nếu còn sống
     chat.getUserProfile().then((user) => {
       if (gamef.getRoom(userRoom).isNight) { // ban đêm
         let userRole = gamef.getRoom(userRoom).getRole(joinID);
@@ -385,7 +386,7 @@ bot.on('message', (payload, chat) => {
   } else {
     chat.say(`Bạn đã chết! Xin giữ im lặng`)
   }
-  console.log(`$ ROOM ${userRoom + 1} > ${joinID} chat: ${chatTxt}`);
+  console.log(`$ ROOM ${userRoom + 1} CHAT > ${joinID}: ${chatTxt}`);
 });
 // listen VIEW_PLAYER_IN_ROOM message
 bot.on('postback:VIEW_PLAYER_IN_ROOM', (payload, chat) => {
