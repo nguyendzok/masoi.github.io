@@ -184,7 +184,7 @@ class Game {
         this.userRoom = [];
         this.roleTxt = [];
         this.MIN_PLAYER = 3;
-        this.resetRoom();
+        this.resetAllRoom();
         this.setRoleTxt(); //không cần lắm
     }
     setRoleTxt(){ //không cần lắm
