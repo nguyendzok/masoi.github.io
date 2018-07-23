@@ -75,6 +75,7 @@ class Room {
         let playerID = this.getPlayer(joinID).id;
         let len = this.players.length;
         this.players.splice(playerID,1);
+        this.playersTxt.splice(playerID,1);
         for (let i=playerID;i<len-1;i++){
             this.players[i].id --;
         }
@@ -126,7 +127,7 @@ class Room {
     }
     save(joinID, voteID) {
         if (this.saveID != voteID && this.alivePlayer[this.players[voteID].joinID]) {
-            this.logs.push(`${this.players[joinID].first_name} bảo vệ: ${this.playersTxt[voteID]}`);
+            this.logs.push(`${this.getPlayer(joinID).first_name} bảo vệ: ${this.playersTxt[voteID]}`);
             this.saveID = voteID;
             this.roleDoneBy(joinID);
             return true;

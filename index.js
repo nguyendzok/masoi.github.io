@@ -69,8 +69,8 @@ function roleDoneCheck(userRoom) {
       let deathID = gamef.getRoom(userRoom).deathID;
       if (gamef.getRoom(userRoom).kill()) {
         let deathTxt = gamef.getRoom(userRoom).playersTxt[deathID];
-        roomChatAll(userRoom, 0, `Đêm hôm qua ${deathTxt.substr(6,deathTxt.length-6)} đã bị cắn!`);
-        gamef.getRoom(userRoom).newLog(`Người bị cắn: ${deathTxt.substr(6,deathTxt.length-6)} là ${gamef.getRoom(userRoom).getRoleByID(deathID)}`);
+        roomChatAll(userRoom, 0, `Đêm hôm qua ${deathTxt.substr(6, deathTxt.length - 6)} đã bị cắn!`);
+        gamef.getRoom(userRoom).newLog(`Người bị cắn: ${deathTxt.substr(6, deathTxt.length - 6)} là ${gamef.getRoom(userRoom).getRoleByID(deathID)}`);
         console.log(`$ ROOM ${userRoom + 1} > ${deathTxt} DIED!`);
       } else {
         console.log(`$ ROOM ${userRoom + 1} > NOBODY DIED!`);
@@ -98,8 +98,8 @@ function gameIsNotEndCheck(userRoom, callback) {
       if (winner === 0) {
         callback();
       } else {
-        console.log(`$ ROOM ${userRoom+1} > END GAME > ${winner === -1 ? 'SÓI' : 'DÂN'} thắng!`);
-        await roomChatAll(userRoom, 0, [`Trò chơi đã kết thúc...`, `${winner === -1 ? 'SÓI' : 'DÂN'} thắng!`,`Bạn có thể sẵn sàng để bắt đầu chơi lại, hoặc tiếp tục trò chuyện với các người chơi khác trong phòng!`]);
+        console.log(`$ ROOM ${userRoom + 1} > END GAME > ${winner === -1 ? 'SÓI' : 'DÂN'} thắng!`);
+        await roomChatAll(userRoom, 0, [`Trò chơi đã kết thúc...`, `${winner === -1 ? 'SÓI' : 'DÂN'} thắng!`, `Bạn có thể sẵn sàng để bắt đầu chơi lại, hoặc tiếp tục trò chuyện với các người chơi khác trong phòng!`]);
         await roomChatAll(userRoom, 0, gamef.getRoom(userRoom).logs);
         gamef.getRoom(userRoom).resetRoom();
       }
@@ -268,8 +268,12 @@ bot.on('postback:LEAVE_ROOM', (payload, chat) => {
     } else {
       gamef.getRoom(userRoom).killAction(gamef.getRoom(userRoom).getPlayer(joinID).id);
     }
-    gamef.setUserRoom(joinID, undefined);
-    chat.say(`Bạn đã rời phòng chơi ${userRoom}!`);
+    chat.say(`Bạn đã rời phòng chơi ${userRoom + 1}!`);
+    chat.getUserProfile().then((user) => {
+      roomChatAll(userRoom, joinID, `${user.first_name} đã rời phòng chơi ${userRoom + 1}!`);
+    }).then(()=>{
+      gamef.setUserRoom(joinID, undefined);
+    });
   } else {
     chat.say(`Bạn chưa tham gia phòng nào!`);
   }
