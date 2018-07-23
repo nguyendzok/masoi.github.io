@@ -359,6 +359,7 @@ bot.on('message', (payload, chat) => {
                           gamef.resetRoom(userRoom);
                         }
                       }
+                      winnerStart();
                     })
                   }
                   newStart();
