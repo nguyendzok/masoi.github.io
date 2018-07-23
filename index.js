@@ -66,8 +66,8 @@ function yesNoVoteCheck(userRoom) {
     if (!isDone) {
       return;
     }
+    let deathTxt = gamef.getRoom(userRoom).playersTxt[deathID];
     if (gamef.getRoom(userRoom).saveOrKillVote < 0) {
-      let deathTxt = gamef.getRoom(userRoom).playersTxt[deathID];
       gamef.getRoom(userRoom).kill();
       roomChatAll(userRoom, 0, `Đã treo cổ ${deathTxt}! Mọi người đi ngủ`);
       gamef.getRoom(userRoom).newLog(`Mọi người đã treo cổ ${deathTxt}!`);
@@ -382,13 +382,13 @@ bot.on('message', (payload, chat) => {
               if (gamef.getRoom(userRoom).deathID != -1) {
                 if (chatTxt.match(/\/yes/g)) { //vote treo cổ
                   gamef.getRoom(userRoom).saveOrKillVote(joinID, true);
-                  chat.say(`Bạn đã vote treo!`);
-                  roomChatAll(userRoom, joinID, `${user.first_name} đã vote treo!`);
+                  chat.say(`Bạn đã vote treo! (${gamef.getRoom(userRoom).saveOrKillVote})`);
+                  roomChatAll(userRoom, joinID, `${user.first_name} đã vote treo! (${gamef.getRoom(userRoom).saveOrKillVote})`);
                   yesNoVoteCheck(userRoom);
                 } else { //vote tha
                   gamef.getRoom(userRoom).saveOrKillVote(joinID, false);
-                  chat.say(`Bạn đã vote tha!`);
-                  roomChatAll(userRoom, joinID, `${user.first_name} đã vote tha!`);
+                  chat.say(`Bạn đã vote tha! (${gamef.getRoom(userRoom).saveOrKillVote})`);
+                  roomChatAll(userRoom, joinID, `${user.first_name} đã vote tha! (${gamef.getRoom(userRoom).saveOrKillVote})`);
                   yesNoVoteCheck(userRoom);
                 }
               }
@@ -399,7 +399,7 @@ bot.on('message', (payload, chat) => {
             const start = async () => {
               if (gamef.getRoom(userRoom).vote(joinID, voteID)) {
                 let voteKill = gamef.getRoom(userRoom).playersTxt[voteID];
-                await chat.say(`Bạn đã vote treo cổ ${voteKill}`);
+                await chat.say(`Bạn đã vote treo cổ ${voteKill} (${gamef.getRoom(userRoom).voteList[voteID]} phiếu)`);
                 await roomChatAll(userRoom, joinID, `${user.first_name} đã vote treo cổ ${voteKill} (${gamef.getRoom(userRoom).voteList[voteID]} phiếu)`);
               } else {
                 chat.say(`Bạn không thể vote 2 lần hoặc vote người chơi đã chết!`);
@@ -414,9 +414,9 @@ bot.on('message', (payload, chat) => {
                     if (deathID != -1) { // mời 1 người lên giá treo cổ
                       gamef.getRoom(userRoom).resetRoleDone();
                       let deathTxt = gamef.getRoom(userRoom).playersTxt[deathID];
-                      await roomChatAll(userRoom, 0, [`Mời ${deathTxt} lên giá treo cổ !!!`, `Bạn có 30 giây để trăn trối, 30s bắt đầu!`]);
-                      // 30 giây
-                      let time = new Date(Date.now() + 30 * 1000);
+                      await roomChatAll(userRoom, 0, [`Mời ${deathTxt} lên giá treo cổ !!!`, `Bạn có 45 giây để trăn trối, 45s bắt đầu!`]);
+                      // 45 giây
+                      let time = new Date(Date.now() + 45 * 1000);
                       gamef.getRoom(userRoom).addSchedule(time, () => {
                         roomChatAll(userRoom, 0, [`Đã hết thời gian, mọi người vote nào!`, `TREO CỔ hay CỨU?`, `/yes hoặc /no`]);
                         console.log(`$ ROOM ${userRoom + 1} > END OF TRĂN TRỐI :))`);
