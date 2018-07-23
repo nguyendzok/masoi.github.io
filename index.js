@@ -348,14 +348,16 @@ bot.on('message', (payload, chat) => {
                       await roomChatAll(userRoom, 0, `Không ai bị treo cổ! Mọi người đi ngủ`);
                     }
                     gamef.getRoom(userRoom).gameIsEnd((winner) => {
-                      if (winner != 0) {
-                        gamef.getRoom(userRoom).dayNightSwitch();
-                        await roomChatAll(userRoom, 0, `Đêm thứ ${gamef.getRoom(userRoom).day}`);
-                        await roomRoleChat(userRoom);
-                      } else {
-                        await roomChatAll(userRoom, 0, [`Trò chơi đã kết thúc...`, `${winner === -1 ? 'SÓI' : 'DÂN'} thắng!`]);
-                        await roomChatAll(userRoom, 0, gamef.getRoom(userRoom).logs);
-                        gamef.resetRoom(userRoom);
+                      const winnerStart = async () => {
+                        if (winner != 0) {
+                          gamef.getRoom(userRoom).dayNightSwitch();
+                          await roomChatAll(userRoom, 0, `Đêm thứ ${gamef.getRoom(userRoom).day}`);
+                          await roomRoleChat(userRoom);
+                        } else {
+                          await roomChatAll(userRoom, 0, [`Trò chơi đã kết thúc...`, `${winner === -1 ? 'SÓI' : 'DÂN'} thắng!`]);
+                          await roomChatAll(userRoom, 0, gamef.getRoom(userRoom).logs);
+                          gamef.resetRoom(userRoom);
+                        }
                       }
                     })
                   }
