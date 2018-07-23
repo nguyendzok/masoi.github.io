@@ -98,7 +98,7 @@ class Room {
         console.log(`$ ROOM ${this.id+1} > KILL ${this.deathID} > SAVE ${this.saveID} !!!`)
         if (this.deathID != -1 && (!this.isNight || (this.isNight && this.deathID != this.saveID))) {
             this.alivePlayer[this.players[this.deathID].joinID] = false;
-            this.playersTxt[this.deathID] = '[CHẾT]' + this.playersTxt[this.deathID].substr(3, this.playersTxt[this.deathID].length-3);
+            this.playersTxt[this.deathID] = '[CHẾT]' + this.playersTxt[this.deathID].substr(2, this.playersTxt[this.deathID].length-2);
             if (this.players[this.deathID].role===-1){
                 this.wolfsCount--;
             } else {

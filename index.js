@@ -70,7 +70,9 @@ function roleDoneCheck(userRoom) {
       if (gamef.getRoom(userRoom).kill()) {
         let deathTxt = gamef.getRoom(userRoom).playersTxt[deathID];
         roomChatAll(userRoom, 0, [`Đêm hôm qua ${deathTxt} đã bị cắn!`, `Mọi người có 1 phút thảo luận!`, `/vote <id> để treo cổ 1 người`]);
+        console.log(`$ ROOM ${userRoom + 1} > ${deathTxt} DIED!`);
       } else {
+        console.log(`$ ROOM ${userRoom + 1} > NOBODY DIED!`);
         roomChatAll(userRoom, 0, [`Đêm hôm qua không ai chết cả!`, `Mọi người có 1 phút thảo luận!`, `/vote <id> để treo cổ 1 người`]);
       }
       gameIsNotEndCheck(userRoom, () => {
@@ -90,9 +92,10 @@ function roleDoneCheck(userRoom) {
 function gameIsNotEndCheck(userRoom, callback) {
   gamef.getRoom(userRoom).gameIsEnd((winner) => {
     const winnerStart = async () => {
-      if (winner != 0) {
+      if (winner === 0) {
         callback();
       } else {
+        console.log(`$ ROOM ${userRoom+1} > END GAME > ${winner === -1 ? 'SÓI' : 'DÂN'} thắng!`);
         await roomChatAll(userRoom, 0, [`Trò chơi đã kết thúc...`, `${winner === -1 ? 'SÓI' : 'DÂN'} thắng!`]);
         await roomChatAll(userRoom, 0, gamef.getRoom(userRoom).logs);
         gamef.getRoom(userRoom).resetRoom();
@@ -345,6 +348,8 @@ bot.on('message', (payload, chat) => {
                 let voteKill = gamef.getRoom(userRoom).playersTxt[voteID];
                 await chat.say(`Bạn đã vote treo cổ ${voteKill}`);
                 await roomChatAll(userRoom, joinID, user.first_name + ' đã vote treo cổ ' + voteKill);
+              } else {
+                chat.say(`Bạn không thể vote 2 lần hoặc vote người chơi đã chết!`);
               }
               // kiểm tra đã VOTE XONG chưa?
               gamef.getRoom(userRoom).roleIsDone((isDone) => {
