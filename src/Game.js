@@ -169,6 +169,9 @@ class Room {
             callback(true);
         }
     }
+    resetRoleDone(){
+        this.roleDone = [];
+    }
     gameIsEnd(callback) {
         if (this.wolfsCount === this.villagersCount) {
             //SÓI THẮNG

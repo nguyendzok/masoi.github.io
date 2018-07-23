@@ -360,7 +360,7 @@ bot.on('message', (payload, chat) => {
         if (!gamef.getRoom(userRoom).isNight) {// ban NGÀY, mọi người thảo luận
           if (!chatTxt.match(/\/vote.[0-9]+/g)) {
             if (!chatTxt.match(/\/yes/g) && !chatTxt.match(/\/no/g)) {
-              if (gamef.getRoom(userRoom).chatON) { //check xem còn bật chat không?
+              if (gamef.getRoom(userRoom).chatON || (gamef.getRoom(userRoom).deathID!=-1 && gamef.getRoom(userRoom).deathID === gamef.getRoom(userRoom).getPlayer(joinID).id)) { //check xem còn bật chat không?
                 roomChatAll(userRoom, joinID, user.first_name + ': ' + chatTxt);
               } else {
                 chat.say([`Đã hết thời gian thảo luận, vui lòng vote 1 người để treo cổ?`, `/vote <id>`, `VD: /vote 1`]);
@@ -398,9 +398,11 @@ bot.on('message', (payload, chat) => {
                     gamef.getRoom(userRoom).findOutDeathID();
                     gamef.getRoom(userRoom).cancelSchedule();
                     let deathID = gamef.getRoom(userRoom).deathID;
-                    if (deathID != -1) {
+                    if (deathID != -1) { // mời 1 người lên giá treo cổ
+                      gamef.getRoom(userRoom).resetRoleDone();
                       let deathTxt = gamef.getRoom(userRoom).playersTxt[deathID];
-                      await roomChatAll(userRoom, 0, [`Mời ${deathTxt} lên giá treo cổ !!!`, `Bạn có 30s để trăn trối, 30s bắt đầu!`]);
+                      await roomChatAll(userRoom, 0, [`Mời ${deathTxt} lên giá treo cổ !!!`, `Bạn có 30 giây để trăn trối, 30s bắt đầu!`]);
+                      // 30 giây
                       let time = new Date(Date.now() + 30 * 1000);
                       gamef.getRoom(userRoom).addSchedule(time, () => {
                         roomChatAll(userRoom, 0, [`Đã hết thời gian, mọi người vote nào!`, `TREO CỔ hay CỨU?`, `/yes hoặc /no`]);
@@ -411,6 +413,7 @@ bot.on('message', (payload, chat) => {
                     }
                     gameIsNotEndCheck(userRoom, () => {
                       const start2 = async () => {
+                        // Đêm tiếp theo
                         gamef.getRoom(userRoom).dayNightSwitch();
                         await roomChatAll(userRoom, 0, `Đêm thứ ${gamef.getRoom(userRoom).day}`);
                         gamef.getRoom(userRoom).newLog(`Đêm thứ ${gamef.getRoom(userRoom).day}`);
