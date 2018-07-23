@@ -171,6 +171,7 @@ class Room {
     }
     resetRoleDone(){
         this.roleDone = [];
+        this.roleDoneCount = 0;
     }
     gameIsEnd(callback) {
         if (this.wolfsCount === this.villagersCount) {
