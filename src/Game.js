@@ -72,7 +72,12 @@ class Room {
         this.alivePlayer[player.joinID] = true;
     }
     deletePlayer(joinID) {
-        this.players[this.getPlayer(joinID).id] = undefined;
+        let playerID = this.getPlayer(joinID).id;
+        let len = this.players.length;
+        this.players.splice(playerID,1);
+        for (let i=playerID;i<len-1;i++){
+            this.players[i].id --;
+        }
     }
     addSchedule(time, callback) {
         this.timerSchedule = schedule.scheduleJob(time, callback);
