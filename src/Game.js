@@ -206,9 +206,6 @@ class Game {
             this.room.push(new Room(i));
         }
     }
-    resetRoom(id){
-        this.room[id].resetRoom();
-    }
     getRoom(id) {
         return this.room[id];
     }

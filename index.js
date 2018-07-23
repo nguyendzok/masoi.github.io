@@ -356,11 +356,11 @@ bot.on('message', (payload, chat) => {
                         } else {
                           await roomChatAll(userRoom, 0, [`Trò chơi đã kết thúc...`, `${winner === -1 ? 'SÓI' : 'DÂN'} thắng!`]);
                           await roomChatAll(userRoom, 0, gamef.getRoom(userRoom).logs);
-                          gamef.resetRoom(userRoom);
+                          gamef.getRoom(userRoom).resetRoom();
                         }
                       }
                       winnerStart();
-                    })
+                    });
                   }
                   newStart();
                 }
