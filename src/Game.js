@@ -119,7 +119,7 @@ class Room {
     kill() {
         console.log(`$ ROOM ${this.id + 1} > KILL ${this.deathID} > SAVE ${this.saveID} !!!`);
         if (this.deathID != -1 && (!this.isNight || (this.isNight && this.deathID != this.saveID))) {
-            killAction(this.deathID);
+            this.killAction(this.deathID);
             return true;
         } else {
             return false;
