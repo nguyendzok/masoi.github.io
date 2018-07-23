@@ -24,7 +24,7 @@ class Room {
         this.playersTxt = [];
         this.playersRole = [];
         this.timerSchedule = null;
-        this.logs = ['...'];
+        this.logs = ['Tóm tắt game: *************************'];
         //status
         this.ingame = false;
         this.day = 0;
@@ -37,6 +37,7 @@ class Room {
         this.alivePlayer = [];
         this.deathID = -1; // -1 là không ai cả
         this.saveID = -1; // -1 là không ai cả
+        this.saveOrKill = 0; // nếu vote cứu thì +1, vote treo cổ thì -1.  nhỏ hơn 0 thì treo
     }
     resetRoom() {
         this.wolfsID = [];
@@ -45,7 +46,7 @@ class Room {
         this.playersTxt = [];
         this.playersRole = [];
         this.timerSchedule = null;
-        this.logs = ['Ghi chép: '];
+        this.logs = ['Tóm tắt game: ************************'];
 
         this.ingame = false;
         this.day = 0;
@@ -57,6 +58,7 @@ class Room {
         this.voteList = [];
         this.deathID = -1; // -1 là không ai cả
         this.saveID = -1; // -1 là không ai cả
+        this.saveOrKill = 0; // nếu vote cứu thì +1, vote treo cổ thì -1.  nhỏ hơn 0 thì treo
 
         this.players.forEach(p => {
             p.ready = false;
@@ -74,10 +76,10 @@ class Room {
     deletePlayer(joinID) {
         let playerID = this.getPlayer(joinID).id;
         let len = this.players.length;
-        this.players.splice(playerID,1);
-        this.playersTxt.splice(playerID,1);
-        for (let i=playerID;i<len-1;i++){
-            this.players[i].id --;
+        this.players.splice(playerID, 1);
+        this.playersTxt.splice(playerID, 1);
+        for (let i = playerID; i < len - 1; i++) {
+            this.players[i].id--;
         }
     }
     addSchedule(time, callback) {
@@ -106,6 +108,18 @@ class Room {
     roleDoneBy(joinID) {
         this.roleDone[joinID] = true;
         this.roleDoneCount++;
+    }
+    saveOrKillVote(joinID, voteKill) {
+        if (this.roleDone[joinID]) {
+            return false;
+        }
+        if (voteKill) {
+            this.saveOrKill++;
+        } else {
+            this.saveOrKill--;
+        }
+        this.roleDoneBy(joinID);
+        return true;
     }
     killAction(deathID) {
         this.alivePlayer[this.players[deathID].joinID] = false;
@@ -138,22 +152,21 @@ class Room {
     newLog(log) {
         this.logs.push(log);
     }
+    findOutDeathID() {
+        let maxVote = -1;
+        this.voteList.forEach((numberOfVote, id) => {
+            if (numberOfVote > maxVote) {
+                maxVote = numberOfVote;
+                this.deathID = id;
+            } else if (numberOfVote == maxVote) {
+                this.deathID = -1;
+            }
+        });
+    }
     roleIsDone(callback) {
         console.log("$ ROOM " + (this.id + 1) + " > ROLE DONE: " + this.roleDoneCount + '/' + (this.wolfsCount + this.villagersCount));
         if (this.roleDoneCount == (this.wolfsCount + this.villagersCount)) {
-            let maxVote = -1;
-            this.voteList.forEach((numberOfVote, id) => {
-                if (numberOfVote > maxVote) {
-                    maxVote = numberOfVote;
-                    this.deathID = id;
-                } else if (numberOfVote == maxVote) {
-                    this.deathID = -1;
-                }
-            });
             callback(true);
-            return true;
-        } else {
-            return false;
         }
     }
     gameIsEnd(callback) {
