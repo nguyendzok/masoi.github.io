@@ -94,14 +94,17 @@ function roleDoneCheck(userRoom) {
       gamef.getRoom(userRoom).findOutDeathID();
       roomChatAll(userRoom, 0, `Trời sáng rồi mọi người dậy đi`);
       let deathID = gamef.getRoom(userRoom).deathID;
+      let deathTxt;
+      if (deathID != -1) {
+        deathTxt = gamef.getRoom(userRoom).playersTxt[deathID];
+      }
       if (gamef.getRoom(userRoom).kill()) {
-        let deathTxt = gamef.getRoom(userRoom).playersTxt[deathID];
         roomChatAll(userRoom, 0, `Đêm hôm qua ${deathTxt.substr(6, deathTxt.length - 6)} đã bị cắn!`);
         gamef.getRoom(userRoom).newLog(`Người bị cắn: ${deathTxt.substr(6, deathTxt.length - 6)} là ${gamef.roleTxt[gamef.getRoom(userRoom).getRoleByID(deathID)]}`);
         console.log(`$ ROOM ${userRoom + 1} > ${deathTxt} DIED!`);
       } else {
         console.log(`$ ROOM ${userRoom + 1} > NOBODY DIED!`);
-        gamef.getRoom(userRoom).newLog(`${deathID!=-1?`Người bị cắn: ${deathTxt.substr(6, deathTxt.length - 6)} là ${gamef.roleTxt[gamef.getRoom(userRoom).getRoleByID(deathID)]}`:''} Và không ai chết!`);
+        gamef.getRoom(userRoom).newLog(`${deathID != -1 ? `Người bị cắn: ${deathTxt.substr(6, deathTxt.length - 6)} là ${gamef.roleTxt[gamef.getRoom(userRoom).getRoleByID(deathID)]}` : ''} Và không ai chết!`);
         roomChatAll(userRoom, 0, `Đêm hôm qua không ai chết cả!`);
       }
       gameIsNotEndCheck(userRoom, () => {
@@ -247,6 +250,7 @@ bot.on('postback:READY_ROOM', (payload, chat) => {
     joinUser = gamef.searchUserInRoom(joinID, userRoom);
     if (!joinUser.ready) {
       joinUser.getReady();
+      gamef.getRoom(userRoom).oneReady();
       // get UserName and sendGlobalMessage to ROOM
       chat.getUserProfile().then((user) => {
         //let playerListView = gamef.getRoomPlayerView(userRoom);
@@ -254,7 +258,7 @@ bot.on('postback:READY_ROOM', (payload, chat) => {
           await asyncForEach(gamef.getRoom(userRoom).players, async (m) => {
             if (m) {
               //await bot.sendGenericTemplate(m.joinID, playerListView).then(async () => {
-              await bot.say(m.joinID, `${user.first_name} đã sẵn sàng!`)
+              await bot.say(m.joinID, `${user.first_name} đã sẵn sàng! (${gamef.getRoom(userRoom).readyCount}/${gamef.getRoom(userRoom).players.length})`)
               //})
             }
           })

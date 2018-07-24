@@ -26,6 +26,7 @@ class Room {
         this.timerSchedule = null;
         this.logs = ['Tóm tắt game: *************************'];
         //status
+        this.readyCount = 0;
         this.ingame = false;
         this.day = 0;
         this.isNight = false;
@@ -48,6 +49,7 @@ class Room {
         this.timerSchedule = null;
         this.logs = ['Tóm tắt game: ************************'];
 
+        this.readyCount = 0;
         this.ingame = false;
         this.day = 0;
         this.isNight = false;
@@ -117,6 +119,9 @@ class Room {
     roleDoneBy(joinID) {
         this.roleDone[joinID] = true;
         this.roleDoneCount++;
+    }
+    oneReady(){
+        this.readyCount++;
     }
     saveOrKillVote(joinID, voteKill) {
         if (this.roleDone[joinID]) {
