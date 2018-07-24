@@ -94,7 +94,7 @@ class Room {
         let rand = 0, count = num;
         while (count > 0) {
             do {
-                rand = Math.floor((Math.random() * (this.players.length - 1)));
+                rand = Math.floor((Math.random() * this.players.length));
             } while (this.players[rand].role != 0)
             this.players[rand].role = role;
             count--;
