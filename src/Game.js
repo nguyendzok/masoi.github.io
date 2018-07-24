@@ -340,6 +340,7 @@ class Game {
                 this.room[roomID].villagersCount++;
             }
         });
+        return roleListTxt;
     }
 }
 

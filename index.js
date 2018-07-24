@@ -267,8 +267,8 @@ bot.on('postback:READY_ROOM', (payload, chat) => {
               const gameStart = async () => {
                 console.log(`$ ROOM ${userRoom + 1} > GAME_START`);
                 gamef.getRoom(userRoom).setInGame();
-                gamef.roleRandom(userRoom);
-                await roomChatAll(userRoom, 0, `Tất cả mọi người đã sẵn sàng! Game sẽ bắt đầu...`);
+                let roleListTxt = gamef.roleRandom(userRoom);
+                await roomChatAll(userRoom, 0, [`Tất cả mọi người đã sẵn sàng! Game sẽ bắt đầu...`, roleListTxt]);
                 //while(){
                 gamef.getRoom(userRoom).dayNightSwitch();
                 await roomChatAll(userRoom, 0, `Đêm thứ ${gamef.getRoom(userRoom).day}`);
