@@ -112,14 +112,15 @@ class Room {
     saveOrKillVote(joinID, voteKill) {
         if (this.roleDone[joinID]) {
             return false;
-        }
-        if (voteKill) {
-            this.saveOrKill++;
         } else {
-            this.saveOrKill--;
+            if (voteKill) {
+                this.saveOrKill++;
+            } else {
+                this.saveOrKill--;
+            }
+            this.roleDoneBy(joinID);
+            return true;
         }
-        this.roleDoneBy(joinID);
-        return true;
     }
     killAction(deathID) {
         this.alivePlayer[this.players[deathID].joinID] = false;
@@ -140,7 +141,7 @@ class Room {
         }
     }
     save(joinID, voteID) {
-        if (this.saveID != voteID && this.alivePlayer[this.players[voteID].joinID]) {
+        if (!this.roleDone[joinID] && this.saveID != voteID && this.alivePlayer[this.players[voteID].joinID]) {
             this.logs.push(`${this.getPlayer(joinID).first_name} bảo vệ: ${this.playersTxt[voteID]}`);
             this.saveID = voteID;
             this.roleDoneBy(joinID);
@@ -169,7 +170,7 @@ class Room {
             callback(true);
         }
     }
-    resetRoleDone(){
+    resetRoleDone() {
         this.roleDone = [];
         this.roleDoneCount = 0;
     }
@@ -194,7 +195,7 @@ class Room {
         this.roleDone = [];
         this.roleDoneCount = 0;
         this.deathID = -1;
-        this.saveID = -1;
+        // this.saveID = -1;
         this.chatON = true;
     }
     vote(joinID, voteID) {
