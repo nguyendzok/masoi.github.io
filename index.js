@@ -351,13 +351,16 @@ bot.on('message', (payload, chat) => {
           }
         } else if (userRole == 1) { // là tiên tri
           if (chatTxt.match(/\/see.[0-9]+/g)) {//see
-            let voteID = chatTxt.match(/[0-9]+/g)[0];
-            let role = gamef.getRoom(userRoom).getRoleByID(voteID);
-            chat.say(`${voteID} là ${role == -1 ? 'SÓI' : role == 1 ? 'TIÊN TRI, Bạn đùa tớ à :v' : 'DÂN'}`);
-            gamef.getRoom(userRoom).newLog(`${user.first_name} soi (${gamef.getRoom(userRoom).playersTxt[voteID]}) là ${role == -1 ? 'SÓI' : role == 1 ? 'TỰ SOI MÌNH! GG' : 'DÂN'}`);
-            gamef.getRoom(userRoom).roleDoneBy(joinID);
-            // kiểm tra đã VOTE xong chưa?
-            roleDoneCheck(userRoom);
+            const startTT = async () => {
+              let voteID = chatTxt.match(/[0-9]+/g)[0];
+              let role = gamef.getRoom(userRoom).getRoleByID(voteID);
+              chat.say(`${voteID} là ${role == -1 ? 'SÓI' : role == 1 ? 'TIÊN TRI, Bạn đùa tớ à :v' : 'DÂN'}`);
+              gamef.getRoom(userRoom).newLog(`${user.first_name} soi (${gamef.getRoom(userRoom).playersTxt[voteID]}) là ${role == -1 ? 'SÓI' : role == 1 ? 'TỰ SOI MÌNH! GG' : 'DÂN'}`);
+              gamef.getRoom(userRoom).roleDoneBy(joinID);
+              // kiểm tra đã VOTE xong chưa?
+              roleDoneCheck(userRoom);
+            }
+            startTT();
           } else {
             chat.say(`Bạn không thể trò chuyện trong đêm!`);
           }
