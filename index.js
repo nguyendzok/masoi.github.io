@@ -97,11 +97,11 @@ function roleDoneCheck(userRoom) {
       if (gamef.getRoom(userRoom).kill()) {
         let deathTxt = gamef.getRoom(userRoom).playersTxt[deathID];
         roomChatAll(userRoom, 0, `Đêm hôm qua ${deathTxt.substr(6, deathTxt.length - 6)} đã bị cắn!`);
-        gamef.getRoom(userRoom).newLog(`Người bị cắn: ${deathTxt.substr(6, deathTxt.length - 6)} là ${gamef.getRoom(userRoom).getRoleByID(deathID)}`);
+        gamef.getRoom(userRoom).newLog(`Người bị cắn: ${deathTxt.substr(6, deathTxt.length - 6)} là ${gamef.roleTxt[gamef.getRoom(userRoom).getRoleByID(deathID)]}`);
         console.log(`$ ROOM ${userRoom + 1} > ${deathTxt} DIED!`);
       } else {
         console.log(`$ ROOM ${userRoom + 1} > NOBODY DIED!`);
-        gamef.getRoom(userRoom).newLog(`Và không ai chết!`);
+        gamef.getRoom(userRoom).newLog(`${deathID!=-1?`Người bị cắn: ${deathTxt.substr(6, deathTxt.length - 6)} là ${gamef.roleTxt[gamef.getRoom(userRoom).getRoleByID(deathID)]}`:''} Và không ai chết!`);
         roomChatAll(userRoom, 0, `Đêm hôm qua không ai chết cả!`);
       }
       gameIsNotEndCheck(userRoom, () => {

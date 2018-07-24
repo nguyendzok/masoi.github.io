@@ -60,12 +60,13 @@ class Room {
         this.saveID = -1; // -1 là không ai cả
         this.saveOrKill = 0; // nếu vote cứu thì +1, vote treo cổ thì -1.  nhỏ hơn 0 thì treo
 
-        this.players.forEach(p => {
-            p.ready = false;
-            p.role = 0; // -1: SÓI / 0: DÂN / 1: tiên tri / 2: bảo vệ
+        this.players.forEach((value, index, arr) => {
+            arr[index].ready = false;
+            arr[index].role = 0; // -1: SÓI / 0: DÂN / 1: tiên tri / 2: bảo vệ
+            this.playersTxt.push(`${p.id}: ${p.first_name}`);
         });
         this.alivePlayer.forEach((value, index, arr) => {
-            arr[index] = true || value;
+            arr[index] = true;
         });
     }
     addPlayer(player) {
@@ -293,6 +294,7 @@ class Game {
         }
     }
     roleRandom(roomID) {
+        console.log(`$ ROOM ${roomID} > RANDOM ROLE FOR ${this.room[roomID].players.length} PLAYERS`);
         this.room[roomID].players[0].role = -1; // SÓI
         this.room[roomID].players[1].role = 1; // TIÊN TRI
         this.room[roomID].players[2].role = 2; // BẢO VỆ
