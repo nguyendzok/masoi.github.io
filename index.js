@@ -423,6 +423,14 @@ bot.on('message', (payload, chat) => {
                       });
                     } else {
                       await roomChatAll(userRoom, 0, `Không ai bị treo cổ do có số vote bằng nhau! Mọi người đi ngủ`);
+                      const start2 = async () => {
+                        // Đêm tiếp theo
+                        gamef.getRoom(userRoom).dayNightSwitch();
+                        await roomChatAll(userRoom, 0, `Đêm thứ ${gamef.getRoom(userRoom).day}`);
+                        gamef.getRoom(userRoom).newLog(`Đêm thứ ${gamef.getRoom(userRoom).day}`);
+                        await roomRoleChat(userRoom);
+                      };
+                      start2();
                     }
                   }
                   newStart();
