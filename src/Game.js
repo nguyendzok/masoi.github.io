@@ -60,7 +60,7 @@ class Room {
         this.saveID = -1; // -1 là không ai cả
         this.saveOrKill = 0; // nếu vote cứu thì +1, vote treo cổ thì -1.  nhỏ hơn 0 thì treo
 
-        this.players.forEach((value, index, arr) => {
+        this.players.forEach((p, index, arr) => {
             arr[index].ready = false;
             arr[index].role = 0; // -1: SÓI / 0: DÂN / 1: tiên tri / 2: bảo vệ
             this.playersTxt.push(`${p.id}: ${p.first_name}`);
