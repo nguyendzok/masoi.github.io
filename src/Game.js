@@ -123,14 +123,14 @@ class Room {
     oneReady(){
         this.readyCount++;
     }
-    saveOrKillVote(joinID, voteKill) {
+    killOrSaveVote(joinID, voteKill) {
         if (this.roleDone[joinID]) {
             return false;
         } else {
             if (voteKill) {
-                this.saveOrKill++;
-            } else {
                 this.saveOrKill--;
+            } else {
+                this.saveOrKill++;
             }
             this.roleDoneBy(joinID);
             return true;

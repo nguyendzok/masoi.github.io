@@ -68,13 +68,13 @@ function yesNoVoteCheck(userRoom) {
     }
     let deathID = gamef.getRoom(userRoom).deathID;
     let deathTxt = gamef.getRoom(userRoom).playersTxt[deathID];
-    if (gamef.getRoom(userRoom).saveOrKillVote < 0) {
+    if (gamef.getRoom(userRoom).saveOrKill < 0) {
       gamef.getRoom(userRoom).kill();
       roomChatAll(userRoom, 0, `Đã treo cổ ${deathTxt}! Mọi người đi ngủ`);
-      gamef.getRoom(userRoom).newLog(`Mọi người đã treo cổ ${deathTxt}!`);
+      gamef.getRoom(userRoom).newLog(`Mọi người đã treo cổ (${deathTxt})!`);
     } else {
       roomChatAll(userRoom, 0, `Đã tha chết cho ${deathTxt}! Mọi người đi ngủ`);
-      gamef.getRoom(userRoom).newLog(`Mọi người tha chết cho ${deathTxt}!`);
+      gamef.getRoom(userRoom).newLog(`Mọi người tha chết cho (${deathTxt})!`);
     }
     gameIsNotEndCheck(userRoom, () => {
       const start2 = async () => {
@@ -99,12 +99,12 @@ function roleDoneCheck(userRoom) {
         deathTxt = gamef.getRoom(userRoom).playersTxt[deathID];
       }
       if (gamef.getRoom(userRoom).kill()) {
-        roomChatAll(userRoom, 0, `Đêm hôm qua ${deathTxt.substr(6, deathTxt.length - 6)} đã bị cắn!`);
-        gamef.getRoom(userRoom).newLog(`Người bị cắn: ${deathTxt.substr(6, deathTxt.length - 6)} là ${gamef.roleTxt[gamef.getRoom(userRoom).getRoleByID(deathID)]}`);
+        roomChatAll(userRoom, 0, `Đêm hôm qua (${deathTxt}) đã bị cắn!`);
+        gamef.getRoom(userRoom).newLog(`Người bị cắn: (${deathTxt}) là ${gamef.roleTxt[gamef.getRoom(userRoom).getRoleByID(deathID)]}`);
         console.log(`$ ROOM ${userRoom + 1} > ${deathTxt} DIED!`);
       } else {
         console.log(`$ ROOM ${userRoom + 1} > NOBODY DIED!`);
-        gamef.getRoom(userRoom).newLog(`${deathID != -1 ? `Người bị cắn: ${deathTxt.substr(6, deathTxt.length - 6)} là ${gamef.roleTxt[gamef.getRoom(userRoom).getRoleByID(deathID)]}` : ''} Và không ai chết!`);
+        gamef.getRoom(userRoom).newLog(`${deathID != -1 ? `Người bị cắn: (${deathTxt}) là ${gamef.roleTxt[gamef.getRoom(userRoom).getRoleByID(deathID)]}` : ''} Và không ai chết!`);
         roomChatAll(userRoom, 0, `Đêm hôm qua không ai chết cả!`);
       }
       gameIsNotEndCheck(userRoom, () => {
@@ -354,7 +354,7 @@ bot.on('message', (payload, chat) => {
             let voteID = chatTxt.match(/[0-9]+/g)[0];
             let role = gamef.getRoom(userRoom).getRoleByID(voteID);
             chat.say(`${voteID} là ${role == -1 ? 'SÓI' : role == 1 ? 'TIÊN TRI, Bạn đùa tớ à :v' : 'DÂN'}`);
-            gamef.getRoom(userRoom).newLog(`${user.first_name} soi ${gamef.getRoom(userRoom).playersTxt[voteID]} là ${role == -1 ? 'SÓI' : role == 1 ? 'TỰ SOI MÌNH! GG' : 'DÂN'}`);
+            gamef.getRoom(userRoom).newLog(`${user.first_name} soi (${gamef.getRoom(userRoom).playersTxt[voteID]}) là ${role == -1 ? 'SÓI' : role == 1 ? 'TỰ SOI MÌNH! GG' : 'DÂN'}`);
             gamef.getRoom(userRoom).roleDoneBy(joinID);
             // kiểm tra đã VOTE xong chưa?
             roleDoneCheck(userRoom);
@@ -387,12 +387,12 @@ bot.on('message', (payload, chat) => {
             } else {  //VOTE YES?NO
               if (gamef.getRoom(userRoom).deathID != -1) {
                 if (chatTxt.match(/\/yes/g)) { //vote treo cổ
-                  gamef.getRoom(userRoom).saveOrKillVote(joinID, true);
+                  gamef.getRoom(userRoom).killOrSaveVote(joinID, true);
                   chat.say(`Bạn đã vote treo! (${gamef.getRoom(userRoom).saveOrKill})`);
                   roomChatAll(userRoom, joinID, `${user.first_name} đã vote treo! (${gamef.getRoom(userRoom).saveOrKill})`);
                   yesNoVoteCheck(userRoom);
                 } else { //vote tha
-                  gamef.getRoom(userRoom).saveOrKillVote(joinID, false);
+                  gamef.getRoom(userRoom).killOrSaveVote(joinID, false);
                   chat.say(`Bạn đã vote tha! (${gamef.getRoom(userRoom).saveOrKill})`);
                   roomChatAll(userRoom, joinID, `${user.first_name} đã vote tha! (${gamef.getRoom(userRoom).saveOrKill})`);
                   yesNoVoteCheck(userRoom);
