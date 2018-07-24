@@ -90,6 +90,16 @@ class Room {
     newPlayerID() {
         return this.players.length > 0 ? (this.players[this.players.length - 1].id + 1) : 0;
     }
+    setRole(role, num) {
+        let rand = 0, count = num;
+        while (count > 0) {
+            do {
+                rand = Math.floor((Math.random() * (this.players.length - 1)));
+            } while (this.players[rand].role != 0)
+            this.players[rand].role = role;
+            count--;
+        }
+    }
     setInGame() {
         this.ingame = true;
     }
@@ -292,16 +302,22 @@ class Game {
         }
     }
     roleRandom(roomID) {
-        console.log(`$ ROOM ${roomID+1} > RANDOM ROLE FOR ${this.room[roomID].players.length} PLAYERS`);
-        this.room[roomID].players[0].role = -1; // SÓI
-        this.room[roomID].players[1].role = 1; // TIÊN TRI
-        this.room[roomID].players[2].role = 2; // BẢO VỆ
-        if (this.room[roomID].players > 3) {
-            this.room[roomID].players[3].role = 0; // DÂN
+        console.log(`$ ROOM ${roomID + 1} > RANDOM ROLE FOR ${this.room[roomID].players.length} PLAYERS`);
+        let len = this.room[roomID].players.length;
+        if (len < 6) {
+            this.room[roomID].setRole(-1, 1);  // 1 SÓI
+        } else if (len < 10) {
+            this.room[roomID].setRole(-1, 2);  // 2 SÓI
+        } else if (len < 12) {
+            this.room[roomID].setRole(-1, 3);  // 3 SÓI
+            // this.room[roomID].setRole(3,1);  // 1 THỢ SĂN
+        } else if (len < 14) {
+            this.room[roomID].setRole(-1, 3);  // 3 SÓI
+            // this.room[roomID].setRole(3,1);  // 1 THỢ SĂN
+            // this.room[roomID].setRole(4,1);  // 1 CUPID - ghép đôi
         }
-        if (this.room[roomID].players > 4) {
-            this.room[roomID].players[4].role = -1; // SÓI
-        }
+        this.room[roomID].setRole(1, 1); // 1 TIÊN TRI
+        this.room[roomID].setRole(2, 1); // 1 BẢO VỆ
 
         this.room[roomID].players.forEach(p => {
             this.room[roomID].playersRole[p.joinID] = p.role;
