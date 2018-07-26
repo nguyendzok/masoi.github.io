@@ -213,8 +213,9 @@ bot.on('postback:JOIN_ROOM', (payload, chat) => {
         chat.say(`Phòng đã vào chơi rồi, vui lòng chọn phòng khác!`);
         return;
       } else {
-        // save room number for user
+        // save room number, username for joined-user
         gamef.setUserRoom(joinID, roomID);
+        gamef.setUserName(joinID, joinUser.first_name);
         // add new player to room
         gamef.getRoom(roomID).addPlayer(new Player({
           id: gamef.getRoom(roomID).newPlayerID(),
