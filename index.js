@@ -74,10 +74,10 @@ function yesNoVoteCheck(userRoom) {
     if (gamef.getRoom(userRoom).saveOrKill < 0) {
       gamef.getRoom(userRoom).kill();
       roomChatAll(userRoom, 0, `Đã treo cổ ${deathTxt}! Mọi người đi ngủ`);
-      gamef.getRoom(userRoom).newLog(`Mọi người đã treo cổ (${deathTxt})! với ${(gamef.getRoom(userRoom).aliveCount()+gamef.getRoom(userRoom).saveOrKill)/2} tha/${(gamef.getRoom(userRoom).aliveCount()+gamef.getRoom(userRoom).saveOrKill)/2} treo`);
+      gamef.getRoom(userRoom).newLog(`Mọi người đã treo cổ (${deathTxt})! với ${(gamef.getRoom(userRoom).aliveCount()+gamef.getRoom(userRoom).saveOrKill)/2} tha/${(gamef.getRoom(userRoom).aliveCount()-gamef.getRoom(userRoom).saveOrKill)/2} treo`);
     } else {
       roomChatAll(userRoom, 0, `Đã tha chết cho ${deathTxt}! Mọi người đi ngủ`);
-      gamef.getRoom(userRoom).newLog(`Mọi người tha chết cho (${deathTxt}) với ${(gamef.getRoom(userRoom).aliveCount()+gamef.getRoom(userRoom).saveOrKill)/2} tha/${(gamef.getRoom(userRoom).aliveCount()+gamef.getRoom(userRoom).saveOrKill)/2} treo`);
+      gamef.getRoom(userRoom).newLog(`Mọi người tha chết cho (${deathTxt}) với ${(gamef.getRoom(userRoom).aliveCount()+gamef.getRoom(userRoom).saveOrKill)/2} tha/${(gamef.getRoom(userRoom).aliveCount()-gamef.getRoom(userRoom).saveOrKill)/2} treo`);
     }
     gameIsNotEndCheck(userRoom, () => {
       const start2 = async () => {
