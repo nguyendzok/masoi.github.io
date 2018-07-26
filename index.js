@@ -242,7 +242,7 @@ bot.on('postback:JOIN_ROOM', (payload, chat) => {
   };
 
   chat.getUserProfile().then((user) => {
-    joinUser = user;
+    joinUser = gamef.getRoom(userRoom).getPlayer(joinID);
     chat.conversation((convo) => {
       askRoom(convo);
     });
@@ -261,6 +261,7 @@ bot.on('postback:READY_ROOM', (payload, chat) => {
       gamef.getRoom(userRoom).oneReady();
       // get UserName and sendGlobalMessage to ROOM
       chat.getUserProfile().then((user) => {
+        user = gamef.getRoom(userRoom).getPlayer(joinID);
         //let playerListView = gamef.getRoomPlayerView(userRoom);
         const start = async () => {
           await asyncForEach(gamef.getRoom(userRoom).players, async (m) => {
@@ -310,6 +311,7 @@ bot.on('postback:LEAVE_ROOM', (payload, chat) => {
     }
     chat.say(`Bạn đã rời phòng chơi ${userRoom + 1}!`);
     chat.getUserProfile().then((user) => {
+      user = gamef.getRoom(userRoom).getPlayer(joinID);
       roomChatAll(userRoom, joinID, `${user.first_name} đã rời phòng chơi ${userRoom + 1}!`);
     }).then(() => {
       gamef.setUserRoom(joinID, undefined);
@@ -334,6 +336,7 @@ bot.on('message', (payload, chat) => {
 
   if (gamef.getRoom(userRoom).alivePlayer[joinID]) { // nếu còn sống
     chat.getUserProfile().then((user) => {
+      user = gamef.getRoom(userRoom).getPlayer(joinID);
       if (gamef.getRoom(userRoom).isNight) { // ban đêm
         let userRole = gamef.getRoom(userRoom).getRole(joinID);
         if (userRole == -1) {// là SÓI
@@ -504,7 +507,7 @@ bot.on('postback:USER_RENAME', (payload, chat) => {
       } else {
         const chatTxt = payload.message.text;
         if (!chatTxt.match(/\/cancel/g)) {
-          user.setFirstName(joinID, chatTxt);
+          user.setFirstName(chatTxt);
           convo.say(`Đã đổi tên thành công!`);
           convo.end();
         } else {
