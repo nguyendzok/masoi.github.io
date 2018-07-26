@@ -252,6 +252,7 @@ bot.on('postback:JOIN_ROOM', (payload, chat) => {
 bot.on('postback:READY_ROOM', (payload, chat) => {
   const joinID = payload.sender.id;
   const userRoom = gamef.getUserRoom(joinID);
+  const userName = gamef.getUserName(joinID);
   if (userRoom != undefined) {
     console.log("$ ROOM " + (userRoom + 1) + " > READY > " + joinID);
     // set status READY
@@ -266,7 +267,7 @@ bot.on('postback:READY_ROOM', (payload, chat) => {
           await asyncForEach(gamef.getRoom(userRoom).players, async (m) => {
             if (m) {
               //await bot.sendGenericTemplate(m.joinID, playerListView).then(async () => {
-              await bot.say(m.joinID, `${user.first_name} đã sẵn sàng! (${gamef.getRoom(userRoom).readyCount}/${gamef.getRoom(userRoom).players.length})`)
+              await bot.say(m.joinID, `${userName} đã sẵn sàng! (${gamef.getRoom(userRoom).readyCount}/${gamef.getRoom(userRoom).players.length})`)
               //})
             }
           })
@@ -302,6 +303,7 @@ bot.on('postback:READY_ROOM', (payload, chat) => {
 bot.on('postback:LEAVE_ROOM', (payload, chat) => {
   let joinID = payload.sender.id;
   const userRoom = gamef.getUserRoom(joinID);
+  const userName = gamef.getUserName(joinID);
   if (userRoom != undefined) {
     if (!gamef.getRoom(userRoom).ingame) {
       gamef.getRoom(userRoom).deletePlayer(joinID);
@@ -310,7 +312,7 @@ bot.on('postback:LEAVE_ROOM', (payload, chat) => {
     }
     chat.say(`Bạn đã rời phòng chơi ${userRoom + 1}!`);
     chat.getUserProfile().then((user) => {
-      roomChatAll(userRoom, joinID, `${user.first_name} đã rời phòng chơi ${userRoom + 1}!`);
+      roomChatAll(userRoom, joinID, `${userName} đã rời phòng chơi ${userRoom + 1}!`);
     }).then(() => {
       gamef.setUserRoom(joinID, undefined);
     });
@@ -323,6 +325,7 @@ bot.on('message', (payload, chat) => {
   const joinID = payload.sender.id;
   const chatTxt = payload.message.text;
   const userRoom = gamef.getUserRoom(joinID);
+  const userName = gamef.getUserName(joinID);
 
   if (userRoom == undefined) {
     chat.say({
@@ -339,7 +342,7 @@ bot.on('message', (payload, chat) => {
         if (userRole == -1) {// là SÓI
           if (!chatTxt.match(/\/vote.[0-9]+/g)) {//chat
             if (gamef.getRoom(userRoom).chatON) {
-              roomWolfChatAll(userRoom, joinID, user.first_name + ': ' + chatTxt);
+              roomWolfChatAll(userRoom, joinID, userName + ': ' + chatTxt);
             }
           } else {// SÓI VOTE
             let voteID = chatTxt.match(/[0-9]+/g)[0];
@@ -348,7 +351,7 @@ bot.on('message', (payload, chat) => {
               if (gamef.getRoom(userRoom).vote(joinID, voteID)) {
                 let voteKill = gamef.getRoom(userRoom).playersTxt[voteID];
                 await chat.say(`Bạn đã vote cắn ${voteKill}`);
-                roomWolfChatAll(userRoom, joinID, user.first_name + ' đã vote cắn ' + voteKill);
+                roomWolfChatAll(userRoom, joinID, userName + ' đã vote cắn ' + voteKill);
               } else {
                 chat.say("Bạn không thể thực hiện vote 2 lần hoặc vote người chơi đã chết!");
               }
@@ -363,7 +366,7 @@ bot.on('message', (payload, chat) => {
               let voteID = chatTxt.match(/[0-9]+/g)[0];
               let role = gamef.getRoom(userRoom).getRoleByID(voteID);
               await chat.say(`${voteID} là ${role == -1 ? 'SÓI' : role == 1 ? 'TIÊN TRI, Bạn đùa tớ à :v' : 'DÂN'}`);
-              gamef.getRoom(userRoom).newLog(`${user.first_name} soi (${gamef.getRoom(userRoom).playersTxt[voteID]}) là ${role == -1 ? 'SÓI' : role == 1 ? 'TỰ SOI MÌNH! GG' : 'DÂN'}`);
+              gamef.getRoom(userRoom).newLog(`${userName} soi (${gamef.getRoom(userRoom).playersTxt[voteID]}) là ${role == -1 ? 'SÓI' : role == 1 ? 'TỰ SOI MÌNH! GG' : 'DÂN'}`);
               gamef.getRoom(userRoom).roleDoneBy(joinID);
               // kiểm tra đã VOTE xong chưa?
               roleDoneCheck(userRoom);
@@ -404,7 +407,7 @@ bot.on('message', (payload, chat) => {
           if (!chatTxt.match(/\/vote.[0-9]+/g)) {
             if (!chatTxt.match(/\/yes/g) && !chatTxt.match(/\/no/g)) {
               if (gamef.getRoom(userRoom).chatON || (gamef.getRoom(userRoom).deathID != -1 && gamef.getRoom(userRoom).deathID === gamef.getRoom(userRoom).getPlayer(joinID).id)) { //check xem còn bật chat không?
-                roomChatAll(userRoom, joinID, user.first_name + ': ' + chatTxt);
+                roomChatAll(userRoom, joinID, userName + ': ' + chatTxt);
               } else {
                 chat.say(`Đã hết thời gian thảo luận!`);
               }
@@ -413,12 +416,12 @@ bot.on('message', (payload, chat) => {
                 if (chatTxt.match(/\/yes/g)) { //vote treo cổ
                   gamef.getRoom(userRoom).killOrSaveVote(joinID, true);
                   chat.say(`Bạn đã vote treo! (${gamef.getRoom(userRoom).saveOrKill})`);
-                  roomChatAll(userRoom, joinID, `${user.first_name} đã vote treo! (${gamef.getRoom(userRoom).saveOrKill})`);
+                  roomChatAll(userRoom, joinID, `${userName} đã vote treo! (${gamef.getRoom(userRoom).saveOrKill})`);
                   yesNoVoteCheck(userRoom);
                 } else { //vote tha
                   gamef.getRoom(userRoom).killOrSaveVote(joinID, false);
                   chat.say(`Bạn đã vote tha! (${gamef.getRoom(userRoom).saveOrKill})`);
-                  roomChatAll(userRoom, joinID, `${user.first_name} đã vote tha! (${gamef.getRoom(userRoom).saveOrKill})`);
+                  roomChatAll(userRoom, joinID, `${userName} đã vote tha! (${gamef.getRoom(userRoom).saveOrKill})`);
                   yesNoVoteCheck(userRoom);
                 }
               }
@@ -430,7 +433,7 @@ bot.on('message', (payload, chat) => {
               if (gamef.getRoom(userRoom).vote(joinID, voteID)) {
                 let voteKill = gamef.getRoom(userRoom).playersTxt[voteID];
                 await chat.say(`Bạn đã vote treo cổ ${voteKill} (${gamef.getRoom(userRoom).voteList[voteID]} phiếu)`);
-                await roomChatAll(userRoom, joinID, `${user.first_name} đã vote treo cổ ${voteKill} (${gamef.getRoom(userRoom).voteList[voteID]} phiếu)`);
+                await roomChatAll(userRoom, joinID, `${userName} đã vote treo cổ ${voteKill} (${gamef.getRoom(userRoom).voteList[voteID]} phiếu)`);
               } else {
                 chat.say(`Bạn không thể vote 2 lần hoặc vote người chơi đã chết!`);
               }
@@ -475,27 +478,27 @@ bot.on('message', (payload, chat) => {
   } else {
     chat.say(`Bạn đã chết! Xin giữ im lặng`)
   }
-  console.log(`$ ROOM ${userRoom + 1} CHAT > ${joinID}: ${chatTxt}`);
+  console.log(`$ ROOM ${userRoom + 1} CHAT > ${userName}: ${chatTxt}`);
 });
 // listen VIEW_PLAYER_IN_ROOM message
 bot.on('postback:VIEW_PLAYER_IN_ROOM', (payload, chat) => {
   let joinID = payload.sender.id;
   let userRoom = gamef.getUserRoom(joinID);
-  let playersInRoomTxt = gamef.getRoom(userRoom).playersTxt.join(' ; ');
-  chat.say(`Danh sách người chơi trong phòng ${userRoom + 1}: \n${playersInRoomTxt}`);
+  if (gamef.getRoom(userRoom).ingame) {
+    let playersInRoomTxt = gamef.getRoom(userRoom).playersTxt.join(' ; ');
+    chat.say(`Danh sách dân và sói làng ${userRoom + 1}: \n${playersInRoomTxt}`);
+  } else {
+    chat.say(`Trò chơi chưa bắt đầu!`);
+  }
+
 });
 // listen USER_RENAME message
 bot.on('postback:USER_RENAME', (payload, chat) => {
   let joinID = payload.sender.id;
-  let userRoom = gamef.getUserRoom(joinID);
-  if (userRoom==undefined){
-    chat.say(`Xin lỗi đã làm phiền!\n Bạn hãy tham gia một phòng trước khi đổi tên!\nTên mới chỉ hiệu lực trong phòng bạn tham gia!`);
-    return;
-  }
-  let user = gamef.getRoom(userRoom).getPlayer(joinID);
+  let userName = gamef.getUserName(joinID);
 
   const askName = (convo) => {
-    convo.ask(`Tên hiện tại của bạn: ${user.first_name}\nĐể hủy đổi tên: /cancel\nNhập tên bạn muốn đổi thành:`, (payload, convo) => {
+    convo.ask(`Tên hiện tại của bạn: ${userName}\nĐể hủy đổi tên: /cancel\nNhập tên bạn muốn đổi thành:`, (payload, convo) => {
       if (!payload.message) {
         convo.say(`Vui lòng nhập tên hợp lệ!`);
         convo.end();
@@ -503,7 +506,7 @@ bot.on('postback:USER_RENAME', (payload, chat) => {
       } else {
         const chatTxt = payload.message.text;
         if (!chatTxt.match(/\/cancel/g)) {
-          user.setFirstName(chatTxt);
+          gamef.setUserName(joinID, chatTxt);
           convo.say(`Đã đổi tên thành công!`);
           convo.end();
         } else {

@@ -12,9 +12,6 @@ class Player {
     getReady() {
         this.ready = true;
     }
-    setFirstName(newFistName){
-        this.first_name = newFistName;
-    }
 }
 class Room {
     constructor(id) {
@@ -251,6 +248,7 @@ class Game {
     constructor() {
         this.room = [];
         this.userRoom = [];
+        this.userName = [];
         this.roleTxt = [];
         this.MIN_PLAYER = 3;
         this.resetAllRoom();
@@ -268,6 +266,12 @@ class Game {
     }
     setUserRoom(joinID, roomID) {
         this.userRoom[joinID] = roomID;
+    }
+    getUserName(joinID) {
+        return this.userName[joinID];
+    }
+    setUserName(joinID, name) {
+        this.userName[joinID] = name;
     }
     resetAllRoom() {
         this.room = [];
