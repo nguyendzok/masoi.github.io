@@ -297,7 +297,7 @@ class Game {
         // create message
         this.room[roomID].players.forEach(m => {
             playerListView.unshift({
-                title: "Người chơi " + m.id+1 + ": " + m.last_name + " " + m.first_name,
+                title: "Người chơi " + (m.id+1) + ": " + m.last_name + " " + m.first_name,
                 image_url: m.avatar,
                 subtitle: 'ID người chơi: '+m.id +'\n' +m.ready ? 'Đã sẵn sàng' : 'Chưa sẵn sàng',
                 // buttons: [
@@ -325,10 +325,10 @@ class Game {
         console.log(`$ ROOM ${roomID + 1} > RANDOM ROLE FOR ${this.room[roomID].players.length} PLAYERS`);
         let len = this.room[roomID].players.length;
         let roleListTxt = "Đang tạo game với: 1 TIÊN TRI, 1 BẢO VỆ";
-        this.room[roomID].setRole(1, 1); // 1 TIÊN TRI
+        // this.room[roomID].setRole(1, 1); // 1 TIÊN TRI
         this.room[roomID].setRole(2, 1); // 1 BẢO VỆ
         if (len < 6) {
-            // this.room[roomID].setRole(-1, 1);  // 1 SÓI
+            this.room[roomID].setRole(-1, 1);  // 1 SÓI
             this.room[roomID].setRole(3, 1);  // 1 THỢ SĂN
             roleListTxt += ", 1 SÓI, " + (len - 3) + " DÂN";
         } else if (len < 10) {
