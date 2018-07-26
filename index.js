@@ -44,7 +44,7 @@ async function roomRoleChat(roomID) {
         let villagersList = gamef.getRoom(roomID).villagersTxt.join(' ; ');
         let playersList = gamef.getRoom(roomID).playersTxt.join(' ; ');
         if (m.role == -1) {//SÓI
-          bot.say(m.joinID, `Sói ơi dậy đi! Đêm nay sói muốn cắn ai?\n/vote <id> để cắn 1 ai đó\n/vote -1 để ăn chay!\nID TEAM SÓI:\n${wolfList}\nID TEAM DÂN:\n${villagersList}`);
+          bot.say(m.joinID, `Sói ơi dậy đi! Đêm nay sói muốn cắn ai?\n/vote <id> để cắn 1 ai đó\nID TEAM SÓI:\n${wolfList}\nID TEAM DÂN:\n${villagersList}`);
         } else if (m.role == 1) { // tiên tri
           bot.say(m.joinID, `Tiên tri dậy đi! Tiên tri muốn kiểm tra ai?\n/see <id> để kiểm tra\n${playersList}`);
         } else if (m.role == 2) { // Bảo vệ
@@ -74,10 +74,10 @@ function yesNoVoteCheck(userRoom) {
     if (gamef.getRoom(userRoom).saveOrKill < 0) {
       gamef.getRoom(userRoom).kill();
       roomChatAll(userRoom, 0, `Đã treo cổ ${deathTxt}! Mọi người đi ngủ`);
-      gamef.getRoom(userRoom).newLog(`Mọi người đã treo cổ (${deathTxt})! với ${(gamef.getRoom(userRoom).aliveCount()+gamef.getRoom(userRoom).saveOrKill)/2} tha/${(gamef.getRoom(userRoom).aliveCount()-gamef.getRoom(userRoom).saveOrKill)/2} treo`);
+      gamef.getRoom(userRoom).newLog(`Mọi người đã treo cổ (${deathTxt})! với ${(gamef.getRoom(userRoom).aliveCount()+gamef.getRoom(userRoom).saveOrKill+1)/2} tha/${(gamef.getRoom(userRoom).aliveCount()-gamef.getRoom(userRoom).saveOrKill+1)/2} treo`);
     } else {
       roomChatAll(userRoom, 0, `Đã tha chết cho ${deathTxt}! Mọi người đi ngủ`);
-      gamef.getRoom(userRoom).newLog(`Mọi người tha chết cho (${deathTxt}) với ${(gamef.getRoom(userRoom).aliveCount()+gamef.getRoom(userRoom).saveOrKill)/2} tha/${(gamef.getRoom(userRoom).aliveCount()-gamef.getRoom(userRoom).saveOrKill)/2} treo`);
+      gamef.getRoom(userRoom).newLog(`Mọi người tha chết cho (${deathTxt}) với ${(gamef.getRoom(userRoom).aliveCount()+gamef.getRoom(userRoom).saveOrKill+1)/2} tha/${(gamef.getRoom(userRoom).aliveCount()-gamef.getRoom(userRoom).saveOrKill+1)/2} treo`);
     }
     gameIsNotEndCheck(userRoom, () => {
       const start2 = async () => {
@@ -113,7 +113,7 @@ function roleDoneCheck(userRoom) {
         console.log(`$ ROOM ${userRoom + 1} > ${deathTxt} DIED!`);
       } else {
         console.log(`$ ROOM ${userRoom + 1} > NOBODY DIED!`);
-        gamef.getRoom(userRoom).newLog(`${deathID != -1 ? `Người bị cắn: (${deathTxt}) là ${gamef.roleTxt[gamef.getRoom(userRoom).getRoleByID(deathID)]}\n` : ``} Và đêm hôm đấy không ai chết cả!`);
+        gamef.getRoom(userRoom).newLog(`${deathID != -1 ? `Người bị cắn: (${deathTxt}) là ${gamef.roleTxt[gamef.getRoom(userRoom).getRoleByID(deathID)]}\n` : ``}Và đêm hôm đấy không ai chết cả!`);
         roomChatAll(userRoom, 0, `Đêm hôm qua không ai chết cả!`);
       }
       gameIsNotEndCheck(userRoom, () => {
@@ -193,7 +193,6 @@ bot.setPersistentMenu(actionButtons, false);
 // listen JOIN ROOM
 bot.on('postback:JOIN_ROOM', (payload, chat) => {
   let joinID = payload.sender.id;
-  console.log('$ JOIN > ' + joinID);
   let userRoom = gamef.getUserRoom(joinID);
   if (userRoom != undefined) {
     chat.say(`Bạn đã tham gia phòng ${(userRoom + 1)} rồi! Để rời phòng chơi, chọn menu Tham gia > Rời phòng chơi! `);
@@ -248,6 +247,7 @@ bot.on('postback:JOIN_ROOM', (payload, chat) => {
   };
 
   chat.getUserProfile().then((user) => {
+    console.log(`$ JOIN > ${joinID} : ${user.last_name+' '+user.first_name}`);
     joinUser = user;
     chat.conversation((convo) => {
       askRoom(convo);
@@ -339,12 +339,12 @@ bot.on('message', (payload, chat) => {
     if (gamef.getRoom(userRoom).isNight) { // ban đêm
       let userRole = gamef.getRoom(userRoom).getRole(joinID);
       if (userRole == -1) {// là SÓI
-        if (!chatTxt.match(/\/vote.[0-9]+/g)) {//chat
+        if (!chatTxt.match(/\/vote.-?[0-9]+/g)) {//chat
           if (gamef.getRoom(userRoom).chatON) {
             roomWolfChatAll(userRoom, joinID, user.first_name + ': ' + chatTxt);
           }
         } else {// SÓI VOTE
-          let voteID = chatTxt.match(/[0-9]+/g)[0];
+          let voteID = chatTxt.match(/-?[0-9]+/g)[0];
           const start = async () => {
             //vote
             if (gamef.getRoom(userRoom).vote(joinID, voteID)) {
@@ -369,8 +369,8 @@ bot.on('message', (payload, chat) => {
           const startTT = async () => {
             let voteID = chatTxt.match(/[0-9]+/g)[0];
             let role = gamef.getRoom(userRoom).getRoleByID(voteID);
-            await chat.say(`${voteID} là ${role == -1 ? 'SÓI' : role == 1 ? 'TIÊN TRI, Bạn đùa tớ à :v' : 'DÂN'}`);
-            gamef.getRoom(userRoom).newLog(`${user.first_name} soi (${gamef.getRoom(userRoom).playersTxt[voteID]}) là ${role == -1 ? 'SÓI' : role == 1 ? 'TỰ SOI MÌNH! GG' : 'DÂN'}`);
+            await chat.say(`${voteID} là ${role == -1 ? 'SÓI' : role == 1 ? 'TIÊN TRI, Bạn đùa tớ à :v' : 'PHE DÂN'}`);
+            gamef.getRoom(userRoom).newLog(`${user.first_name} soi (${gamef.getRoom(userRoom).playersTxt[voteID]}) là ${role == -1 ? 'SÓI' : role == 1 ? 'TỰ SOI MÌNH! GG' : 'PHE DÂN'}`);
             gamef.getRoom(userRoom).roleDoneBy(joinID);
             // kiểm tra đã VOTE xong chưa?
             roleDoneCheck(userRoom);
@@ -408,7 +408,7 @@ bot.on('message', (payload, chat) => {
       }
     } else {
       if (!gamef.getRoom(userRoom).isNight) {// ban NGÀY, mọi người thảo luận
-        if (!chatTxt.match(/\/vote.[0-9]+/g)) {
+        if (!chatTxt.match(/\/vote.-?[0-9]+/g)) {
           if (!chatTxt.match(/\/yes/g) && !chatTxt.match(/\/no/g)) {
             if (gamef.getRoom(userRoom).chatON || (gamef.getRoom(userRoom).deathID != -1 && gamef.getRoom(userRoom).deathID === gamef.getRoom(userRoom).getPlayer(joinID).id)) { //check xem còn bật chat không?
               roomChatAll(userRoom, joinID, user.first_name + ': ' + chatTxt);
@@ -432,7 +432,7 @@ bot.on('message', (payload, chat) => {
           }
         } else {
           // VOTE TREO CỔ
-          let voteID = chatTxt.match(/[0-9]+/g)[0];
+          let voteID = chatTxt.match(/-?[0-9]+/g)[0];
           const start = async () => {
             if (gamef.getRoom(userRoom).vote(joinID, voteID)) {
               if (voteID == -1) {
