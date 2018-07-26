@@ -497,9 +497,13 @@ bot.on('postback:USER_RENAME', (payload, chat) => {
       } else {
         const chatTxt = payload.message.text;
         if (!chatTxt.match(/\/cancel/g)) {
-          user.setFirstName(chatTxt);
-          convo.say(`Đã đổi tên thành công!`);
-          convo.end();
+          const startR = async () => {
+            await convo.say(`Đã đổi tên thành công!`);
+            await roomChatAll(userRoom, joinID, `${user.first_name} đã đổi tên thành ${chatTxt}!`)
+            user.setFirstName(chatTxt);
+            convo.end();
+          }
+          startR();
         } else {
           convo.say(`Bạn đã hủy không đổi tên!`)
           convo.end();
@@ -525,7 +529,7 @@ bot.on('postback:RESET_ROOM', (payload, chat) => {
 // listen HELP button
 bot.on('postback:HELP', (payload, chat) => {
   chat.getUserProfile().then((user) => {
-    chat.say(`Xin chào ${user.last_name+' '+user.first_name}! \n` +
+    chat.say(`Xin chào ${user.last_name + ' ' + user.first_name}! \n` +
       `Để bắt đầu, bạn hãy mở MENU (nút 3 dấu gạch ngang) bên dưới.\n` +
       `Chọn menu: Tham gia... > Tham gia phòng chơi\n` +
       `Chọn một phòng chơi từ danh sách để tham gia một phòng!\n` +
@@ -540,7 +544,7 @@ bot.on('postback:HELP', (payload, chat) => {
 // listen to HELP
 bot.hear(['help', 'menu', 'hướng dẫn', 'trợ giúp'], (payload, chat) => {
   chat.getUserProfile().then((user) => {
-    chat.say(`Xin chào ${user.last_name+' '+user.first_name}! \n` +
+    chat.say(`Xin chào ${user.last_name + ' ' + user.first_name}! \n` +
       `Để bắt đầu, bạn hãy mở MENU (nút 3 dấu gạch ngang) bên dưới.\n` +
       `Chọn menu: Tham gia... > Tham gia phòng chơi\n` +
       `Chọn một phòng chơi từ danh sách để tham gia một phòng!\n` +
