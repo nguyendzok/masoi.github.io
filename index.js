@@ -485,7 +485,7 @@ bot.on('postback:VIEW_PLAYER_IN_ROOM', (payload, chat) => {
   chat.say(`Danh sách người chơi trong phòng ${userRoom + 1}: \n${playersInRoomTxt}`);
 });
 // listen USER_RENAME message
-bot.on('postback:VIEW_PLAYER_IN_ROOM', (payload, chat) => {
+bot.on('postback:USER_RENAME', (payload, chat) => {
   let joinID = payload.sender.id;
   let userRoom = gamef.getUserRoom(joinID);
   let user = gamef.getRoom(userRoom).getPlayer(joinID);
