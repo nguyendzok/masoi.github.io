@@ -299,7 +299,7 @@ class Game {
             playerListView.unshift({
                 title: "Người chơi " + (m.id+1) + ": " + m.last_name + " " + m.first_name,
                 image_url: m.avatar,
-                subtitle: 'ID người chơi: '+m.id +'\n' +m.ready ? 'Đã sẵn sàng' : 'Chưa sẵn sàng',
+                subtitle: `ID người chơi: ${m.id}\n${m.ready ? 'Đã sẵn sàng' : 'Chưa sẵn sàng'}`,
                 // buttons: [
                 //   { type: 'postback', title: m.ready ? 'Đã sẵn sàng' : 'Chưa sẵn sàng', payload: 'button' }
                 // ]
