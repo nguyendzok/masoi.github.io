@@ -12,6 +12,9 @@ class Player {
     getReady() {
         this.ready = true;
     }
+    setFirstName(newFistName){
+        this.first_name = newFistName;
+    }
 }
 class Room {
     constructor(id) {
@@ -325,11 +328,10 @@ class Game {
         console.log(`$ ROOM ${roomID + 1} > RANDOM ROLE FOR ${this.room[roomID].players.length} PLAYERS`);
         let len = this.room[roomID].players.length;
         let roleListTxt = "Đang tạo game với: 1 TIÊN TRI, 1 BẢO VỆ";
-        // this.room[roomID].setRole(1, 1); // 1 TIÊN TRI
+        this.room[roomID].setRole(1, 1); // 1 TIÊN TRI
         this.room[roomID].setRole(2, 1); // 1 BẢO VỆ
-        if (len < 6) {
+        if (len <= 6) {
             this.room[roomID].setRole(-1, 1);  // 1 SÓI
-            this.room[roomID].setRole(3, 1);  // 1 THỢ SĂN
             roleListTxt += ", 1 SÓI, " + (len - 3) + " DÂN";
         } else if (len < 10) {
             this.room[roomID].setRole(-1, 2);  // 2 SÓI
@@ -345,7 +347,7 @@ class Game {
             // this.room[roomID].setRole(3,1);  // 1 THỢ SĂN
             // this.room[roomID].setRole(4,1);  // 1 CUPID - ghép đôi
         }
-
+        this.room[roomID].playersTxt = [];
         this.room[roomID].players.forEach(p => {
             this.room[roomID].playersRole[p.joinID] = p.role;
             this.room[roomID].playersTxt.push(p.id + ': ' + p.first_name); .0
