@@ -44,7 +44,7 @@ async function roomRoleChat(roomID) {
         let villagersList = gamef.getRoom(roomID).villagersTxt.join(' ; ');
         let playersList = gamef.getRoom(roomID).playersTxt.join(' ; ');
         if (m.role == -1) {//SÓI
-          bot.say(m.joinID, `Sói ơi dậy đi! Đêm nay sói muốn cắn ai?\n/vote <id> để cắn 1 ai đó\nID TEAM SÓI:\n${wolfList}\nID TEAM DÂN:\n${villagersList}`);
+          bot.say(m.joinID, `Sói ơi dậy đi! Đêm nay sói muốn cắn ai?\n/vote <id> để cắn 1 ai đó\n/vote -1 để ăn chay!\nID TEAM SÓI:\n${wolfList}\nID TEAM DÂN:\n${villagersList}`);
         } else if (m.role == 1) { // tiên tri
           bot.say(m.joinID, `Tiên tri dậy đi! Tiên tri muốn kiểm tra ai?\n/see <id> để kiểm tra\n${playersList}`);
         } else if (m.role == 2) { // Bảo vệ
@@ -74,10 +74,10 @@ function yesNoVoteCheck(userRoom) {
     if (gamef.getRoom(userRoom).saveOrKill < 0) {
       gamef.getRoom(userRoom).kill();
       roomChatAll(userRoom, 0, `Đã treo cổ ${deathTxt}! Mọi người đi ngủ`);
-      gamef.getRoom(userRoom).newLog(`Mọi người đã treo cổ (${deathTxt})!`);
+      gamef.getRoom(userRoom).newLog(`Mọi người đã treo cổ (${deathTxt})! với ${(gamef.getRoom(userRoom).aliveCount()+gamef.getRoom(userRoom).saveOrKill)/2} tha/${(gamef.getRoom(userRoom).aliveCount()+gamef.getRoom(userRoom).saveOrKill)/2} treo`);
     } else {
       roomChatAll(userRoom, 0, `Đã tha chết cho ${deathTxt}! Mọi người đi ngủ`);
-      gamef.getRoom(userRoom).newLog(`Mọi người tha chết cho (${deathTxt})!`);
+      gamef.getRoom(userRoom).newLog(`Mọi người tha chết cho (${deathTxt}) với ${(gamef.getRoom(userRoom).aliveCount()+gamef.getRoom(userRoom).saveOrKill)/2} tha/${(gamef.getRoom(userRoom).aliveCount()+gamef.getRoom(userRoom).saveOrKill)/2} treo`);
     }
     gameIsNotEndCheck(userRoom, () => {
       const start2 = async () => {
@@ -348,9 +348,14 @@ bot.on('message', (payload, chat) => {
           const start = async () => {
             //vote
             if (gamef.getRoom(userRoom).vote(joinID, voteID)) {
-              let voteKill = gamef.getRoom(userRoom).playersTxt[voteID];
-              await chat.say(`Bạn đã vote cắn ${voteKill}`);
-              roomWolfChatAll(userRoom, joinID, user.first_name + ' đã vote cắn ' + voteKill);
+              if (voteID === -1) { //ăn chay (phiếu trống)
+                await chat.say(`Bạn đã vote ăn chay!`);
+                roomWolfChatAll(userRoom, joinID, user.first_name + ' đã vote ăn chay!');
+              } else {
+                let voteKill = gamef.getRoom(userRoom).playersTxt[voteID];
+                await chat.say(`Bạn đã vote cắn ${voteKill}`);
+                roomWolfChatAll(userRoom, joinID, user.first_name + ' đã vote cắn ' + voteKill);
+              }
             } else {
               chat.say("Bạn không thể thực hiện vote 2 lần hoặc vote người chơi đã chết!");
             }
@@ -430,9 +435,14 @@ bot.on('message', (payload, chat) => {
           let voteID = chatTxt.match(/[0-9]+/g)[0];
           const start = async () => {
             if (gamef.getRoom(userRoom).vote(joinID, voteID)) {
-              let voteKill = gamef.getRoom(userRoom).playersTxt[voteID];
-              await chat.say(`Bạn đã vote treo cổ ${voteKill} (${gamef.getRoom(userRoom).voteList[voteID]} phiếu)`);
-              await roomChatAll(userRoom, joinID, `${user.first_name} đã vote treo cổ ${voteKill} (${gamef.getRoom(userRoom).voteList[voteID]} phiếu)`);
+              if (voteID == -1) {
+                await chat.say(`Bạn đã từ chối bỏ phiếu!`);
+                await roomChatAll(userRoom, joinID, `${user.first_name} đã từ chối bỏ phiếu (${gamef.getRoom(userRoom).voteList[voteID]} phiếu)`);
+              } else {
+                let voteKill = gamef.getRoom(userRoom).playersTxt[voteID];
+                await chat.say(`Bạn đã vote treo cổ ${voteKill} (${gamef.getRoom(userRoom).voteList[voteID]} phiếu)`);
+                await roomChatAll(userRoom, joinID, `${user.first_name} đã vote treo cổ ${voteKill} (${gamef.getRoom(userRoom).voteList[voteID]} phiếu)`);
+              }
             } else {
               chat.say(`Bạn không thể vote 2 lần hoặc vote người chơi đã chết!`);
             }

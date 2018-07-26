@@ -234,6 +234,10 @@ class Room {
         this.chatON = true;
     }
     vote(joinID, voteID) {
+        if (voteID == -1){
+            this.roleDoneBy(joinID);
+            return true;
+        }
         if (!this.roleDone[joinID] && this.players[voteID] && this.alivePlayer[this.players[voteID].joinID]) {
             if (this.voteList[voteID]) {
                 this.voteList[voteID]++;
@@ -248,6 +252,9 @@ class Room {
     }
     chatOFF() {
         this.chatON = false;
+    }
+    aliveCount(){
+        return this.villagersCount+this.wolfsCount;
     }
 }
 
