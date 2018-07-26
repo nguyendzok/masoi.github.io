@@ -44,7 +44,7 @@ async function roomRoleChat(roomID) {
         let villagersList = gamef.getRoom(roomID).villagersTxt.join(' ; ');
         let playersList = gamef.getRoom(roomID).playersTxt.join(' ; ');
         if (m.role == -1) {//SÓI
-          bot.say(m.joinID, `Sói ơi dậy đi! Đêm nay sói muốn cắn ai?\n/vote <id> để cắn 1 ai đó\nID team SÓI:\n ${wolfList}\n'ID team DÂN:\n ${villagersList}`);
+          bot.say(m.joinID, `Sói ơi dậy đi! Đêm nay sói muốn cắn ai?\n/vote <id> để cắn 1 ai đó\nID TEAM SÓI:\n${wolfList}\nID TEAM DÂN:\n${villagersList}`);
         } else if (m.role == 1) { // tiên tri
           bot.say(m.joinID, `Tiên tri dậy đi! Tiên tri muốn kiểm tra ai?\n/see <id> để kiểm tra\n${playersList}`);
         } else if (m.role == 2) { // Bảo vệ
@@ -488,11 +488,15 @@ bot.on('postback:VIEW_PLAYER_IN_ROOM', (payload, chat) => {
 bot.on('postback:USER_RENAME', (payload, chat) => {
   let joinID = payload.sender.id;
   let userRoom = gamef.getUserRoom(joinID);
+  if (userRoom==undefined){
+    chat.say(`Xin lỗi đã làm phiền!\n Bạn hãy tham gia một phòng trước khi đổi tên!\nTên mới chỉ hiệu lực trong phòng bạn tham gia!`);
+    return;
+  }
   let user = gamef.getRoom(userRoom).getPlayer(joinID);
 
   const askName = (convo) => {
-    convo.ask(`Tên hiện tại của bạn là: ${user.first_name}\n Để hủy đổi tên, chat: /cancelNhập tên bạn muốn đổi thành:`, (payload, convo) => {
-      if (!(payload.message) || isNaN(parseInt(payload.message.text))) {
+    convo.ask(`Tên hiện tại của bạn: ${user.first_name}\nĐể hủy đổi tên: /cancel\nNhập tên bạn muốn đổi thành:`, (payload, convo) => {
+      if (!payload.message) {
         convo.say(`Vui lòng nhập tên hợp lệ!`);
         convo.end();
         return;
@@ -501,10 +505,10 @@ bot.on('postback:USER_RENAME', (payload, chat) => {
         if (!chatTxt.match(/\/cancel/g)) {
           user.setFirstName(chatTxt);
           convo.say(`Đã đổi tên thành công!`);
+          convo.end();
         } else {
           convo.say(`Bạn đã hủy không đổi tên!`)
           convo.end();
-          return;
         }
       }
     });
