@@ -44,13 +44,13 @@ async function roomRoleChat(roomID) {
         let villagersList = gamef.getRoom(roomID).villagersTxt.join(' ; ');
         let playersList = gamef.getRoom(roomID).playersTxt.join(' ; ');
         if (m.role == -1) {//SÓI
-          bot.say(m.joinID, ['Sói ơi dậy đi! Đêm nay sói muốn cắn ai?', '/vote <id> để cắn 1 ai đó', 'ID SÓI: ' + wolfList, 'ID DÂN: ' + villagersList]);
+          bot.say(m.joinID, `Sói ơi dậy đi! Đêm nay sói muốn cắn ai?\n/vote <id> để cắn 1 ai đó\nID team SÓI:\n ${wolfList}\n'ID team DÂN:\n ${villagersList}`);
         } else if (m.role == 1) { // tiên tri
-          bot.say(m.joinID, ['Tiên tri dậy đi! Tiên tri muốn kiểm tra ai?', '/see <id> để kiểm tra', playersList]);
+          bot.say(m.joinID, `Tiên tri dậy đi! Tiên tri muốn kiểm tra ai?\n/see <id> để kiểm tra\n${playersList}`);
         } else if (m.role == 2) { // Bảo vệ
-          bot.say(m.joinID, ['Bảo vệ dậy đi! Đêm nay bạn muốn bảo vệ ai?', '/save <id> để bảo vệ', playersList]);
+          bot.say(m.joinID, `Bảo vệ dậy đi! Đêm nay bạn muốn bảo vệ ai?\n/save <id> để bảo vệ\n${playersList}`);
         } else if (m.role == 3) { // Thợ săn
-          bot.say(m.joinID, ['Thợ săn dậy đi! Đêm nay bạn muốn bắn ai?', '/fire <id> để ngắm bắn', playersList]);
+          bot.say(m.joinID, `Thợ săn dậy đi! Đêm nay bạn muốn bắn ai?\n/fire <id> để ngắm bắn\n${playersList}`);
         } else {
           bot.say(m.joinID, "Bạn là DÂN! Ngủ tiếp đi :))");
           gamef.getRoom(roomID).roleDoneBy(m.joinID);
@@ -58,7 +58,7 @@ async function roomRoleChat(roomID) {
       }
       start();
     } else {
-      bot.say(m.joinID, "Bạn đã chết :))");
+      bot.say(m.joinID, "Bạn đã chết =))");
       gamef.getRoom(roomID).roleDoneBy(m.joinID);
     }
   })
@@ -112,18 +112,17 @@ function roleDoneCheck(userRoom) {
         console.log(`$ ROOM ${userRoom + 1} > ${deathTxt} DIED!`);
       } else {
         console.log(`$ ROOM ${userRoom + 1} > NOBODY DIED!`);
-        gamef.getRoom(userRoom).newLog(`${deathID != -1 ? `Người bị cắn: (${deathTxt}) là ${gamef.roleTxt[gamef.getRoom(userRoom).getRoleByID(deathID)]}` : ''} Và không ai chết!`);
+        gamef.getRoom(userRoom).newLog(`${deathID != -1 ? `Người bị cắn: (${deathTxt}) là ${gamef.roleTxt[gamef.getRoom(userRoom).getRoleByID(deathID)]}\n Và đêm hôm đấy không ai chết cả!`);
         roomChatAll(userRoom, 0, `Đêm hôm qua không ai chết cả!`);
       }
       gameIsNotEndCheck(userRoom, () => {
         let playersInRoomTxt = gamef.getRoom(userRoom).playersTxt.join(' ; ');
-        roomChatAll(userRoom, 0, [`Mọi người có 6 phút thảo luận!`, `/vote <id> để treo cổ 1 người`, playersInRoomTxt]);
+        roomChatAll(userRoom, 0, `Mọi người có 6 phút thảo luận!`);
         gamef.getRoom(userRoom).dayNightSwitch();
 
-        let playersList = gamef.getRoom(userRoom).playersTxt.join(' ; ');
         let time = new Date(Date.now() + 6 * 60 * 1000);
         gamef.getRoom(userRoom).addSchedule(time, () => {
-          roomChatAll(userRoom, 0, [`Đã hết thời gian, mọi người vote một người để treo cổ!`, playersList]);
+          roomChatAll(userRoom, 0, `Đã hết thời gian, mọi người vote một người để treo cổ!\n/vote <id> để treo cổ 1 người\n${playersInRoomTxt}`);
           gamef.getRoom(userRoom).chatOFF();
           console.log(`$ ROOM ${userRoom + 1} > END OF DISCUSSION!`);
         });
@@ -138,7 +137,7 @@ function gameIsNotEndCheck(userRoom, callback) {
         callback();
       } else {
         console.log(`$ ROOM ${userRoom + 1} > END GAME > ${winner === -1 ? 'SÓI' : 'DÂN'} thắng!`);
-        await roomChatAll(userRoom, 0, [`Trò chơi đã kết thúc...`, `${winner === -1 ? 'SÓI' : 'DÂN'} thắng!`, `Bạn có thể sẵn sàng để bắt đầu chơi lại, hoặc tiếp tục trò chuyện với các người chơi khác trong phòng!`]);
+        await roomChatAll(userRoom, 0, [`Trò chơi đã kết thúc...\n${winner === -1 ? 'SÓI' : 'DÂN'} thắng!`, `Bạn có thể sẵn sàng để bắt đầu chơi lại, hoặc tiếp tục trò chuyện với các người chơi khác trong phòng!`]);
         await roomChatAll(userRoom, 0, gamef.getRoom(userRoom).logs);
         gamef.getRoom(userRoom).resetRoom();
       }
@@ -444,11 +443,11 @@ bot.on('message', (payload, chat) => {
                     if (deathID != -1) { // mời 1 người lên giá treo cổ
                       gamef.getRoom(userRoom).resetRoleDone();
                       let deathTxt = gamef.getRoom(userRoom).playersTxt[deathID];
-                      await roomChatAll(userRoom, 0, [`Mời ${deathTxt} lên giá treo cổ !!!`, `Bạn có 45 giây để trăn trối, 45s bắt đầu!`]);
+                      await roomChatAll(userRoom, 0, `Mời ${deathTxt} lên giá treo cổ !!!\nBạn có 45 giây để trăn trối, 45s bắt đầu!`);
                       // 45 giây
                       let time = new Date(Date.now() + 45 * 1000);
                       gamef.getRoom(userRoom).addSchedule(time, () => {
-                        roomChatAll(userRoom, 0, [`Đã hết thời gian, mọi người vote nào!`, `TREO CỔ hay CỨU?`, `/yes hoặc /no`]);
+                        roomChatAll(userRoom, 0, `Đã hết thời gian, mọi người vote nào!\nTREO CỔ hay CỨU?\n/yes hoặc /no`);
                         console.log(`$ ROOM ${userRoom + 1} > END OF TRĂN TRỐI :))`);
                       });
                     } else {
@@ -482,7 +481,7 @@ bot.on('postback:VIEW_PLAYER_IN_ROOM', (payload, chat) => {
   let joinID = payload.sender.id;
   let userRoom = gamef.getUserRoom(joinID);
   let playersInRoomTxt = gamef.getRoom(userRoom).playersTxt.join(' ; ');
-  chat.say([`Danh sách người chơi trong phòng ${userRoom + 1}: `, playersInRoomTxt]);
+  chat.say(`Danh sách người chơi trong phòng ${userRoom + 1}: \n${playersInRoomTxt}`);
 });
 // listen RESET ROOM message
 bot.on('postback:RESET_ROOM', (payload, chat) => {
@@ -498,31 +497,31 @@ bot.on('postback:RESET_ROOM', (payload, chat) => {
 // listen HELP button
 bot.on('postback:HELP', (payload, chat) => {
   chat.getUserProfile().then((user) => {
-    chat.say([`Xin chào ${user.first_name}!`,
-      `Để bắt đầu, bạn hãy mở MENU (nút 3 dấu gạch ngang) bên dưới.`,
-      `Chọn menu: Tham gia... > Tham gia phòng chơi`,
-      `Chọn một phòng chơi từ danh sách để tham gia một phòng!`,
-      `Sau khi tham gia thành công, bạn có thể chat với các người chơi khác trong phòng`,
-      `Tham gia > 'Sẵn sàng!' để thể hiện bạn sẽ tham gia chơi, còn không, hãy chọn 'Rời phòng chơi' để tránh ảnh hưởng người chơi khác`,
-      `Khi tất cả mọi người đã sẵn sàng (ít nhất 3 người), trò chơi sẽ bắt đầu! `,
-      `Trong khi chơi, bạn sẽ vote bằng cách chat với nội dung: /vote <id>`,
-      `VD: /vote 1 `,
-      `Bạn có thể xem <id> người chơi từ menu: Tiện ích khi chơi... > Các người chơi cùng phòng `]);
+    chat.say(`Xin chào ${user.first_name}! \n`+
+      `Để bắt đầu, bạn hãy mở MENU (nút 3 dấu gạch ngang) bên dưới.\n`+
+      `Chọn menu: Tham gia... > Tham gia phòng chơi\n`+
+      `Chọn một phòng chơi từ danh sách để tham gia một phòng!\n`+
+      `Sau khi tham gia thành công, bạn có thể chat với các người chơi khác trong phòng\n`+
+      `Tham gia > 'Sẵn sàng!' để thể hiện bạn sẽ tham gia chơi, còn không, hãy chọn 'Rời phòng chơi' để tránh ảnh hưởng người chơi khác\n`+
+      `Khi tất cả mọi người đã sẵn sàng (ít nhất 3 người), trò chơi sẽ bắt đầu! \n`+
+      `Trong khi chơi, bạn sẽ vote bằng cách chat với nội dung: /vote <id>\n`+
+      `VD: /vote 1 \n`+
+      `Bạn có thể xem <id> người chơi từ menu: Tiện ích khi chơi... > Các người chơi cùng phòng `);
   })
 });
 // listen to HELP
 bot.hear(['help', 'menu', 'hướng dẫn', 'trợ giúp'], (payload, chat) => {
   chat.getUserProfile().then((user) => {
-    chat.say([`Xin chào ${user.first_name}!`,
-      `Để bắt đầu, bạn hãy mở MENU (nút 3 dấu gạch ngang) bên dưới.`,
-      `Chọn menu: Tham gia... > Tham gia phòng chơi`,
-      `Chọn một phòng chơi từ danh sách để tham gia một phòng!`,
-      `Sau khi tham gia thành công, bạn có thể chat với các người chơi khác trong phòng`,
-      `Tham gia > 'Sẵn sàng!' để thể hiện bạn sẽ tham gia chơi, còn không, hãy chọn 'Rời phòng chơi' để tránh ảnh hưởng người chơi khác`,
-      `Khi tất cả mọi người đã sẵn sàng (ít nhất 3 người), trò chơi sẽ bắt đầu! `,
-      `Trong khi chơi, bạn sẽ vote bằng cách chat với nội dung: /vote <id>`,
-      `VD: /vote 1 `,
-      `Bạn có thể xem <id> người chơi từ menu: Tiện ích khi chơi... > Các người chơi cùng phòng `]);
+    chat.say(`Xin chào ${user.first_name}! \n`+
+    `Để bắt đầu, bạn hãy mở MENU (nút 3 dấu gạch ngang) bên dưới.\n`+
+    `Chọn menu: Tham gia... > Tham gia phòng chơi\n`+
+    `Chọn một phòng chơi từ danh sách để tham gia một phòng!\n`+
+    `Sau khi tham gia thành công, bạn có thể chat với các người chơi khác trong phòng\n`+
+    `Tham gia > 'Sẵn sàng!' để thể hiện bạn sẽ tham gia chơi, còn không, hãy chọn 'Rời phòng chơi' để tránh ảnh hưởng người chơi khác\n`+
+    `Khi tất cả mọi người đã sẵn sàng (ít nhất 3 người), trò chơi sẽ bắt đầu! \n`+
+    `Trong khi chơi, bạn sẽ vote bằng cách chat với nội dung: /vote <id>\n`+
+    `VD: /vote 1 \n`+
+    `Bạn có thể xem <id> người chơi từ menu: Tiện ích khi chơi... > Các người chơi cùng phòng `);
   })
 })
 
