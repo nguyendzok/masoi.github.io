@@ -260,37 +260,32 @@ bot.on('postback:READY_ROOM', (payload, chat) => {
       joinUser.getReady();
       gamef.getRoom(userRoom).oneReady();
       // get UserName and sendGlobalMessage to ROOM
-      chat.getUserProfile().then((user) => {
-        user = gamef.getRoom(userRoom).getPlayer(joinID);
-        //let playerListView = gamef.getRoomPlayerView(userRoom);
-        const start = async () => {
-          await asyncForEach(gamef.getRoom(userRoom).players, async (m) => {
-            if (m) {
-              //await bot.sendGenericTemplate(m.joinID, playerListView).then(async () => {
-              await bot.say(m.joinID, `${user.first_name} đã sẵn sàng! (${gamef.getRoom(userRoom).readyCount}/${gamef.getRoom(userRoom).players.length})`)
-              //})
+      user = gamef.getRoom(userRoom).getPlayer(joinID);
+      const start = async () => {
+        await asyncForEach(gamef.getRoom(userRoom).players, async (m) => {
+          if (m) {
+            await bot.say(m.joinID, `${user.first_name} đã sẵn sàng! (${gamef.getRoom(userRoom).readyCount}/${gamef.getRoom(userRoom).players.length})`)
+          }
+        })
+        gamef.gameIsReady(userRoom, (gameReady) => {
+          if (gameReady && !gamef.getRoom(userRoom).ingame) {
+            const gameStart = async () => {
+              console.log(`$ ROOM ${userRoom + 1} > GAME_START`);
+              gamef.getRoom(userRoom).setInGame();
+              let roleListTxt = gamef.roleRandom(userRoom);
+              await roomChatAll(userRoom, 0, [`Tất cả mọi người đã sẵn sàng! Game sẽ bắt đầu...`, roleListTxt]);
+              //while(){
+              gamef.getRoom(userRoom).dayNightSwitch();
+              await roomChatAll(userRoom, 0, `Đêm thứ ${gamef.getRoom(userRoom).day}`);
+              gamef.getRoom(userRoom).newLog(`Đêm thứ ${gamef.getRoom(userRoom).day}`);
+              await roomRoleChat(userRoom);
+              //}
             }
-          })
-          gamef.gameIsReady(userRoom, (gameReady) => {
-            if (gameReady && !gamef.getRoom(userRoom).ingame) {
-              const gameStart = async () => {
-                console.log(`$ ROOM ${userRoom + 1} > GAME_START`);
-                gamef.getRoom(userRoom).setInGame();
-                let roleListTxt = gamef.roleRandom(userRoom);
-                await roomChatAll(userRoom, 0, [`Tất cả mọi người đã sẵn sàng! Game sẽ bắt đầu...`, roleListTxt]);
-                //while(){
-                gamef.getRoom(userRoom).dayNightSwitch();
-                await roomChatAll(userRoom, 0, `Đêm thứ ${gamef.getRoom(userRoom).day}`);
-                gamef.getRoom(userRoom).newLog(`Đêm thứ ${gamef.getRoom(userRoom).day}`);
-                await roomRoleChat(userRoom);
-                //}
-              }
-              gameStart();
-            }
-          });
-        }
-        start();
-      })
+            gameStart();
+          }
+        });
+      }
+      start();
     } else {
       chat.say("Bạn đã sẵn sàng rồi!");
     }
@@ -310,12 +305,9 @@ bot.on('postback:LEAVE_ROOM', (payload, chat) => {
       gamef.getRoom(userRoom).killAction(gamef.getRoom(userRoom).getPlayer(joinID).id);
     }
     chat.say(`Bạn đã rời phòng chơi ${userRoom + 1}!`);
-    chat.getUserProfile().then((user) => {
-      user = gamef.getRoom(userRoom).getPlayer(joinID);
-      roomChatAll(userRoom, joinID, `${user.first_name} đã rời phòng chơi ${userRoom + 1}!`);
-    }).then(() => {
-      gamef.setUserRoom(joinID, undefined);
-    });
+    user = gamef.getRoom(userRoom).getPlayer(joinID);
+    roomChatAll(userRoom, joinID, `${user.first_name} đã rời phòng chơi ${userRoom + 1}!`);
+    gamef.setUserRoom(joinID, undefined);
   } else {
     chat.say(`Bạn chưa tham gia phòng nào!`);
   }
@@ -335,146 +327,144 @@ bot.on('message', (payload, chat) => {
   }
 
   if (gamef.getRoom(userRoom).alivePlayer[joinID]) { // nếu còn sống
-    chat.getUserProfile().then((user) => {
-      user = gamef.getRoom(userRoom).getPlayer(joinID);
-      if (gamef.getRoom(userRoom).isNight) { // ban đêm
-        let userRole = gamef.getRoom(userRoom).getRole(joinID);
-        if (userRole == -1) {// là SÓI
-          if (!chatTxt.match(/\/vote.[0-9]+/g)) {//chat
-            if (gamef.getRoom(userRoom).chatON) {
-              roomWolfChatAll(userRoom, joinID, user.first_name + ': ' + chatTxt);
-            }
-          } else {// SÓI VOTE
-            let voteID = chatTxt.match(/[0-9]+/g)[0];
-            const start = async () => {
-              //vote
-              if (gamef.getRoom(userRoom).vote(joinID, voteID)) {
-                let voteKill = gamef.getRoom(userRoom).playersTxt[voteID];
-                await chat.say(`Bạn đã vote cắn ${voteKill}`);
-                roomWolfChatAll(userRoom, joinID, user.first_name + ' đã vote cắn ' + voteKill);
-              } else {
-                chat.say("Bạn không thể thực hiện vote 2 lần hoặc vote người chơi đã chết!");
-              }
-              // kiểm tra đã VOTE xong chưa?
-              roleDoneCheck(userRoom);
-            }
-            start();
+    user = gamef.getRoom(userRoom).getPlayer(joinID);
+    if (gamef.getRoom(userRoom).isNight) { // ban đêm
+      let userRole = gamef.getRoom(userRoom).getRole(joinID);
+      if (userRole == -1) {// là SÓI
+        if (!chatTxt.match(/\/vote.[0-9]+/g)) {//chat
+          if (gamef.getRoom(userRoom).chatON) {
+            roomWolfChatAll(userRoom, joinID, user.first_name + ': ' + chatTxt);
           }
-        } else if (userRole == 1) { // là tiên tri
-          if (chatTxt.match(/\/see.[0-9]+/g)) {//see
-            const startTT = async () => {
-              let voteID = chatTxt.match(/[0-9]+/g)[0];
-              let role = gamef.getRoom(userRoom).getRoleByID(voteID);
-              await chat.say(`${voteID} là ${role == -1 ? 'SÓI' : role == 1 ? 'TIÊN TRI, Bạn đùa tớ à :v' : 'DÂN'}`);
-              gamef.getRoom(userRoom).newLog(`${user.first_name} soi (${gamef.getRoom(userRoom).playersTxt[voteID]}) là ${role == -1 ? 'SÓI' : role == 1 ? 'TỰ SOI MÌNH! GG' : 'DÂN'}`);
-              gamef.getRoom(userRoom).roleDoneBy(joinID);
-              // kiểm tra đã VOTE xong chưa?
-              roleDoneCheck(userRoom);
-            }
-            startTT();
-          } else {
-            chat.say(`Bạn không thể trò chuyện trong đêm!`);
-          }
-        } else if (userRole == 2) { // là bảo vệ
-          if (chatTxt.match(/\/save.[0-9]+/g)) {//save
-            let voteID = chatTxt.match(/[0-9]+/g)[0];
-            if (!gamef.getRoom(userRoom).save(joinID, voteID)) {
-              chat.say(`Bạn không thể bảo vệ 1 người 2 đêm liên tiếp!`);
+        } else {// SÓI VOTE
+          let voteID = chatTxt.match(/[0-9]+/g)[0];
+          const start = async () => {
+            //vote
+            if (gamef.getRoom(userRoom).vote(joinID, voteID)) {
+              let voteKill = gamef.getRoom(userRoom).playersTxt[voteID];
+              await chat.say(`Bạn đã vote cắn ${voteKill}`);
+              roomWolfChatAll(userRoom, joinID, user.first_name + ' đã vote cắn ' + voteKill);
             } else {
-              chat.say(`Bạn đã bảo vệ ${gamef.getRoom(userRoom).playersTxt[voteID]}!`);
-              // kiểm tra đã VOTE xong chưa?
-              roleDoneCheck(userRoom);
+              chat.say("Bạn không thể thực hiện vote 2 lần hoặc vote người chơi đã chết!");
             }
-          } else {
-            chat.say(`Bạn không thể trò chuyện trong đêm!`);
+            // kiểm tra đã VOTE xong chưa?
+            roleDoneCheck(userRoom);
           }
-        } else if (userRole == 3) { // là thợ săn
-          if (chatTxt.match(/\/fire.[0-9]+/g)) {//fire
-            let voteID = chatTxt.match(/[0-9]+/g)[0];
-            if (!gamef.getRoom(userRoom).fire(joinID, voteID)) {
-              chat.say(`Bạn không thể ngắm bắn thành viên đã chết!`);
-            } else {
-              chat.say(`Bạn đã ngắm bắn ${gamef.getRoom(userRoom).playersTxt[voteID]}!`);
-              // kiểm tra đã VOTE xong chưa?
-              roleDoneCheck(userRoom);
-            }
-          } else {
-            chat.say(`Bạn không thể trò chuyện trong đêm!`);
-          }
+          start();
         }
-      } else {
-        if (!gamef.getRoom(userRoom).isNight) {// ban NGÀY, mọi người thảo luận
-          if (!chatTxt.match(/\/vote.[0-9]+/g)) {
-            if (!chatTxt.match(/\/yes/g) && !chatTxt.match(/\/no/g)) {
-              if (gamef.getRoom(userRoom).chatON || (gamef.getRoom(userRoom).deathID != -1 && gamef.getRoom(userRoom).deathID === gamef.getRoom(userRoom).getPlayer(joinID).id)) { //check xem còn bật chat không?
-                roomChatAll(userRoom, joinID, user.first_name + ': ' + chatTxt);
-              } else {
-                chat.say(`Đã hết thời gian thảo luận!`);
-              }
-            } else {  //VOTE YES?NO
-              if (gamef.getRoom(userRoom).deathID != -1) {
-                if (chatTxt.match(/\/yes/g)) { //vote treo cổ
-                  gamef.getRoom(userRoom).killOrSaveVote(joinID, true);
-                  chat.say(`Bạn đã vote treo! (${gamef.getRoom(userRoom).saveOrKill})`);
-                  roomChatAll(userRoom, joinID, `${user.first_name} đã vote treo! (${gamef.getRoom(userRoom).saveOrKill})`);
-                  yesNoVoteCheck(userRoom);
-                } else { //vote tha
-                  gamef.getRoom(userRoom).killOrSaveVote(joinID, false);
-                  chat.say(`Bạn đã vote tha! (${gamef.getRoom(userRoom).saveOrKill})`);
-                  roomChatAll(userRoom, joinID, `${user.first_name} đã vote tha! (${gamef.getRoom(userRoom).saveOrKill})`);
-                  yesNoVoteCheck(userRoom);
-                }
-              }
-            }
-          } else {
-            // VOTE TREO CỔ
+      } else if (userRole == 1) { // là tiên tri
+        if (chatTxt.match(/\/see.[0-9]+/g)) {//see
+          const startTT = async () => {
             let voteID = chatTxt.match(/[0-9]+/g)[0];
-            const start = async () => {
-              if (gamef.getRoom(userRoom).vote(joinID, voteID)) {
-                let voteKill = gamef.getRoom(userRoom).playersTxt[voteID];
-                await chat.say(`Bạn đã vote treo cổ ${voteKill} (${gamef.getRoom(userRoom).voteList[voteID]} phiếu)`);
-                await roomChatAll(userRoom, joinID, `${user.first_name} đã vote treo cổ ${voteKill} (${gamef.getRoom(userRoom).voteList[voteID]} phiếu)`);
-              } else {
-                chat.say(`Bạn không thể vote 2 lần hoặc vote người chơi đã chết!`);
-              }
-              // kiểm tra đã VOTE XONG chưa?
-              gamef.getRoom(userRoom).roleIsDone((isDone) => {
-                if (isDone) {
-                  const newStart = async () => {
-                    gamef.getRoom(userRoom).findOutDeathID();
-                    gamef.getRoom(userRoom).cancelSchedule();
-                    let deathID = gamef.getRoom(userRoom).deathID;
-                    if (deathID != -1) { // mời 1 người lên giá treo cổ
-                      gamef.getRoom(userRoom).resetRoleDone();
-                      let deathTxt = gamef.getRoom(userRoom).playersTxt[deathID];
-                      await roomChatAll(userRoom, 0, `Mời ${deathTxt} lên giá treo cổ !!!\nBạn có 45 giây để trăn trối, 45s bắt đầu!`);
-                      // 45 giây
-                      let time = new Date(Date.now() + 45 * 1000);
-                      gamef.getRoom(userRoom).addSchedule(time, () => {
-                        roomChatAll(userRoom, 0, `Đã hết thời gian, mọi người vote nào!\nTREO CỔ hay CỨU?\n/yes hoặc /no`);
-                        console.log(`$ ROOM ${userRoom + 1} > END OF TRĂN TRỐI :))`);
-                      });
-                    } else {
-                      await roomChatAll(userRoom, 0, `Không ai bị treo cổ do có số vote bằng nhau! Mọi người đi ngủ`);
-                      const start2 = async () => {
-                        // Đêm tiếp theo
-                        gamef.getRoom(userRoom).dayNightSwitch();
-                        await roomChatAll(userRoom, 0, `Đêm thứ ${gamef.getRoom(userRoom).day}`);
-                        gamef.getRoom(userRoom).newLog(`Đêm thứ ${gamef.getRoom(userRoom).day}`);
-                        await roomRoleChat(userRoom);
-                      };
-                      start2();
-                    }
-                  }
-                  newStart();
-                }
-              });
-            }
-            start();
+            let role = gamef.getRoom(userRoom).getRoleByID(voteID);
+            await chat.say(`${voteID} là ${role == -1 ? 'SÓI' : role == 1 ? 'TIÊN TRI, Bạn đùa tớ à :v' : 'DÂN'}`);
+            gamef.getRoom(userRoom).newLog(`${user.first_name} soi (${gamef.getRoom(userRoom).playersTxt[voteID]}) là ${role == -1 ? 'SÓI' : role == 1 ? 'TỰ SOI MÌNH! GG' : 'DÂN'}`);
+            gamef.getRoom(userRoom).roleDoneBy(joinID);
+            // kiểm tra đã VOTE xong chưa?
+            roleDoneCheck(userRoom);
           }
+          startTT();
+        } else {
+          chat.say(`Bạn không thể trò chuyện trong đêm!`);
+        }
+      } else if (userRole == 2) { // là bảo vệ
+        if (chatTxt.match(/\/save.[0-9]+/g)) {//save
+          let voteID = chatTxt.match(/[0-9]+/g)[0];
+          if (!gamef.getRoom(userRoom).save(joinID, voteID)) {
+            chat.say(`Bạn không thể bảo vệ 1 người 2 đêm liên tiếp!`);
+          } else {
+            chat.say(`Bạn đã bảo vệ ${gamef.getRoom(userRoom).playersTxt[voteID]}!`);
+            // kiểm tra đã VOTE xong chưa?
+            roleDoneCheck(userRoom);
+          }
+        } else {
+          chat.say(`Bạn không thể trò chuyện trong đêm!`);
+        }
+      } else if (userRole == 3) { // là thợ săn
+        if (chatTxt.match(/\/fire.[0-9]+/g)) {//fire
+          let voteID = chatTxt.match(/[0-9]+/g)[0];
+          if (!gamef.getRoom(userRoom).fire(joinID, voteID)) {
+            chat.say(`Bạn không thể ngắm bắn thành viên đã chết!`);
+          } else {
+            chat.say(`Bạn đã ngắm bắn ${gamef.getRoom(userRoom).playersTxt[voteID]}!`);
+            // kiểm tra đã VOTE xong chưa?
+            roleDoneCheck(userRoom);
+          }
+        } else {
+          chat.say(`Bạn không thể trò chuyện trong đêm!`);
         }
       }
-    })
+    } else {
+      if (!gamef.getRoom(userRoom).isNight) {// ban NGÀY, mọi người thảo luận
+        if (!chatTxt.match(/\/vote.[0-9]+/g)) {
+          if (!chatTxt.match(/\/yes/g) && !chatTxt.match(/\/no/g)) {
+            if (gamef.getRoom(userRoom).chatON || (gamef.getRoom(userRoom).deathID != -1 && gamef.getRoom(userRoom).deathID === gamef.getRoom(userRoom).getPlayer(joinID).id)) { //check xem còn bật chat không?
+              roomChatAll(userRoom, joinID, user.first_name + ': ' + chatTxt);
+            } else {
+              chat.say(`Đã hết thời gian thảo luận!`);
+            }
+          } else {  //VOTE YES?NO
+            if (gamef.getRoom(userRoom).deathID != -1) {
+              if (chatTxt.match(/\/yes/g)) { //vote treo cổ
+                gamef.getRoom(userRoom).killOrSaveVote(joinID, true);
+                chat.say(`Bạn đã vote treo! (${gamef.getRoom(userRoom).saveOrKill})`);
+                roomChatAll(userRoom, joinID, `${user.first_name} đã vote treo! (${gamef.getRoom(userRoom).saveOrKill})`);
+                yesNoVoteCheck(userRoom);
+              } else { //vote tha
+                gamef.getRoom(userRoom).killOrSaveVote(joinID, false);
+                chat.say(`Bạn đã vote tha! (${gamef.getRoom(userRoom).saveOrKill})`);
+                roomChatAll(userRoom, joinID, `${user.first_name} đã vote tha! (${gamef.getRoom(userRoom).saveOrKill})`);
+                yesNoVoteCheck(userRoom);
+              }
+            }
+          }
+        } else {
+          // VOTE TREO CỔ
+          let voteID = chatTxt.match(/[0-9]+/g)[0];
+          const start = async () => {
+            if (gamef.getRoom(userRoom).vote(joinID, voteID)) {
+              let voteKill = gamef.getRoom(userRoom).playersTxt[voteID];
+              await chat.say(`Bạn đã vote treo cổ ${voteKill} (${gamef.getRoom(userRoom).voteList[voteID]} phiếu)`);
+              await roomChatAll(userRoom, joinID, `${user.first_name} đã vote treo cổ ${voteKill} (${gamef.getRoom(userRoom).voteList[voteID]} phiếu)`);
+            } else {
+              chat.say(`Bạn không thể vote 2 lần hoặc vote người chơi đã chết!`);
+            }
+            // kiểm tra đã VOTE XONG chưa?
+            gamef.getRoom(userRoom).roleIsDone((isDone) => {
+              if (isDone) {
+                const newStart = async () => {
+                  gamef.getRoom(userRoom).findOutDeathID();
+                  gamef.getRoom(userRoom).cancelSchedule();
+                  let deathID = gamef.getRoom(userRoom).deathID;
+                  if (deathID != -1) { // mời 1 người lên giá treo cổ
+                    gamef.getRoom(userRoom).resetRoleDone();
+                    let deathTxt = gamef.getRoom(userRoom).playersTxt[deathID];
+                    await roomChatAll(userRoom, 0, `Mời ${deathTxt} lên giá treo cổ !!!\nBạn có 45 giây để trăn trối, 45s bắt đầu!`);
+                    // 45 giây
+                    let time = new Date(Date.now() + 45 * 1000);
+                    gamef.getRoom(userRoom).addSchedule(time, () => {
+                      roomChatAll(userRoom, 0, `Đã hết thời gian, mọi người vote nào!\nTREO CỔ hay CỨU?\n/yes hoặc /no`);
+                      console.log(`$ ROOM ${userRoom + 1} > END OF TRĂN TRỐI :))`);
+                    });
+                  } else {
+                    await roomChatAll(userRoom, 0, `Không ai bị treo cổ do có số vote bằng nhau! Mọi người đi ngủ`);
+                    const start2 = async () => {
+                      // Đêm tiếp theo
+                      gamef.getRoom(userRoom).dayNightSwitch();
+                      await roomChatAll(userRoom, 0, `Đêm thứ ${gamef.getRoom(userRoom).day}`);
+                      gamef.getRoom(userRoom).newLog(`Đêm thứ ${gamef.getRoom(userRoom).day}`);
+                      await roomRoleChat(userRoom);
+                    };
+                    start2();
+                  }
+                }
+                newStart();
+              }
+            });
+          }
+          start();
+        }
+      }
+    }
   } else {
     chat.say(`Bạn đã chết! Xin giữ im lặng`)
   }
@@ -535,7 +525,7 @@ bot.on('postback:RESET_ROOM', (payload, chat) => {
 // listen HELP button
 bot.on('postback:HELP', (payload, chat) => {
   chat.getUserProfile().then((user) => {
-    chat.say(`Xin chào ${user.first_name}! \n` +
+    chat.say(`Xin chào ${user.last_name+' '+user.first_name}! \n` +
       `Để bắt đầu, bạn hãy mở MENU (nút 3 dấu gạch ngang) bên dưới.\n` +
       `Chọn menu: Tham gia... > Tham gia phòng chơi\n` +
       `Chọn một phòng chơi từ danh sách để tham gia một phòng!\n` +
@@ -550,7 +540,7 @@ bot.on('postback:HELP', (payload, chat) => {
 // listen to HELP
 bot.hear(['help', 'menu', 'hướng dẫn', 'trợ giúp'], (payload, chat) => {
   chat.getUserProfile().then((user) => {
-    chat.say(`Xin chào ${user.first_name}! \n` +
+    chat.say(`Xin chào ${user.last_name+' '+user.first_name}! \n` +
       `Để bắt đầu, bạn hãy mở MENU (nút 3 dấu gạch ngang) bên dưới.\n` +
       `Chọn menu: Tham gia... > Tham gia phòng chơi\n` +
       `Chọn một phòng chơi từ danh sách để tham gia một phòng!\n` +
