@@ -44,11 +44,13 @@ async function roomRoleChat(roomID) {
         let villagersList = gamef.getRoom(roomID).villagersTxt.join(' ; ');
         let playersList = gamef.getRoom(roomID).playersTxt.join(' ; ');
         if (m.role == -1) {//SÓI
-          bot.say(m.joinID, ['Sói ơi dậy đi! Đêm nay sói muốn cắn ai?', '/vote <id> để cắn 1 ai đó', 'ID của SÓI: ' + wolfList, 'ID của DÂN: ' + villagersList]);
+          bot.say(m.joinID, ['Sói ơi dậy đi! Đêm nay sói muốn cắn ai?', '/vote <id> để cắn 1 ai đó', 'ID SÓI: ' + wolfList, 'ID DÂN: ' + villagersList]);
         } else if (m.role == 1) { // tiên tri
           bot.say(m.joinID, ['Tiên tri dậy đi! Tiên tri muốn kiểm tra ai?', '/see <id> để kiểm tra', playersList]);
         } else if (m.role == 2) { // Bảo vệ
           bot.say(m.joinID, ['Bảo vệ dậy đi! Đêm nay bạn muốn bảo vệ ai?', '/save <id> để bảo vệ', playersList]);
+        } else if (m.role == 3) { // Thợ săn
+          bot.say(m.joinID, ['Thợ săn dậy đi! Đêm nay bạn muốn bắn ai?', '/fire <id> để ngắm bắn', playersList]);
         } else {
           bot.say(m.joinID, "Bạn là DÂN! Ngủ tiếp đi :))");
           gamef.getRoom(roomID).roleDoneBy(m.joinID);
@@ -100,6 +102,10 @@ function roleDoneCheck(userRoom) {
       }
       if (gamef.getRoom(userRoom).kill()) {
         roomChatAll(userRoom, 0, `Đêm hôm qua (${deathTxt}) đã bị cắn!`);
+        if (gamef.getRoom(userRoom).players[deathID].role === 3){ //người chết là thợ săn
+          let deathFireTxt = gamef.getRoom(userRoom).playersTxt[gamef.getRoom(userRoom).fireID];
+          roomChatAll(userRoom, 0, `Thợ săn vừa chết đã ngắm bắn (${deathFireTxt})!`);
+        }
         gamef.getRoom(userRoom).newLog(`Người bị cắn: (${deathTxt}) là ${gamef.roleTxt[gamef.getRoom(userRoom).getRoleByID(deathID)]}`);
         console.log(`$ ROOM ${userRoom + 1} > ${deathTxt} DIED!`);
       } else {
@@ -339,7 +345,7 @@ bot.on('message', (payload, chat) => {
               //vote
               if (gamef.getRoom(userRoom).vote(joinID, voteID)) {
                 let voteKill = gamef.getRoom(userRoom).playersTxt[voteID];
-                chat.say(`Bạn đã vote cắn ${voteKill}`);
+                await chat.say(`Bạn đã vote cắn ${voteKill}`);
                 roomWolfChatAll(userRoom, joinID, user.first_name + ' đã vote cắn ' + voteKill);
               } else {
                 chat.say("Bạn không thể thực hiện vote 2 lần hoặc vote người chơi đã chết!");
@@ -354,7 +360,7 @@ bot.on('message', (payload, chat) => {
             const startTT = async () => {
               let voteID = chatTxt.match(/[0-9]+/g)[0];
               let role = gamef.getRoom(userRoom).getRoleByID(voteID);
-              chat.say(`${voteID} là ${role == -1 ? 'SÓI' : role == 1 ? 'TIÊN TRI, Bạn đùa tớ à :v' : 'DÂN'}`);
+              await chat.say(`${voteID} là ${role == -1 ? 'SÓI' : role == 1 ? 'TIÊN TRI, Bạn đùa tớ à :v' : 'DÂN'}`);
               gamef.getRoom(userRoom).newLog(`${user.first_name} soi (${gamef.getRoom(userRoom).playersTxt[voteID]}) là ${role == -1 ? 'SÓI' : role == 1 ? 'TỰ SOI MÌNH! GG' : 'DÂN'}`);
               gamef.getRoom(userRoom).roleDoneBy(joinID);
               // kiểm tra đã VOTE xong chưa?
@@ -371,6 +377,19 @@ bot.on('message', (payload, chat) => {
               chat.say(`Bạn không thể bảo vệ 1 người 2 đêm liên tiếp!`);
             } else {
               chat.say(`Bạn đã bảo vệ ${gamef.getRoom(userRoom).playersTxt[voteID]}!`);
+              // kiểm tra đã VOTE xong chưa?
+              roleDoneCheck(userRoom);
+            }
+          } else {
+            chat.say(`Bạn không thể trò chuyện trong đêm!`);
+          }
+        } else if (userRole == 3) { // là thợ săn
+          if (chatTxt.match(/\/fire.[0-9]+/g)) {//fire
+            let voteID = chatTxt.match(/[0-9]+/g)[0];
+            if (!gamef.getRoom(userRoom).fire(joinID, voteID)) {
+              chat.say(`Bạn không thể ngắm bắn thành viên đã chết!`);
+            } else {
+              chat.say(`Bạn đã ngắm bắn ${gamef.getRoom(userRoom).playersTxt[voteID]}!`);
               // kiểm tra đã VOTE xong chưa?
               roleDoneCheck(userRoom);
             }

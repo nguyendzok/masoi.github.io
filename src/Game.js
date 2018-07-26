@@ -38,6 +38,7 @@ class Room {
         this.alivePlayer = [];
         this.deathID = -1; // -1 là không ai cả
         this.saveID = -1; // -1 là không ai cả
+        this.fireID = -1;
         this.saveOrKill = 0; // nếu vote cứu thì +1, vote treo cổ thì -1.  nhỏ hơn 0 thì treo
     }
     resetRoom() {
@@ -60,6 +61,7 @@ class Room {
         this.voteList = [];
         this.deathID = -1; // -1 là không ai cả
         this.saveID = -1; // -1 là không ai cả
+        this.fireID = -1;
         this.saveOrKill = 0; // nếu vote cứu thì +1, vote treo cổ thì -1.  nhỏ hơn 0 thì treo
 
         this.players.forEach((p, index, arr) => {
@@ -71,14 +73,12 @@ class Room {
     }
     addPlayer(player) {
         this.players.push(player);
-        this.playersTxt.push(player.id + ': ' + player.first_name);
         this.alivePlayer[player.joinID] = true;
     }
     deletePlayer(joinID) {
         let playerID = this.getPlayer(joinID).id;
         let len = this.players.length;
         this.players.splice(playerID, 1);
-        this.playersTxt.splice(playerID, 1);
         for (let i = playerID; i < len - 1; i++) {
             this.players[i].id--;
         }
@@ -120,7 +120,7 @@ class Room {
         this.roleDone[joinID] = true;
         this.roleDoneCount++;
     }
-    oneReady(){
+    oneReady() {
         this.readyCount++;
     }
     killOrSaveVote(joinID, voteKill) {
@@ -147,17 +147,30 @@ class Room {
     }
     kill() {
         console.log(`$ ROOM ${this.id + 1} > KILL ${this.deathID} > SAVE ${this.saveID} !!!`);
-        if (this.deathID != -1 && (!this.isNight || (this.isNight && this.deathID != this.saveID))) {
+        if (this.deathID != -1 && (!this.isNight || (this.isNight && this.deathID != this.saveID)) && this.players[this.deathID]) {
             this.killAction(this.deathID);
+            if (this.players[this.deathID].role === 3) { //là thợ săn
+                this.killAction(this.fireID);
+            }
             return true;
         } else {
             return false;
         }
     }
     save(joinID, voteID) {
-        if (!this.roleDone[joinID] && this.saveID != voteID && this.alivePlayer[this.players[voteID].joinID]) {
-            this.logs.push(`${this.getPlayer(joinID).first_name} bảo vệ: ${this.playersTxt[voteID]}`);
+        if (!this.roleDone[joinID] && this.saveID != voteID && this.players[voteID] && this.alivePlayer[this.players[voteID].joinID]) {
+            this.logs.push(`${this.getPlayer(joinID).first_name} bảo vệ: (${this.playersTxt[voteID]})`);
             this.saveID = voteID;
+            this.roleDoneBy(joinID);
+            return true;
+        } else {
+            return false;
+        }
+    }
+    fire(joinID, voteID) {
+        if (!this.roleDone[joinID] && this.players[voteID] && this.alivePlayer[this.players[voteID].joinID]) {
+            this.logs.push(`${this.getPlayer(joinID).first_name} ngắm bắn: (${this.playersTxt[voteID]})`);
+            this.fireID = voteID;
             this.roleDoneBy(joinID);
             return true;
         } else {
@@ -209,11 +222,12 @@ class Room {
         this.roleDone = [];
         this.roleDoneCount = 0;
         this.deathID = -1;
+        this.fireID = -1;
         // this.saveID = -1;
         this.chatON = true;
     }
     vote(joinID, voteID) {
-        if (!this.roleDone[joinID] && this.alivePlayer[this.players[voteID].joinID]) {
+        if (!this.roleDone[joinID] && this.players[voteID] && this.alivePlayer[this.players[voteID].joinID]) {
             if (this.voteList[voteID]) {
                 this.voteList[voteID]++;
             } else {
@@ -243,7 +257,8 @@ class Game {
         this.roleTxt[0] = 'DÂN';
         this.roleTxt[-1] = 'SÓI';
         this.roleTxt[1] = 'TIÊN TRI';
-        this.roleTxt[2] = 'Bảo vệ';
+        this.roleTxt[2] = 'BẢO VỆ';
+        this.roleTxt[3] = 'THỢ SĂN';
     }
     getUserRoom(joinID) {
         return this.userRoom[joinID];
@@ -281,10 +296,10 @@ class Game {
         let playerListView = [];
         // create message
         this.room[roomID].players.forEach(m => {
-            playerListView.push({
-                title: "Người chơi " + m.last_name + " " + m.first_name,
+            playerListView.unshift({
+                title: "Người chơi " + m.id+1 + ": " + m.last_name + " " + m.first_name,
                 image_url: m.avatar,
-                subtitle: m.ready ? 'Đã sẵn sàng' : 'Chưa sẵn sàng',
+                subtitle: 'ID người chơi: '+m.id +'\n' +m.ready ? 'Đã sẵn sàng' : 'Chưa sẵn sàng',
                 // buttons: [
                 //   { type: 'postback', title: m.ready ? 'Đã sẵn sàng' : 'Chưa sẵn sàng', payload: 'button' }
                 // ]
@@ -313,24 +328,28 @@ class Game {
         this.room[roomID].setRole(1, 1); // 1 TIÊN TRI
         this.room[roomID].setRole(2, 1); // 1 BẢO VỆ
         if (len < 6) {
-            this.room[roomID].setRole(-1, 1);  // 1 SÓI
-            roleListTxt+=", 1 SÓI, "+(len-3)+" DÂN";
+            // this.room[roomID].setRole(-1, 1);  // 1 SÓI
+            this.room[roomID].setRole(3, 1);  // 1 THỢ SĂN
+            roleListTxt += ", 1 SÓI, " + (len - 3) + " DÂN";
         } else if (len < 10) {
             this.room[roomID].setRole(-1, 2);  // 2 SÓI
-            roleListTxt+=", 2 SÓI, "+(len-4)+" DÂN";
+            this.room[roomID].setRole(3, 1);  // 1 THỢ SĂN
+            roleListTxt += ", 2 SÓI, 1 THỢ SĂN, " + (len - 5) + " DÂN";
         } else if (len < 12) {
             this.room[roomID].setRole(-1, 3);  // 3 SÓI
-            roleListTxt+=", 3 SÓI, "+(len-5)+" DÂN";
+            roleListTxt += ", 3 SÓI, " + (len - 5) + " DÂN";
             // this.room[roomID].setRole(3,1);  // 1 THỢ SĂN
         } else if (len < 14) {
             this.room[roomID].setRole(-1, 3);  // 3 SÓI
-            roleListTxt+=", 3 SÓI, "+(len-5)+" DÂN";
+            roleListTxt += ", 3 SÓI, " + (len - 5) + " DÂN";
             // this.room[roomID].setRole(3,1);  // 1 THỢ SĂN
             // this.room[roomID].setRole(4,1);  // 1 CUPID - ghép đôi
         }
 
         this.room[roomID].players.forEach(p => {
             this.room[roomID].playersRole[p.joinID] = p.role;
+            this.room[roomID].playersTxt.push(p.id + ': ' + p.first_name); .0
+
             if (p.role === -1) {
                 this.room[roomID].wolfsID.push(p.joinID);
                 this.room[roomID].wolfsTxt.push(p.id + ': ' + p.first_name);
