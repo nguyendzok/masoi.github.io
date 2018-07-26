@@ -188,12 +188,12 @@ bot.setPersistentMenu(actionButtons, false);
 bot.on('postback:JOIN_ROOM', (payload, chat) => {
   let joinID = payload.sender.id;
   console.log('$ JOIN > ' + joinID);
-  let joinUser;
   let userRoom = gamef.getUserRoom(joinID);
   if (userRoom != undefined) {
     chat.say(`Bạn đã tham gia phòng ${(userRoom + 1)} rồi! Để rời phòng chơi, chọn menu Tham gia > Rời phòng chơi! `);
     return;
   }
+  let joinUser = gamef.getRoom(userRoom).getPlayer(joinID);
   let roomListView = gamef.getRoomListView();
 
   const askRoom = (convo) => {
@@ -242,7 +242,6 @@ bot.on('postback:JOIN_ROOM', (payload, chat) => {
   };
 
   chat.getUserProfile().then((user) => {
-    joinUser = gamef.getRoom(userRoom).getPlayer(joinID);
     chat.conversation((convo) => {
       askRoom(convo);
     });
