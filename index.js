@@ -486,6 +486,10 @@ bot.on('postback:VIEW_PLAYER_IN_ROOM', (payload, chat) => {
 bot.on('postback:USER_RENAME', (payload, chat) => {
   let joinID = payload.sender.id;
   let userRoom = gamef.getUserRoom(joinID);
+  if (userRoom==undefined){
+    chat.say(`Bạn cần tham gia 1 phòng chơi trước khi đổi tên!`);
+    return;
+  }
   let user = gamef.getRoom(userRoom).getPlayer(joinID);
 
   const askName = (convo) => {
