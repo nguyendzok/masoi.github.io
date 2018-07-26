@@ -68,6 +68,7 @@ function yesNoVoteCheck(userRoom) {
     if (!isDone) {
       return;
     }
+    gamef.getRoom(userRoom).cancelSchedule();
     let deathID = gamef.getRoom(userRoom).deathID;
     let deathTxt = gamef.getRoom(userRoom).playersTxt[deathID];
     if (gamef.getRoom(userRoom).saveOrKill < 0) {
@@ -120,11 +121,16 @@ function roleDoneCheck(userRoom) {
         roomChatAll(userRoom, 0, `Mọi người có 6 phút thảo luận!`);
         gamef.getRoom(userRoom).dayNightSwitch();
 
-        let time = new Date(Date.now() + 6 * 60 * 1000);
+        let time = new Date(Date.now() + 5 * 60 * 1000);
         gamef.getRoom(userRoom).addSchedule(time, () => {
-          roomChatAll(userRoom, 0, `Đã hết thời gian, mọi người vote một người để treo cổ!\n/vote <id> để treo cổ 1 người\n${playersInRoomTxt}`);
-          gamef.getRoom(userRoom).chatOFF();
-          console.log(`$ ROOM ${userRoom + 1} > END OF DISCUSSION!`);
+          roomChatAll(userRoom, 0, `CÒN 1 PHÚT THẢO LUẬN\nCác bạn nên cân nhắc kĩ, tránh lan man, nhanh chóng tìm ra kẻ đang nghi nhất!`);
+          console.log(`$ ROOM ${userRoom + 1} > 1 MINUTE REMAINING`);
+          let time = new Date(Date.now() + 1 * 60 * 1000);
+          gamef.getRoom(userRoom).addSchedule(time, () => {
+            roomChatAll(userRoom, 0, `Đã hết thời gian, mọi người vote một người để treo cổ!\n/vote <id> để treo cổ 1 người\n${playersInRoomTxt}`);
+            gamef.getRoom(userRoom).chatOFF();
+            console.log(`$ ROOM ${userRoom + 1} > END OF DISCUSSION!`);
+          });
         });
       });
     }
@@ -309,6 +315,7 @@ bot.on('postback:LEAVE_ROOM', (payload, chat) => {
     chat.say(`Bạn đã rời phòng chơi ${userRoom + 1}!`);
     roomChatAll(userRoom, joinID, `${userName} đã rời phòng chơi ${userRoom + 1}!`);
     gamef.setUserRoom(joinID, undefined);
+    console.log(`$ ROOM ${userRoom + 1} > LEAVE > ${joinID} : ${userName}`);
   } else {
     chat.say(`Bạn chưa tham gia phòng nào!`);
   }
@@ -487,7 +494,7 @@ bot.on('postback:VIEW_PLAYER_IN_ROOM', (payload, chat) => {
 bot.on('postback:USER_RENAME', (payload, chat) => {
   let joinID = payload.sender.id;
   let userRoom = gamef.getUserRoom(joinID);
-  if (userRoom==undefined){
+  if (userRoom == undefined) {
     chat.say(`Bạn cần tham gia 1 phòng chơi trước khi đổi tên!`);
     return;
   }

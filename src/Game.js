@@ -79,8 +79,12 @@ class Room {
         this.alivePlayer[player.joinID] = true;
     }
     deletePlayer(joinID) {
-        let playerID = this.getPlayer(joinID).id;
+        let player = this.getPlayer(joinID);
+        let playerID = player.id;
         let len = this.players.length;
+        if (player.ready){
+            this.readyCount--;
+        }
         this.players.splice(playerID, 1);
         for (let i = playerID; i < len - 1; i++) {
             this.players[i].id--;
