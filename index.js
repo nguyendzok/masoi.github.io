@@ -299,14 +299,15 @@ bot.on('postback:LEAVE_ROOM', (payload, chat) => {
   let joinID = payload.sender.id;
   const userRoom = gamef.getUserRoom(joinID);
   if (userRoom != undefined) {
+    let user = gamef.getRoom(userRoom).getPlayer(joinID);
+    let userName = user.first_name;
     if (!gamef.getRoom(userRoom).ingame) {
       gamef.getRoom(userRoom).deletePlayer(joinID);
     } else {
       gamef.getRoom(userRoom).killAction(gamef.getRoom(userRoom).getPlayer(joinID).id);
     }
     chat.say(`Bạn đã rời phòng chơi ${userRoom + 1}!`);
-    user = gamef.getRoom(userRoom).getPlayer(joinID);
-    roomChatAll(userRoom, joinID, `${user.first_name} đã rời phòng chơi ${userRoom + 1}!`);
+    roomChatAll(userRoom, joinID, `${userName} đã rời phòng chơi ${userRoom + 1}!`);
     gamef.setUserRoom(joinID, undefined);
   } else {
     chat.say(`Bạn chưa tham gia phòng nào!`);
