@@ -163,7 +163,7 @@ class Room {
     }
     killAction(deathID) {
         this.alivePlayer[this.players[deathID].joinID] = false;
-        this.playersTxt[deathID] = '[CHẾT]' + this.playersTxt[deathID].substr(2, this.playersTxt[deathID].length - 2);
+        this.playersTxt[deathID] = '💀CHẾT:' + this.playersTxt[deathID].substr(2, this.playersTxt[deathID].length - 2) + '💀';
         if (this.players[deathID].role === -1) {
             this.wolfsCount--;
         } else {
@@ -298,12 +298,12 @@ class Game {
         this.setRoleTxt(); //không cần lắm
     }
     setRoleTxt() { //không cần lắm
-        this.roleTxt[0] = 'DÂN';
-        this.roleTxt[-1] = 'SÓI';
-        this.roleTxt[1] = 'TIÊN TRI';
-        this.roleTxt[2] = 'BẢO VỆ';
-        this.roleTxt[3] = 'THỢ SĂN';
-        this.roleTxt[4] = 'BÁN SÓI';
+        this.roleTxt[0] = '💩DÂN';
+        this.roleTxt[-1] = '🐺SÓI';
+        this.roleTxt[1] = '🔍TIÊN TRI';
+        this.roleTxt[2] = '🗿BẢO VỆ';
+        this.roleTxt[3] = '🔫THỢ SĂN';
+        this.roleTxt[4] = '🐺BÁN SÓI';
     }
     getUserRoom(joinID) {
         return this.userRoom[joinID];

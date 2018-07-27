@@ -44,18 +44,18 @@ async function roomRoleChat(roomID) {
         let villagersList = gamef.getRoom(roomID).villagersTxt.join(' ; ');
         let playersList = gamef.getRoom(roomID).playersTxt.join(' ; ');
         if (m.role == -1) {//SÓI
-          bot.say(m.joinID, `Sói ơi dậy đi! Đêm nay sói muốn cắn ai?\n/vote <id> để cắn 1 ai đó\n/vote -1 để ăn chay!\nID CẢ LÀNG:\n${playersList}\nID TEAM SÓI:\n${wolfList}\nID TEAM DÂN:\n${villagersList}`);
+          bot.say(m.joinID, `🐺Sói ơi dậy đi! Đêm nay sói muốn cắn ai?\n/vote <id> để cắn 1 ai đó\n/vote -1 để ăn chay!\nID CẢ LÀNG:\n${playersList}\n🐺ID TEAM SÓI:\n${wolfList}\n💩ID TEAM DÂN:\n${villagersList}`);
         } else if (m.role == 1) { // tiên tri
-          bot.say(m.joinID, `Tiên tri dậy đi! Tiên tri muốn kiểm tra ai?\n/see <id> để kiểm tra\n${playersList}`);
+          bot.say(m.joinID, `🔍Tiên tri dậy đi! Tiên tri muốn kiểm tra ai?\n/see <id> để kiểm tra\n${playersList}`);
         } else if (m.role == 2) { // Bảo vệ
-          bot.say(m.joinID, `Bảo vệ dậy đi! Đêm nay bạn muốn bảo vệ ai?\n/save <id> để bảo vệ\n${playersList}`);
+          bot.say(m.joinID, `🗿Bảo vệ dậy đi! Đêm nay bạn muốn bảo vệ ai?\n/save <id> để bảo vệ\n${playersList}`);
         } else if (m.role == 3) { // Thợ săn
-          bot.say(m.joinID, `Thợ săn dậy đi! Đêm nay bạn muốn bắn ai?\n/fire <id> để ngắm bắn\n${playersList}`);
+          bot.say(m.joinID, `🔫Thợ săn dậy đi! Đêm nay bạn muốn bắn ai?\n/fire <id> để ngắm bắn\n${playersList}`);
         } else if (m.role == 4) { // Bán sói
-          bot.say(m.joinID, `Bạn là BÁN SÓI!\nBạn vẫn còn là DÂN! Ngủ tiếp đi!\nID CẢ LÀNG:\n${playersList}`);
+          bot.say(m.joinID, `🐺Bạn là BÁN SÓI!\nBạn vẫn còn là DÂN! Ngủ tiếp đi!\nID CẢ LÀNG:\n${playersList}`);
           gamef.getRoom(roomID).roleDoneBy(m.joinID);
         } else {
-          bot.say(m.joinID, `Bạn là DÂN! Ngủ tiếp đi :))\nID CẢ LÀNG:\n${playersList}`);
+          bot.say(m.joinID, `💩Bạn là DÂN! Ngủ tiếp đi :))\nID CẢ LÀNG:\n${playersList}`);
           gamef.getRoom(roomID).roleDoneBy(m.joinID);
         }
       }
@@ -110,17 +110,18 @@ function nightDoneCheck(userRoom) {
         if (gamef.getRoom(userRoom).players[deathID].role === 3) { //người chết là thợ săn
           let fireID = gamef.getRoom(userRoom).fireID;
           let deathFireTxt = gamef.getRoom(userRoom).playersTxt[fireID];
-          roomChatAll(userRoom, 0, `Thợ săn vừa chết đã ngắm bắn (${deathFireTxt})!`);
-          gamef.getRoom(userRoom).newLog(`Thợ săn vừa chết đã ngắm bắn (${deathFireTxt}) là ${gamef.roleTxt[gamef.getRoom(userRoom).getRoleByID(fireID)]}`);
+          roomChatAll(userRoom, 0, `🔫Thợ săn vừa chết đã ngắm bắn (${deathFireTxt})!`);
+          gamef.getRoom(userRoom).newLog(`🔫Thợ săn vừa chết đã ngắm bắn (${deathFireTxt}) là ${gamef.roleTxt[gamef.getRoom(userRoom).getRoleByID(fireID)]}`);
         }
         console.log(`$ ROOM ${userRoom + 1} > ${deathTxt} DIED!`);
       } else {
         console.log(`$ ROOM ${userRoom + 1} > NOBODY DIED!`);
-        let deathRole = gamef.roleTxt[gamef.getRoom(userRoom).getRoleByID(deathID)];
+        let deathRole;
         if (deathID != -1 && gamef.getRoom(userRoom).players[deathID].role == 4){ //là BÁN SÓI
+          deathRole = gamef.roleTxt[gamef.getRoom(userRoom).getRoleByID(deathID)]
           console.log(`$ ROOM ${userRoom + 1} > HALF WOLF!`);
           let halfWolfjoinID = gamef.getRoom(userRoom).players[deathID].joinID;
-          bot.say(halfWolfjoinID,`\`\`\`\nBạn đã bị sói cắn!\nTừ giờ bạn là SÓI!\n\`\`\``);
+          bot.say(halfWolfjoinID,`\`\`\`\nBạn đã bị sói cắn!\nTừ giờ bạn là 🐺SÓI!\n\`\`\``);
           gamef.getRoom(userRoom).players[deathID].setRole(-1);
         }
         gamef.getRoom(userRoom).newLog(`${deathID != -1 ? `Người bị cắn: (${deathTxt}) là ${deathRole}\n` : `Sói đêm ấy ăn chay!\n`}Và đêm hôm đấy không ai chết cả!`);
@@ -152,8 +153,8 @@ function gameIsNotEndCheck(userRoom, callback) {
       if (winner === 0) {
         callback();
       } else {
-        console.log(`$ ROOM ${userRoom + 1} > END GAME > ${winner === -1 ? 'SÓI' : 'DÂN'} thắng!`);
-        await roomChatAll(userRoom, 0, [`Trò chơi đã kết thúc...\n${winner === -1 ? 'SÓI' : 'DÂN'} thắng!`, `Bạn có thể sẵn sàng để bắt đầu chơi lại, hoặc tiếp tục trò chuyện với các người chơi khác trong phòng!`]);
+        console.log(`$ ROOM ${userRoom + 1} > END GAME > ${winner === -1 ? '🐺SÓI' : '💩DÂN'} thắng!`);
+        await roomChatAll(userRoom, 0, [`Trò chơi đã kết thúc...\n${winner === -1 ? '🐺SÓI' : '💩DÂN'} thắng!`, `Bạn có thể sẵn sàng để bắt đầu chơi lại, hoặc tiếp tục trò chuyện với các người chơi khác trong phòng!`]);
         await roomChatAll(userRoom, 0, gamef.getRoom(userRoom).logs.join(`\n`));
         gamef.getRoom(userRoom).resetRoom();
       }
@@ -202,7 +203,7 @@ const bot = new BootBot({
 // bot config
 bot.setGreetingText("Chào mừng bạn đến với Phạm Ngọc Duy GAME bot, hãy bắt đầu trò chơi :3")
 bot.setGetStartedButton((payload, chat) => {
-  chat.say('MA SÓI GAME').then(() => {
+  chat.say('🐺MA SÓI GAME').then(() => {
     chat.say({
       text: `Chào mừng bạn, để bắt đầu hãy chat 'help' hoặc 'trợ giúp' để được hướng dẫn cách chơi!'`,
       quickReplies: ['help', 'trợ giúp'],
@@ -390,8 +391,8 @@ bot.on('message', (payload, chat) => {
           const startTT = async () => {
             let voteID = chatTxt.match(/[0-9]+/g)[0];
             let role = gamef.getRoom(userRoom).getRoleByID(voteID);
-            await chat.say(`${voteID} là ${role == -1 ? 'SÓI' : role == 1 ? 'TIÊN TRI, Bạn đùa tớ à :v' : 'PHE DÂN'}`);
-            gamef.getRoom(userRoom).newLog(`${user.first_name} soi (${gamef.getRoom(userRoom).playersTxt[voteID]}) là ${role == -1 ? 'SÓI' : role == 1 ? 'TỰ SOI MÌNH! GG' : 'PHE DÂN'}`);
+            await chat.say(`${voteID} là ${role == -1 ? '🐺SÓI' : role == 1 ? '🔍TIÊN TRI, Bạn đùa tớ à :v' : '💩PHE DÂN'}`);
+            gamef.getRoom(userRoom).newLog(`${user.first_name} soi (${gamef.getRoom(userRoom).playersTxt[voteID]}) là ${role == -1 ? '🐺SÓI' : role == 1 ? 'TỰ SOI MÌNH! GG' : '💩PHE DÂN'}`);
             gamef.getRoom(userRoom).roleDoneBy(joinID);
             // kiểm tra đã VOTE xong chưa?
             nightDoneCheck(userRoom);
@@ -406,7 +407,7 @@ bot.on('message', (payload, chat) => {
           if (!gamef.getRoom(userRoom).save(joinID, voteID)) {
             chat.say(`\`\`\`\nBạn không thể bảo vệ 1 người 2 đêm liên tiếp hoặc bảo vệ người chơi đã chết!\n\`\`\``);
           } else {
-            chat.say(`Bạn đã bảo vệ ${gamef.getRoom(userRoom).playersTxt[voteID]}!`);
+            chat.say(`🗿Bạn đã bảo vệ ${gamef.getRoom(userRoom).playersTxt[voteID]}!`);
             // kiểm tra đã VOTE xong chưa?
             nightDoneCheck(userRoom);
           }
@@ -500,8 +501,8 @@ bot.on('postback:LEAVE_ROOM', (payload, chat) => {
       gamef.getRoom(userRoom).killAction(user.id);
       leaveRole = user.role;
       chat.say(`Bạn đã tự sát!`);
-      roomChatAll(userRoom, joinID, `******************\n${user.first_name} đã tự sát với vai trò là: ${leaveRole == -1 ? 'SÓI' : leaveRole == 1 ? 'TIÊN TRI' : leaveRole == 2 ? 'BẢO VỆ' : leaveRole == 3 ? 'THỢ SĂN' : 'DÂN THƯỜNG'}\n******************`);
-      gamef.getRoom(userRoom).newLog(`${user.first_name} đã tự sát với vai trò là: ${leaveRole == -1 ? 'SÓI' : leaveRole == 1 ? 'TIÊN TRI' : leaveRole == 2 ? 'BẢO VỆ' : leaveRole == 3 ? 'THỢ SĂN' : 'DÂN THƯỜNG'}`);
+      roomChatAll(userRoom, joinID, `\`\`\`\n${user.first_name} đã tự sát với vai trò là: ${leaveRole == -1 ? '🐺SÓI' : leaveRole == 1 ? '🔍TIÊN TRI' : leaveRole == 2 ? '🗿BẢO VỆ' : leaveRole == 3 ? '🔫THỢ SĂN' : '💩DÂN THƯỜNG'}\n\`\`\``);
+      gamef.getRoom(userRoom).newLog(`\`\`\`\n${user.first_name} đã tự sát với vai trò là: ${leaveRole == -1 ? '🐺SÓI' : leaveRole == 1 ? '🔍TIÊN TRI' : leaveRole == 2 ? '🗿BẢO VỆ' : leaveRole == 3 ? '🔫THỢ SĂN' : '💩DÂN THƯỜNG'}\n\`\`\``);
       if (gamef.getRoom(userRoom).isNight) {
         gamef.getRoom(userRoom).roleIsDone((isDone) => {
           if (isDone) {
@@ -608,8 +609,8 @@ bot.on('postback:ADMIN_COMMAND', (payload, chat) => {
             gamef.getRoom(roomID).killAction(player.id);
             leaveRole = player.role;
             bot.say(playerJoinID, '```\nBạn đã bị ADMIN sát hại do đã AFK quá lâu!\n```');
-            roomChatAll(roomID, playerJoinID, `\`\`\`\n${player.first_name} đã bị ADMIN sát hại (do AFK quá lâu) với vai trò là: ${leaveRole == -1 ? 'SÓI' : leaveRole == 1 ? 'TIÊN TRI' : leaveRole == 2 ? 'BẢO VỆ' : leaveRole == 3 ? 'THỢ SĂN' : 'DÂN THƯỜNG'}\n\`\`\``);
-            gamef.getRoom(userRoom).newLog(`\`\`\`\n${user.first_name} đã bị ADMIN sát hại (do AFK quá lâu) với vai trò là: ${leaveRole == -1 ? 'SÓI' : leaveRole == 1 ? 'TIÊN TRI' : leaveRole == 2 ? 'BẢO VỆ' : leaveRole == 3 ? 'THỢ SĂN' : 'DÂN THƯỜNG'}\n\`\`\``);
+            roomChatAll(roomID, playerJoinID, `\`\`\`\n${player.first_name} đã bị ADMIN sát hại (do AFK quá lâu) với vai trò là: ${leaveRole == -1 ? '🐺SÓI' : leaveRole == 1 ? '🔍TIÊN TRI' : leaveRole == 2 ? '🗿BẢO VỆ' : leaveRole == 3 ? '🔫THỢ SĂN' : '💩DÂN THƯỜNG'}\n\`\`\``);
+            gamef.getRoom(userRoom).newLog(`\`\`\`\n${user.first_name} đã bị ADMIN sát hại (do AFK quá lâu) với vai trò là: ${leaveRole == -1 ? '🐺SÓI' : leaveRole == 1 ? '🔍TIÊN TRI' : leaveRole == 2 ? '🗿BẢO VỆ' : leaveRole == 3 ? '🔫THỢ SĂN' : '💩DÂN THƯỜNG'}\n\`\`\``);
             if (gamef.getRoom(roomID).isNight) {
               gamef.getRoom(roomID).roleIsDone((isDone) => {
                 if (isDone) {
