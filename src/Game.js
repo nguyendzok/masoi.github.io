@@ -248,6 +248,7 @@ class Room {
     vote(joinID, voteID) {
         if (voteID == -1){
             this.roleDoneBy(joinID);
+            console.log('SÓI ĂN CHAY 1');
             return true;
         }
         if (!this.roleDone[joinID] && this.players[voteID] && this.alivePlayer[this.players[voteID].joinID]) {

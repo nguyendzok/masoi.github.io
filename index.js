@@ -559,8 +559,8 @@ bot.on('postback:ADMIN_COMMAND', (payload, chat) => {
           chat.say('Đã tạo lại các phòng chơi và xóa các người chơi!');
           console.log('$ ROOM > RESET_ALL');
         } else if (chatTxt.match(/\/kick.[0-9]+.[0-9]+/g)) {
-          let roomID = chatTxt.match(/\/[0-9]+/g)[0]-1;
-          let userID = chatTxt.match(/\/[0-9]+/g)[1];
+          let roomID = chatTxt.match(/[0-9]+/g)[0]-1;
+          let userID = chatTxt.match(/[0-9]+/g)[1];
           let leaveRole;
           let player = gamef.getRoom(roomID).players[userID];
           if (!gamef.getRoom(roomID).ingame) {
