@@ -209,6 +209,7 @@ class Room {
         this.roleDoneCount = 0;
     }
     gameIsEnd(callback) {
+        console.log("$ ROOM " + (this.id + 1) + " > GAME CHECK:" + this.wolfsCount + 'SÓI /' + villagersCount + 'DÂN');
         if (this.wolfsCount === this.villagersCount) {
             //SÓI THẮNG
             callback(-1);
