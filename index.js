@@ -478,12 +478,12 @@ bot.on('postback:LEAVE_ROOM', (payload, chat) => {
     let userName = user.first_name;
     let leaveRole;
     if (!gamef.getRoom(userRoom).ingame) {
-      gamef.getRoom(userRoom).deletePlayer(joinID);
+      
     } else {
-      let player = gamef.getRoom(userRoom).getPlayer(joinID);
-      gamef.getRoom(userRoom).killAction(player.id);
-      leaveRole = player.role;
+      gamef.getRoom(userRoom).killAction(user.id);
+      leaveRole = user.role;
     }
+    gamef.getRoom(userRoom).deletePlayer(joinID);
     chat.say(`Bạn đã rời phòng chơi ${userRoom + 1}!`);
     roomChatAll(userRoom, joinID, `${userName} đã rời phòng chơi ${userRoom + 1} ${leaveRole != undefined ? (' có vai trò là: ' + (leaveRole == -1 ? 'SÓI' : leaveRole == 1 ? 'TIÊN TRI' : leaveRole == 2 ? 'BẢO VỆ' : leaveRole == 3 ? 'THỢ SĂN' : 'DÂN THƯỜNG')) : ''}`);
     gamef.setUserRoom(joinID, undefined);
@@ -575,7 +575,8 @@ bot.on('postback:ADMIN_COMMAND', (payload, chat) => {
           roomChatAll(roomID, 0, `${player.first_name} đã bị kick khỏi phòng chơi ${roomID + 1} ${leaveRole != undefined ? (' có vai trò là: ' + (leaveRole == -1 ? 'SÓI' : leaveRole == 1 ? 'TIÊN TRI' : leaveRole == 2 ? 'BẢO VỆ' : leaveRole == 3 ? 'THỢ SĂN' : 'DÂN THƯỜNG')) : ''}`);
           
           chat.say('Thành công!');
-          console.log('$ ROOM > RESET_ALL');
+          console.log(`$ ROOM ${roomID} > KICK PLAYER ${player.first_name}`);
+          convo.end();
         } else {
           convo.say(`Bạn đã hủy không đổi tên!`)
           convo.end();
