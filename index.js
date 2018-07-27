@@ -91,7 +91,7 @@ function yesNoVoteCheck(userRoom) {
     });
   })
 }
-function roleDoneCheck(userRoom) {
+function nightDoneCheck(userRoom) {
   return gamef.getRoom(userRoom).roleIsDone((isDone) => {
     if (isDone) {
       gamef.getRoom(userRoom).findOutDeathID();
@@ -370,7 +370,7 @@ bot.on('message', (payload, chat) => {
               chat.say("Bạn không thể thực hiện vote 2 lần hoặc vote người chơi đã chết!");
             }
             // kiểm tra đã VOTE xong chưa?
-            roleDoneCheck(userRoom);
+            nightDoneCheck(userRoom);
           }
           start();
         }
@@ -383,7 +383,7 @@ bot.on('message', (payload, chat) => {
             gamef.getRoom(userRoom).newLog(`${user.first_name} soi (${gamef.getRoom(userRoom).playersTxt[voteID]}) là ${role == -1 ? 'SÓI' : role == 1 ? 'TỰ SOI MÌNH! GG' : 'PHE DÂN'}`);
             gamef.getRoom(userRoom).roleDoneBy(joinID);
             // kiểm tra đã VOTE xong chưa?
-            roleDoneCheck(userRoom);
+            nightDoneCheck(userRoom);
           }
           startTT();
         } else {
@@ -397,7 +397,7 @@ bot.on('message', (payload, chat) => {
           } else {
             chat.say(`Bạn đã bảo vệ ${gamef.getRoom(userRoom).playersTxt[voteID]}!`);
             // kiểm tra đã VOTE xong chưa?
-            roleDoneCheck(userRoom);
+            nightDoneCheck(userRoom);
           }
         } else {
           chat.say(`Bạn không thể trò chuyện trong đêm!`);
@@ -410,7 +410,7 @@ bot.on('message', (payload, chat) => {
           } else {
             chat.say(`Bạn đã ngắm bắn ${gamef.getRoom(userRoom).playersTxt[voteID]}!`);
             // kiểm tra đã VOTE xong chưa?
-            roleDoneCheck(userRoom);
+            nightDoneCheck(userRoom);
           }
         } else {
           chat.say(`Bạn không thể trò chuyện trong đêm!`);
@@ -490,7 +490,7 @@ bot.on('postback:LEAVE_ROOM', (payload, chat) => {
       chat.say(`Bạn đã tự sát!`);
       gamef.getRoom(userRoom).roleIsDone((isDone) => {
         if (isDone) {
-          dayVoteEnd(userRoom);
+          nightDoneCheck(userRoom);
         }
       });
     }
@@ -582,7 +582,7 @@ bot.on('postback:ADMIN_COMMAND', (payload, chat) => {
             bot.say(playerJoinID, `Bạn đã bị ADMIN sát hại do đã AFK quá lâu!`);
             gamef.getRoom(userRoom).roleIsDone((isDone) => {
               if (isDone) {
-                dayVoteEnd();
+                nightDoneCheck(userRoom)
               }
             })
           }
