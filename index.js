@@ -593,12 +593,13 @@ bot.on('postback:ADMIN_COMMAND', (payload, chat) => {
             gamef.getRoom(roomID).deletePlayerByID(userID);
             gamef.setUserRoom(playerJoinID, undefined);
             bot.say(playerJoinID, `Bạn đã bị kick ra khỏi phòng chơi do đã AFK quá lâu!`);
-            roomChatAll(roomID, playerJoinID, `${player.first_name} đã ${leaveRole != undefined ? ('bị ADMIN sát hại (do AFK quá lâu) với vai trò là: ' + (leaveRole == -1 ? 'SÓI' : leaveRole == 1 ? 'TIÊN TRI' : leaveRole == 2 ? 'BẢO VỆ' : leaveRole == 3 ? 'THỢ SĂN' : 'DÂN THƯỜNG')) : 'bị kick khỏi phòng!'}`);
+            roomChatAll(roomID, playerJoinID, `${player.first_name} đã bị kick ra khỏi phòng chơi do đã AFK quá lâu!`);
           } else {
             gamef.getRoom(roomID).killAction(player.id);
             leaveRole = player.role;
             bot.say(playerJoinID, `Bạn đã bị ADMIN sát hại do đã AFK quá lâu!`);
-            roomChatAll(roomID, playerJoinID, `${player.first_name} đã ${leaveRole != undefined ? ('bị ADMIN sát hại (do AFK quá lâu) với vai trò là: ' + (leaveRole == -1 ? 'SÓI' : leaveRole == 1 ? 'TIÊN TRI' : leaveRole == 2 ? 'BẢO VỆ' : leaveRole == 3 ? 'THỢ SĂN' : 'DÂN THƯỜNG')) : 'bị kick khỏi phòng!'}`);
+            roomChatAll(roomID, playerJoinID, `${player.first_name} đã bị ADMIN sát hại (do AFK quá lâu) với vai trò là: ${leaveRole == -1 ? 'SÓI' : leaveRole == 1 ? 'TIÊN TRI' : leaveRole == 2 ? 'BẢO VỆ' : leaveRole == 3 ? 'THỢ SĂN' : 'DÂN THƯỜNG'}`);
+            gamef.getRoom(userRoom).newLog(`${user.first_name} đã bị ADMIN sát hại (do AFK quá lâu) với vai trò là: ${leaveRole == -1 ? 'SÓI' : leaveRole == 1 ? 'TIÊN TRI' : leaveRole == 2 ? 'BẢO VỆ' : leaveRole == 3 ? 'THỢ SĂN' : 'DÂN THƯỜNG'}`);
             if (gamef.getRoom(roomID).isNight) {
               gamef.getRoom(roomID).roleIsDone((isDone) => {
                 if (isDone) {

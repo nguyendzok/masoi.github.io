@@ -224,7 +224,7 @@ class Room {
         this.roleDoneCount = 0;
     }
     gameIsEnd(callback) {
-        console.log("$ ROOM " + (this.id + 1) + " > GAME CHECK:" + this.wolfsCount + 'SÓI /' + this.villagersCount + 'DÂN');
+        console.log("$ ROOM " + (this.id + 1) + " > GAME CHECK: " + this.wolfsCount + ' SÓI/' + this.villagersCount + ' DÂN');
         if (this.wolfsCount >= this.villagersCount) {
             //SÓI THẮNG
             callback(-1);
