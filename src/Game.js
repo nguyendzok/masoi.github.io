@@ -12,7 +12,7 @@ class Player {
     getReady() {
         this.ready = true;
     }
-    setFirstName(newFirstName){
+    setFirstName(newFirstName) {
         this.first_name = newFirstName;
     }
 }
@@ -82,7 +82,7 @@ class Room {
         let player = this.getPlayer(joinID);
         let playerID = player.id;
         let len = this.players.length;
-        if (player.ready){
+        if (player.ready) {
             this.readyCount--;
         }
         this.players.splice(playerID, 1);
@@ -93,7 +93,7 @@ class Room {
     deletePlayerByID(id) {
         let playerID = id;
         let len = this.players.length;
-        if (this.players[id].ready){
+        if (this.players[id].ready) {
             this.readyCount--;
         }
         this.players.splice(playerID, 1);
@@ -105,7 +105,9 @@ class Room {
         this.timerSchedule = schedule.scheduleJob(time, callback);
     }
     cancelSchedule() {
-        this.timerSchedule.cancel();
+        if (this.timerSchedule) {
+            this.timerSchedule.cancel();
+        }
     }
     newPlayerID() {
         return this.players.length > 0 ? (this.players[this.players.length - 1].id + 1) : 0;
@@ -246,7 +248,7 @@ class Room {
         this.chatON = true;
     }
     vote(joinID, voteID) {
-        if (voteID == -1){
+        if (voteID == -1) {
             this.roleDoneBy(joinID);
             console.log('SÓI ĂN CHAY 1');
             return true;
@@ -266,8 +268,8 @@ class Room {
     chatOFF() {
         this.chatON = false;
     }
-    aliveCount(){
-        return this.villagersCount+this.wolfsCount;
+    aliveCount() {
+        return this.villagersCount + this.wolfsCount;
     }
 }
 
@@ -324,7 +326,7 @@ class Game {
         // create message
         this.room[roomID].players.forEach(m => {
             playerListView.unshift({
-                title: "Người chơi " + (m.id+1) + ": " + m.last_name + " " + m.first_name,
+                title: "Người chơi " + (m.id + 1) + ": " + m.last_name + " " + m.first_name,
                 image_url: m.avatar,
                 subtitle: `ID người chơi: ${m.id}\n${m.ready ? 'Đã sẵn sàng' : 'Chưa sẵn sàng'}`,
                 // buttons: [
