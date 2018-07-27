@@ -303,6 +303,7 @@ class Game {
         this.roleTxt[1] = 'TIÊN TRI';
         this.roleTxt[2] = 'BẢO VỆ';
         this.roleTxt[3] = 'THỢ SĂN';
+        this.roleTxt[4] = 'BÁN SÓI';
     }
     getUserRoom(joinID) {
         return this.userRoom[joinID];
