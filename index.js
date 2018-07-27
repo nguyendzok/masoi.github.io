@@ -234,7 +234,7 @@ bot.on('postback:JOIN_ROOM', (payload, chat) => {
           await asyncForEach(gamef.getRoom(roomID).players, async (m) => {
             if (m) {
               await bot.sendGenericTemplate(m.joinID, playerListView).then(async () => {
-                await bot.say(m.joinID, `${joinUser.first_name} đã tham gia phòng!`);
+                await bot.say(m.joinID, `${joinUser.first_name} đã tham gia phòng!`)
               })
             }
           })
@@ -307,16 +307,13 @@ bot.on('postback:LEAVE_ROOM', (payload, chat) => {
   if (userRoom != undefined) {
     let user = gamef.getRoom(userRoom).getPlayer(joinID);
     let userName = user.first_name;
-    let leaveRole;
     if (!gamef.getRoom(userRoom).ingame) {
       gamef.getRoom(userRoom).deletePlayer(joinID);
     } else {
-      let player = gamef.getRoom(userRoom).getPlayer(joinID);
-      gamef.getRoom(userRoom).killAction(player.id);
-      leaveRole = player.role;
+      gamef.getRoom(userRoom).killAction(gamef.getRoom(userRoom).getPlayer(joinID).id);
     }
     chat.say(`Bạn đã rời phòng chơi ${userRoom + 1}!`);
-    roomChatAll(userRoom, joinID, `${userName} đã rời phòng chơi ${userRoom + 1} ${leaveRole!=undefined?(' có vai trò là: '+(leaveRole==-1?'SÓI':leaveRole==1?'TIÊN TRI':leaveRole==2?'BẢO VỆ':leaveRole==3?'THỢ SĂN':'DÂN THƯỜNG')):''}`);
+    roomChatAll(userRoom, joinID, `${userName} đã rời phòng chơi ${userRoom + 1}!`);
     gamef.setUserRoom(joinID, undefined);
     console.log(`$ ROOM ${userRoom + 1} > LEAVE > ${joinID} : ${userName}`);
   } else {
