@@ -563,12 +563,15 @@ bot.on('postback:ADMIN_COMMAND', (payload, chat) => {
           let userID = chatTxt.match(/[0-9]+/g)[1];
           let leaveRole;
           let player = gamef.getRoom(roomID).players[userID];
+          let playerJoinID = player.joinID;
           if (!gamef.getRoom(roomID).ingame) {
             gamef.getRoom(roomID).deletePlayerByID(userID);
+            bot.say(playerJoinID, `Bạn đã bị kick ra khỏi phòng chơi!`);
           } else {
             gamef.getRoom(roomID).killAction(player.id);
             leaveRole = player.role;
           }
+          gamef.setUserRoom(playerJoinID, undefined);
           roomChatAll(roomID, 0, `${player.first_name} đã bị kick khỏi phòng chơi ${roomID + 1} ${leaveRole != undefined ? (' có vai trò là: ' + (leaveRole == -1 ? 'SÓI' : leaveRole == 1 ? 'TIÊN TRI' : leaveRole == 2 ? 'BẢO VỆ' : leaveRole == 3 ? 'THỢ SĂN' : 'DÂN THƯỜNG')) : ''}`);
           
           chat.say('Thành công!');
