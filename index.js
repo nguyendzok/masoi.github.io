@@ -74,10 +74,10 @@ function yesNoVoteCheck(userRoom) {
     if (gamef.getRoom(userRoom).saveOrKill < 0) {
       gamef.getRoom(userRoom).kill();
       roomChatAll(userRoom, 0, `Đã treo cổ ${deathTxt}! Mọi người đi ngủ`);
-      gamef.getRoom(userRoom).newLog(`Mọi người đã treo cổ (${deathTxt})! với ${(gamef.getRoom(userRoom).aliveCount()+gamef.getRoom(userRoom).saveOrKill+1)/2} tha/${(gamef.getRoom(userRoom).aliveCount()-gamef.getRoom(userRoom).saveOrKill+1)/2} treo`);
+      gamef.getRoom(userRoom).newLog(`Mọi người đã treo cổ (${deathTxt})! với ${(gamef.getRoom(userRoom).aliveCount() + gamef.getRoom(userRoom).saveOrKill + 1) / 2} tha/${(gamef.getRoom(userRoom).aliveCount() - gamef.getRoom(userRoom).saveOrKill + 1) / 2} treo`);
     } else {
       roomChatAll(userRoom, 0, `Đã tha chết cho ${deathTxt}! Mọi người đi ngủ`);
-      gamef.getRoom(userRoom).newLog(`Mọi người tha chết cho (${deathTxt}) với ${(gamef.getRoom(userRoom).aliveCount()+gamef.getRoom(userRoom).saveOrKill+1)/2} tha/${(gamef.getRoom(userRoom).aliveCount()-gamef.getRoom(userRoom).saveOrKill+1)/2} treo`);
+      gamef.getRoom(userRoom).newLog(`Mọi người tha chết cho (${deathTxt}) với ${(gamef.getRoom(userRoom).aliveCount() + gamef.getRoom(userRoom).saveOrKill + 1) / 2} tha/${(gamef.getRoom(userRoom).aliveCount() - gamef.getRoom(userRoom).saveOrKill + 1) / 2} treo`);
     }
     gameIsNotEndCheck(userRoom, () => {
       const start2 = async () => {
@@ -183,7 +183,7 @@ const actionButtons = [
     call_to_actions: [
       { type: 'postback', title: 'Đổi tên', payload: 'USER_RENAME' },
       { type: 'postback', title: 'Các người chơi cùng phòng', payload: 'VIEW_PLAYER_IN_ROOM' },
-      { type: 'postback', title: '(ADMIN ONLY) RESET ROOM', payload: 'RESET_ROOM' },
+      { type: 'postback', title: '(ADMIN ONLY) COMMAND', payload: 'ADMIN_COMMAND' },
     ]
   },
   { type: 'postback', title: 'Trợ giúp', payload: 'HELP' },
@@ -247,7 +247,7 @@ bot.on('postback:JOIN_ROOM', (payload, chat) => {
   };
 
   chat.getUserProfile().then((user) => {
-    console.log(`$ JOIN > ${joinID} : ${user.last_name+' '+user.first_name}`);
+    console.log(`$ JOIN > ${joinID} : ${user.last_name + ' ' + user.first_name}`);
     joinUser = user;
     chat.conversation((convo) => {
       askRoom(convo);
@@ -300,29 +300,6 @@ bot.on('postback:READY_ROOM', (payload, chat) => {
   }
 });
 
-// listen LEAVE ROOM message
-bot.on('postback:LEAVE_ROOM', (payload, chat) => {
-  let joinID = payload.sender.id;
-  const userRoom = gamef.getUserRoom(joinID);
-  if (userRoom != undefined) {
-    let user = gamef.getRoom(userRoom).getPlayer(joinID);
-    let userName = user.first_name;
-    let leaveRole;
-    if (!gamef.getRoom(userRoom).ingame) {
-      gamef.getRoom(userRoom).deletePlayer(joinID);
-    } else {
-      let player = gamef.getRoom(userRoom).getPlayer(joinID);
-      gamef.getRoom(userRoom).killAction(player.id);
-      leaveRole = player.role;
-    }
-    chat.say(`Bạn đã rời phòng chơi ${userRoom + 1}!`);
-    roomChatAll(userRoom, joinID, `${userName} đã rời phòng chơi ${userRoom + 1} ${leaveRole!=undefined?(' có vai trò là: '+(leaveRole==-1?'SÓI':leaveRole==1?'TIÊN TRI':leaveRole==2?'BẢO VỆ':leaveRole==3?'THỢ SĂN':'DÂN THƯỜNG')):''}`);
-    gamef.setUserRoom(joinID, undefined);
-    console.log(`$ ROOM ${userRoom + 1} > LEAVE > ${joinID} : ${userName}`);
-  } else {
-    chat.say(`Bạn chưa tham gia phòng nào!`);
-  }
-});
 // listen for ROOM CHAT and VOTE
 bot.on('message', (payload, chat) => {
   const joinID = payload.sender.id;
@@ -491,6 +468,31 @@ bot.on('message', (payload, chat) => {
   }
   console.log(`$ ROOM ${userRoom + 1} CHAT > ${joinID}: ${chatTxt}`);
 });
+
+// listen LEAVE ROOM message
+bot.on('postback:LEAVE_ROOM', (payload, chat) => {
+  let joinID = payload.sender.id;
+  const userRoom = gamef.getUserRoom(joinID);
+  if (userRoom != undefined) {
+    let user = gamef.getRoom(userRoom).getPlayer(joinID);
+    let userName = user.first_name;
+    let leaveRole;
+    if (!gamef.getRoom(userRoom).ingame) {
+      gamef.getRoom(userRoom).deletePlayer(joinID);
+    } else {
+      let player = gamef.getRoom(userRoom).getPlayer(joinID);
+      gamef.getRoom(userRoom).killAction(player.id);
+      leaveRole = player.role;
+    }
+    chat.say(`Bạn đã rời phòng chơi ${userRoom + 1}!`);
+    roomChatAll(userRoom, joinID, `${userName} đã rời phòng chơi ${userRoom + 1} ${leaveRole != undefined ? (' có vai trò là: ' + (leaveRole == -1 ? 'SÓI' : leaveRole == 1 ? 'TIÊN TRI' : leaveRole == 2 ? 'BẢO VỆ' : leaveRole == 3 ? 'THỢ SĂN' : 'DÂN THƯỜNG')) : ''}`);
+    gamef.setUserRoom(joinID, undefined);
+    console.log(`$ ROOM ${userRoom + 1} > LEAVE > ${joinID} : ${userName}`);
+  } else {
+    chat.say(`Bạn chưa tham gia phòng nào!`);
+  }
+});
+
 // listen VIEW_PLAYER_IN_ROOM message
 bot.on('postback:VIEW_PLAYER_IN_ROOM', (payload, chat) => {
   let joinID = payload.sender.id;
@@ -541,12 +543,48 @@ bot.on('postback:USER_RENAME', (payload, chat) => {
   });
 });
 // listen RESET ROOM message
-bot.on('postback:RESET_ROOM', (payload, chat) => {
+bot.on('postback:ADMIN_COMMAND', (payload, chat) => {
   let joinID = payload.sender.id;
+
+  const askCMD = (convo) => {
+    convo.ask(`Các lệnh cơ bản:\nĐể reset 2 phòng: /resetAll\nĐể kick người chơi: /kick <RoomID> <userID>`, (payload, convo) => {
+      if (!payload.message) {
+        convo.say(`Vui lòng nhập lệnh hợp lệ!`);
+        convo.end();
+        return;
+      } else {
+        const chatTxt = payload.message.text;
+        if (chatTxt.match(/\/resetAll/g)) {
+          gamef.resetAllRoom();
+          chat.say('Đã tạo lại các phòng chơi và xóa các người chơi!');
+          console.log('$ ROOM > RESET_ALL');
+        } else if (chatTxt.match(/\/kick.[0-9]+.[0-9]+/g)) {
+          let roomID = chatTxt.match(/\/[0-9]+/g)[0]-1;
+          let userID = chatTxt.match(/\/[0-9]+/g)[1];
+          let leaveRole;
+          let player = gamef.getRoom(roomID).players[userID];
+          if (!gamef.getRoom(roomID).ingame) {
+            gamef.getRoom(roomID).deletePlayerByID(userID);
+          } else {
+            gamef.getRoom(roomID).killAction(player.id);
+            leaveRole = player.role;
+          }
+          roomChatAll(roomID, 0, `${player.first_name} đã bị kick khỏi phòng chơi ${roomID + 1} ${leaveRole != undefined ? (' có vai trò là: ' + (leaveRole == -1 ? 'SÓI' : leaveRole == 1 ? 'TIÊN TRI' : leaveRole == 2 ? 'BẢO VỆ' : leaveRole == 3 ? 'THỢ SĂN' : 'DÂN THƯỜNG')) : ''}`);
+          
+          chat.say('Thành công!');
+          console.log('$ ROOM > RESET_ALL');
+        } else {
+          convo.say(`Bạn đã hủy không đổi tên!`)
+          convo.end();
+        }
+      }
+    });
+  };
+
   if (joinID == 2643770348982136) {
-    gamef.resetAllRoom();
-    chat.say('Đã tạo lại 5 phòng chơi!');
-    console.log('$ ROOM > RESET_ALL');
+    chat.conversation((convo) => {
+      askCMD(convo);
+    });
   } else {
     chat.say('Bạn không có quyền thực hiện yêu cầu này!');
   }

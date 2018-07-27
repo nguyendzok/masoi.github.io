@@ -90,6 +90,17 @@ class Room {
             this.players[i].id--;
         }
     }
+    deletePlayerByID(id) {
+        let playerID = id;
+        let len = this.players.length;
+        if (this.players[id].ready){
+            this.readyCount--;
+        }
+        this.players.splice(playerID, 1);
+        for (let i = playerID; i < len - 1; i++) {
+            this.players[i].id--;
+        }
+    }
     addSchedule(time, callback) {
         this.timerSchedule = schedule.scheduleJob(time, callback);
     }
@@ -210,7 +221,7 @@ class Room {
     }
     gameIsEnd(callback) {
         console.log("$ ROOM " + (this.id + 1) + " > GAME CHECK:" + this.wolfsCount + 'SÓI /' + this.villagersCount + 'DÂN');
-        if (this.wolfsCount === this.villagersCount) {
+        if (this.wolfsCount >= this.villagersCount) {
             //SÓI THẮNG
             callback(-1);
         } else if (this.wolfsCount === 0) {
@@ -342,7 +353,7 @@ class Game {
         let roleListTxt = "Đang tạo game với: 1 TIÊN TRI, 1 BẢO VỆ";
         this.room[roomID].setRole(1, 1); // 1 TIÊN TRI
         this.room[roomID].setRole(2, 1); // 1 BẢO VỆ
-        if (len <= 6) {
+        if (len < 6) {
             this.room[roomID].setRole(-1, 1);  // 1 SÓI
             roleListTxt += ", 1 SÓI, " + (len - 3) + " DÂN";
         } else if (len < 10) {
