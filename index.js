@@ -44,7 +44,7 @@ async function roomRoleChat(roomID) {
         let villagersList = gamef.getRoom(roomID).villagersTxt.join(' ; ');
         let playersList = gamef.getRoom(roomID).playersTxt.join(' ; ');
         if (m.role == -1) {//SÓI
-          bot.say(m.joinID, `Sói ơi dậy đi! Đêm nay sói muốn cắn ai?\n/vote <id> để cắn 1 ai đó\nID TEAM SÓI:\n${wolfList}\nID TEAM DÂN:\n${villagersList}`);
+          bot.say(m.joinID, `Sói ơi dậy đi! Đêm nay sói muốn cắn ai?\n/vote <id> để cắn 1 ai đó\n/vote -1 để ăn chay!\nID TEAM SÓI:\n${wolfList}\nID TEAM DÂN:\n${villagersList}\nID CẢ LÀNG:\n${playersList}`);
         } else if (m.role == 1) { // tiên tri
           bot.say(m.joinID, `Tiên tri dậy đi! Tiên tri muốn kiểm tra ai?\n/see <id> để kiểm tra\n${playersList}`);
         } else if (m.role == 2) { // Bảo vệ
@@ -113,7 +113,7 @@ function nightDoneCheck(userRoom) {
         console.log(`$ ROOM ${userRoom + 1} > ${deathTxt} DIED!`);
       } else {
         console.log(`$ ROOM ${userRoom + 1} > NOBODY DIED!`);
-        gamef.getRoom(userRoom).newLog(`${deathID != -1 ? `Người bị cắn: (${deathTxt}) là ${gamef.roleTxt[gamef.getRoom(userRoom).getRoleByID(deathID)]}\n` : ``}Và đêm hôm đấy không ai chết cả!`);
+        gamef.getRoom(userRoom).newLog(`${deathID != -1 ? `Người bị cắn: (${deathTxt}) là ${gamef.roleTxt[gamef.getRoom(userRoom).getRoleByID(deathID)]}\n` : `Sói đêm ấy ăn chay!\n`}Và đêm hôm đấy không ai chết cả!`);
         roomChatAll(userRoom, 0, `Đêm hôm qua không ai chết cả!`);
       }
       gameIsNotEndCheck(userRoom, () => {
