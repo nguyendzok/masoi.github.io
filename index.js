@@ -238,7 +238,7 @@ bot.on('postback:JOIN_ROOM', (payload, chat) => {
       quickReplies: roomListView,
     }, (payload, convo) => {
       if (!(payload.message) || isNaN(parseInt(payload.message.text))) {
-        convo.say(`Vui lòng nhập 1 phòng hợp lệ!`);
+        convo.say(`\`\`\`\nVui lòng nhập 1 phòng hợp lệ!\n\`\`\``);
         convo.end();
         return;
       }
@@ -246,7 +246,7 @@ bot.on('postback:JOIN_ROOM', (payload, chat) => {
       let roomID = parseInt(roomTxt) - 1;
 
       if (gamef.getRoom(roomID).ingame) {
-        chat.say(`Phòng đã vào chơi rồi, vui lòng chọn phòng khác!`);
+        chat.say(`\`\`\`\nPhòng đã vào chơi rồi, vui lòng chọn phòng khác!\n\`\`\``);
         return;
       } else {
         // save room number for user
@@ -324,10 +324,10 @@ bot.on('postback:READY_ROOM', (payload, chat) => {
       }
       start();
     } else {
-      chat.say("Bạn đã sẵn sàng rồi!");
+      chat.say("```\nBạn đã sẵn sàng rồi!\n```");
     }
   } else {
-    chat.say("Bạn chưa tham gia phòng nào!");
+    chat.say("```\nBạn chưa tham gia phòng nào!\n```");
   }
 });
 
@@ -339,7 +339,7 @@ bot.on('message', (payload, chat) => {
 
   if (userRoom == undefined) {
     chat.say({
-      text: `Hãy chat 'help' hoặc 'trợ giúp' để được giúp đỡ!`,
+      text: `\`\`\`\nBạn chưa tham gia phòng chơi nào!\n\`\`\``,
       quickReplies: ['help', 'trợ giúp']
     });
     return;
@@ -368,7 +368,7 @@ bot.on('message', (payload, chat) => {
                 roomWolfChatAll(userRoom, joinID, user.first_name + ' đã vote cắn ' + voteKill);
               }
             } else {
-              chat.say("Bạn không thể thực hiện vote 2 lần hoặc vote người chơi đã chết!");
+              chat.say("```\nBạn không thể thực hiện vote 2 lần hoặc vote người chơi đã chết!\n```");
             }
             // kiểm tra đã VOTE xong chưa?
             nightDoneCheck(userRoom);
@@ -394,27 +394,27 @@ bot.on('message', (payload, chat) => {
         if (chatTxt.match(/\/save.[0-9]+/g)) {//save
           let voteID = chatTxt.match(/[0-9]+/g)[0];
           if (!gamef.getRoom(userRoom).save(joinID, voteID)) {
-            chat.say(`Bạn không thể bảo vệ 1 người 2 đêm liên tiếp!`);
+            chat.say(`\`\`\`\nBạn không thể bảo vệ 1 người 2 đêm liên tiếp hoặc bảo vệ người chơi đã chết!\n\`\`\``);
           } else {
             chat.say(`Bạn đã bảo vệ ${gamef.getRoom(userRoom).playersTxt[voteID]}!`);
             // kiểm tra đã VOTE xong chưa?
             nightDoneCheck(userRoom);
           }
         } else {
-          chat.say(`Bạn không thể trò chuyện trong đêm!`);
+          chat.say('```\nBạn không thể trò chuyện trong đêm!\n```');
         }
       } else if (userRole == 3) { // là thợ săn
         if (chatTxt.match(/\/fire.[0-9]+/g)) {//fire
           let voteID = chatTxt.match(/[0-9]+/g)[0];
           if (!gamef.getRoom(userRoom).fire(joinID, voteID)) {
-            chat.say(`Bạn không thể ngắm bắn thành viên đã chết!`);
+            chat.say(`\`\`\`\nBạn không thể ngắm bắn người chơi đã chết!\n\`\`\``);
           } else {
             chat.say(`Bạn đã ngắm bắn ${gamef.getRoom(userRoom).playersTxt[voteID]}!`);
             // kiểm tra đã VOTE xong chưa?
             nightDoneCheck(userRoom);
           }
         } else {
-          chat.say(`Bạn không thể trò chuyện trong đêm!`);
+          chat.say('```\nBạn không thể trò chuyện trong đêm!\n```');
         }
       }
     } else {
@@ -424,7 +424,7 @@ bot.on('message', (payload, chat) => {
             if (gamef.getRoom(userRoom).chatON || (gamef.getRoom(userRoom).deathID != -1 && gamef.getRoom(userRoom).deathID === gamef.getRoom(userRoom).getPlayer(joinID).id)) { //check xem còn bật chat không?
               roomChatAll(userRoom, joinID, user.first_name + ': ' + chatTxt);
             } else {
-              chat.say(`Đã hết thời gian thảo luận!`);
+              chat.say('```\nBạn không thể trò chuyện trong đêm!\n```');
             }
           } else {  //VOTE YES?NO
             if (gamef.getRoom(userRoom).deathID != -1) {
@@ -455,7 +455,7 @@ bot.on('message', (payload, chat) => {
                 await roomChatAll(userRoom, joinID, `${user.first_name} đã vote treo cổ ${voteKill} (${gamef.getRoom(userRoom).voteList[voteID]} phiếu)`);
               }
             } else {
-              chat.say(`Bạn không thể vote 2 lần hoặc vote người chơi đã chết!`);
+              chat.say('```\nBạn không thể vote 2 lần hoặc vote người chơi đã chết!\n```');
             }
             // kiểm tra đã VOTE XONG chưa?
             gamef.getRoom(userRoom).roleIsDone((isDone) => {
@@ -469,7 +469,7 @@ bot.on('message', (payload, chat) => {
       }
     }
   } else {
-    chat.say(`Bạn đã chết! Xin giữ im lặng`)
+    chat.say('```\nBạn đã chết! Xin giữ im lặng! \n```')
   }
   console.log(`$ ROOM ${userRoom + 1} CHAT > ${joinID}: ${chatTxt}`);
 });
@@ -514,7 +514,7 @@ bot.on('postback:LEAVE_ROOM', (payload, chat) => {
     }
     console.log(`$ ROOM ${userRoom + 1} > LEAVE > ${joinID} : ${user.first_name}`);
   } else {
-    chat.say(`Bạn chưa tham gia phòng nào!`);
+    chat.say('```\nBạn chưa tham gia phòng nào!\n```');
   }
 });
 
@@ -526,7 +526,7 @@ bot.on('postback:VIEW_PLAYER_IN_ROOM', (payload, chat) => {
     let playersInRoomTxt = gamef.getRoom(userRoom).playersTxt.join(' ; ');
     chat.say(`Danh sách dân và sói làng ${userRoom + 1}: \n${playersInRoomTxt}`);
   } else {
-    chat.say(`Trò chơi chưa bắt đầu!`);
+    chat.say('```\nTrò chơi chưa bắt đầu!\n```');
   }
 
 });
@@ -535,7 +535,7 @@ bot.on('postback:USER_RENAME', (payload, chat) => {
   let joinID = payload.sender.id;
   let userRoom = gamef.getUserRoom(joinID);
   if (userRoom == undefined) {
-    chat.say(`Bạn cần tham gia 1 phòng chơi trước khi đổi tên!`);
+    chat.say('```\nBạn cần tham gia 1 phòng chơi trước khi đổi tên!\n```');
     return;
   }
   let user = gamef.getRoom(userRoom).getPlayer(joinID);
@@ -543,7 +543,7 @@ bot.on('postback:USER_RENAME', (payload, chat) => {
   const askName = (convo) => {
     convo.ask(`Tên hiện tại của bạn: ${user.first_name}\nĐể hủy đổi tên: /cancel\nNhập tên bạn muốn đổi thành:`, (payload, convo) => {
       if (!payload.message) {
-        convo.say(`Vui lòng nhập tên hợp lệ!`);
+        convo.say('```\nVui lòng nhập tên hợp lệ\n```');
         convo.end();
         return;
       } else {
@@ -574,7 +574,7 @@ bot.on('postback:ADMIN_COMMAND', (payload, chat) => {
   const askCMD = (convo) => {
     convo.ask(`Các lệnh cơ bản:\nĐể reset 2 phòng: /resetAll\nĐể kick người chơi: /kick <RoomID> <userID>\nHủy: /cancel`, (payload, convo) => {
       if (!payload.message) {
-        convo.say(`Vui lòng nhập lệnh hợp lệ!`);
+        convo.say('```\nVui lòng nhập lệnh hợp lệ\n```');
         convo.end();
         return;
       } else {
@@ -592,14 +592,14 @@ bot.on('postback:ADMIN_COMMAND', (payload, chat) => {
           if (!gamef.getRoom(roomID).ingame) {
             gamef.getRoom(roomID).deletePlayerByID(userID);
             gamef.setUserRoom(playerJoinID, undefined);
-            bot.say(playerJoinID, `Bạn đã bị kick ra khỏi phòng chơi do đã AFK quá lâu!`);
-            roomChatAll(roomID, playerJoinID, `${player.first_name} đã bị kick ra khỏi phòng chơi do đã AFK quá lâu!`);
+            bot.say(playerJoinID, '```\nBạn đã bị kick ra khỏi phòng chơi do đã AFK quá lâu!\n```');
+            roomChatAll(roomID, playerJoinID, `\`\`\`\n${player.first_name} đã bị kick ra khỏi phòng chơi do đã AFK quá lâu!\n\`\`\``);
           } else {
             gamef.getRoom(roomID).killAction(player.id);
             leaveRole = player.role;
-            bot.say(playerJoinID, `Bạn đã bị ADMIN sát hại do đã AFK quá lâu!`);
-            roomChatAll(roomID, playerJoinID, `******************\n${player.first_name} đã bị ADMIN sát hại (do AFK quá lâu) với vai trò là: ${leaveRole == -1 ? 'SÓI' : leaveRole == 1 ? 'TIÊN TRI' : leaveRole == 2 ? 'BẢO VỆ' : leaveRole == 3 ? 'THỢ SĂN' : 'DÂN THƯỜNG'}\n******************`);
-            gamef.getRoom(userRoom).newLog(`${user.first_name} đã bị ADMIN sát hại (do AFK quá lâu) với vai trò là: ${leaveRole == -1 ? 'SÓI' : leaveRole == 1 ? 'TIÊN TRI' : leaveRole == 2 ? 'BẢO VỆ' : leaveRole == 3 ? 'THỢ SĂN' : 'DÂN THƯỜNG'}`);
+            bot.say(playerJoinID, '```\nBạn đã bị ADMIN sát hại do đã AFK quá lâu!\n```');
+            roomChatAll(roomID, playerJoinID, `\`\`\`\n${player.first_name} đã bị ADMIN sát hại (do AFK quá lâu) với vai trò là: ${leaveRole == -1 ? 'SÓI' : leaveRole == 1 ? 'TIÊN TRI' : leaveRole == 2 ? 'BẢO VỆ' : leaveRole == 3 ? 'THỢ SĂN' : 'DÂN THƯỜNG'}\n\`\`\``);
+            gamef.getRoom(userRoom).newLog(`\`\`\`\n${user.first_name} đã bị ADMIN sát hại (do AFK quá lâu) với vai trò là: ${leaveRole == -1 ? 'SÓI' : leaveRole == 1 ? 'TIÊN TRI' : leaveRole == 2 ? 'BẢO VỆ' : leaveRole == 3 ? 'THỢ SĂN' : 'DÂN THƯỜNG'}\n\`\`\``);
             if (gamef.getRoom(roomID).isNight) {
               gamef.getRoom(roomID).roleIsDone((isDone) => {
                 if (isDone) {
@@ -636,7 +636,7 @@ bot.on('postback:ADMIN_COMMAND', (payload, chat) => {
       askCMD(convo);
     });
   } else {
-    chat.say('Bạn không có quyền thực hiện yêu cầu này!');
+    chat.say('```\nBạn không có quyền thực hiện yêu cầu này!\n```');
   }
 });
 // listen HELP button
