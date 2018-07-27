@@ -15,7 +15,7 @@ class Player {
     setFirstName(newFirstName) {
         this.first_name = newFirstName;
     }
-    setRole(role){
+    setRole(role) {
         this.role = role;
     }
 }
@@ -173,14 +173,17 @@ class Room {
     kill() {
         console.log(`$ ROOM ${this.id + 1} > KILL ${this.deathID} > SAVE ${this.saveID} !!!`);
         if (this.deathID != -1 && (!this.isNight || (this.isNight && this.deathID != this.saveID)) && this.players[this.deathID]) {
-            this.killAction(this.deathID);
-            if (this.players[this.deathID].role === 3) { //là thợ săn
-                this.killAction(this.fireID);
-            }
             if (this.players[this.deathID].role === 4 && this.isNight) { //là BÁN SÓI
+                this.wolfsCount++;
+                this.villagersCount--;
                 return false;
+            } else {
+                this.killAction(this.deathID);
+                if (this.players[this.deathID].role === 3) { //là thợ săn
+                    this.killAction(this.fireID);
+                }
+                return true;
             }
-            return true;
         } else {
             return false;
         }
@@ -257,7 +260,7 @@ class Room {
         // this.saveID = -1;
         this.chatON = true;
     }
-    setMorning(isMorning){
+    setMorning(isMorning) {
         this.isMorning = isMorning;
     }
     vote(joinID, voteID) {
@@ -378,11 +381,11 @@ class Game {
             roleListTxt += ", 2 SÓI, 1 THỢ SĂN, " + (len - 5) + " DÂN";
         } else if (len < 12) { // 10,11
             this.room[roomID].setRole(-1, 3);  // 3 SÓI
-            this.room[roomID].setRole(3,1);  // 1 THỢ SĂN
+            this.room[roomID].setRole(3, 1);  // 1 THỢ SĂN
             roleListTxt += ", 3 SÓI, 1 THỢ SĂN, " + (len - 6) + " DÂN";
         } else if (len < 14) {
             this.room[roomID].setRole(-1, 3);  // 3 SÓI
-            this.room[roomID].setRole(3,1);  // 1 THỢ SĂN
+            this.room[roomID].setRole(3, 1);  // 1 THỢ SĂN
             roleListTxt += ", 3 SÓI, 1 THỢ SĂN, " + (len - 6) + " DÂN";
             // this.room[roomID].setRole(4,1);  // 1 CUPID - ghép đôi
         }

@@ -117,7 +117,7 @@ function nightDoneCheck(userRoom) {
       } else {
         console.log(`$ ROOM ${userRoom + 1} > NOBODY DIED!`);
         if (deathID != -1 && gamef.getRoom(userRoom).players[deathID].role == 4){ //là BÁN SÓI
-          console.log(`$ ROOM ${userRoom + 1} > THROW NEW HALF WOLF!`);
+          console.log(`$ ROOM ${userRoom + 1} > HALF WOLF!`);
           let halfWolfjoinID = gamef.getRoom(userRoom).players[deathID].joinID;
           bot.say(halfWolfjoinID,`\`\`\`\nBạn đã bị sói cắn!\nTừ giờ bạn là SÓI!\n\`\`\``);
           gamef.getRoom(userRoom).players[deathID].setRole(-1);
