@@ -206,7 +206,7 @@ const actionButtons = [
     call_to_actions: [
       { type: 'postback', title: 'Tham gia phòng chơi', payload: 'JOIN_ROOM' },
       { type: 'postback', title: 'Sẵn sàng!', payload: 'READY_ROOM' },
-      { type: 'postback', title: 'Rời phòng chơi', payload: 'LEAVE_ROOM' },
+      { type: 'postback', title: 'Rời phòng/Tự sát', payload: 'LEAVE_ROOM' },
     ]
   },
   {
@@ -388,7 +388,7 @@ bot.on('message', (payload, chat) => {
           }
           startTT();
         } else {
-          chat.say(`Bạn không thể trò chuyện trong đêm!`);
+          chat.say('```\nBạn không thể trò chuyện trong đêm!\n```');
         }
       } else if (userRole == 2) { // là bảo vệ
         if (chatTxt.match(/\/save.[0-9]+/g)) {//save
@@ -490,7 +490,7 @@ bot.on('postback:LEAVE_ROOM', (payload, chat) => {
       gamef.getRoom(userRoom).killAction(user.id);
       leaveRole = user.role;
       chat.say(`Bạn đã tự sát!`);
-      roomChatAll(userRoom, joinID, `${user.first_name} đã tự sát với vai trò là: ${leaveRole == -1 ? 'SÓI' : leaveRole == 1 ? 'TIÊN TRI' : leaveRole == 2 ? 'BẢO VỆ' : leaveRole == 3 ? 'THỢ SĂN' : 'DÂN THƯỜNG'}`);
+      roomChatAll(userRoom, joinID, `******************\n${user.first_name} đã tự sát với vai trò là: ${leaveRole == -1 ? 'SÓI' : leaveRole == 1 ? 'TIÊN TRI' : leaveRole == 2 ? 'BẢO VỆ' : leaveRole == 3 ? 'THỢ SĂN' : 'DÂN THƯỜNG'}\n******************`);
       gamef.getRoom(userRoom).newLog(`${user.first_name} đã tự sát với vai trò là: ${leaveRole == -1 ? 'SÓI' : leaveRole == 1 ? 'TIÊN TRI' : leaveRole == 2 ? 'BẢO VỆ' : leaveRole == 3 ? 'THỢ SĂN' : 'DÂN THƯỜNG'}`);
       if (gamef.getRoom(userRoom).isNight) {
         gamef.getRoom(userRoom).roleIsDone((isDone) => {
@@ -598,7 +598,7 @@ bot.on('postback:ADMIN_COMMAND', (payload, chat) => {
             gamef.getRoom(roomID).killAction(player.id);
             leaveRole = player.role;
             bot.say(playerJoinID, `Bạn đã bị ADMIN sát hại do đã AFK quá lâu!`);
-            roomChatAll(roomID, playerJoinID, `${player.first_name} đã bị ADMIN sát hại (do AFK quá lâu) với vai trò là: ${leaveRole == -1 ? 'SÓI' : leaveRole == 1 ? 'TIÊN TRI' : leaveRole == 2 ? 'BẢO VỆ' : leaveRole == 3 ? 'THỢ SĂN' : 'DÂN THƯỜNG'}`);
+            roomChatAll(roomID, playerJoinID, `******************\n${player.first_name} đã bị ADMIN sát hại (do AFK quá lâu) với vai trò là: ${leaveRole == -1 ? 'SÓI' : leaveRole == 1 ? 'TIÊN TRI' : leaveRole == 2 ? 'BẢO VỆ' : leaveRole == 3 ? 'THỢ SĂN' : 'DÂN THƯỜNG'}\n******************`);
             gamef.getRoom(userRoom).newLog(`${user.first_name} đã bị ADMIN sát hại (do AFK quá lâu) với vai trò là: ${leaveRole == -1 ? 'SÓI' : leaveRole == 1 ? 'TIÊN TRI' : leaveRole == 2 ? 'BẢO VỆ' : leaveRole == 3 ? 'THỢ SĂN' : 'DÂN THƯỜNG'}`);
             if (gamef.getRoom(roomID).isNight) {
               gamef.getRoom(roomID).roleIsDone((isDone) => {
@@ -631,7 +631,7 @@ bot.on('postback:ADMIN_COMMAND', (payload, chat) => {
     });
   };
 
-  if (joinID == 2643770348982136) {
+  if ([2643770348982136].indexOf(joinID)!=-1) {
     chat.conversation((convo) => {
       askCMD(convo);
     });
