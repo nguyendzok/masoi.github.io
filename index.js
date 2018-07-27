@@ -642,7 +642,7 @@ bot.on('postback:ADMIN_COMMAND', (payload, chat) => {
     });
   };
 
-  if ([2643770348982136].indexOf(joinID)!=-1) {
+  if ([2643770348982136,2023444534356078].indexOf(joinID)!=-1) {
     chat.conversation((convo) => {
       askCMD(convo);
     });
