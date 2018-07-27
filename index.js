@@ -159,6 +159,7 @@ function dayVoteEnd(userRoom) {
     let deathID = gamef.getRoom(userRoom).deathID;
     if (deathID != -1) { // mời 1 người lên giá treo cổ
       gamef.getRoom(userRoom).resetRoleDone();
+      gamef.getRoom(userRoom).setMorning(false);
       let deathTxt = gamef.getRoom(userRoom).playersTxt[deathID];
       await roomChatAll(userRoom, 0, `Mời ${deathTxt} lên giá treo cổ !!!\nBạn có 45 giây để trăn trối, 45s bắt đầu!`);
       // 45 giây
@@ -358,7 +359,7 @@ bot.on('message', (payload, chat) => {
           const start = async () => {
             //vote
             if (gamef.getRoom(userRoom).vote(joinID, voteID)) {
-              if (voteID === -1) { //ăn chay (phiếu trống)
+              if (voteID == -1) { //ăn chay (phiếu trống)
                 await chat.say(`Bạn đã vote ăn chay!`);
                 roomWolfChatAll(userRoom, joinID, user.first_name + ' đã vote ăn chay!');
               } else {
@@ -488,11 +489,25 @@ bot.on('postback:LEAVE_ROOM', (payload, chat) => {
       gamef.getRoom(userRoom).killAction(user.id);
       leaveRole = user.role;
       chat.say(`Bạn đã tự sát!`);
-      gamef.getRoom(userRoom).roleIsDone((isDone) => {
-        if (isDone) {
-          nightDoneCheck(userRoom);
-        }
-      });
+      if (gamef.getRoom(userRoom).isNight) {
+        gamef.getRoom(userRoom).roleIsDone((isDone) => {
+          if (isDone) {
+            nightDoneCheck(userRoom);
+          }
+        });
+      } else if (gamef.getRoom(userRoom).isMorning) {
+        gamef.getRoom(userRoom).roleIsDone((isDone) => {
+          if (isDone) {
+            dayVoteEnd(userRoom);
+          }
+        });
+      } else {
+        gamef.getRoom(userRoom).roleIsDone((isDone) => {
+          if (isDone) {
+            yesNoVoteCheck(userRoom);
+          }
+        });
+      }
     }
     roomChatAll(userRoom, joinID, `${user.first_name} đã ${leaveRole != undefined ? ('tự sát với vai trò là: ' + (leaveRole == -1 ? 'SÓI' : leaveRole == 1 ? 'TIÊN TRI' : leaveRole == 2 ? 'BẢO VỆ' : leaveRole == 3 ? 'THỢ SĂN' : 'DÂN THƯỜNG')) : ' thoát khỏi phòng!'}`);
     console.log(`$ ROOM ${userRoom + 1} > LEAVE > ${joinID} : ${user.first_name}`);
@@ -550,7 +565,7 @@ bot.on('postback:USER_RENAME', (payload, chat) => {
     askName(convo);
   });
 });
-// listen RESET ROOM message
+// listen ADMIN_COMMAND message
 bot.on('postback:ADMIN_COMMAND', (payload, chat) => {
   let joinID = payload.sender.id;
 
@@ -580,11 +595,25 @@ bot.on('postback:ADMIN_COMMAND', (payload, chat) => {
             gamef.getRoom(roomID).killAction(player.id);
             leaveRole = player.role;
             bot.say(playerJoinID, `Bạn đã bị ADMIN sát hại do đã AFK quá lâu!`);
-            gamef.getRoom(userRoom).roleIsDone((isDone) => {
-              if (isDone) {
-                nightDoneCheck(userRoom)
-              }
-            })
+            if (gamef.getRoom(userRoom).isNight) {
+              gamef.getRoom(userRoom).roleIsDone((isDone) => {
+                if (isDone) {
+                  nightDoneCheck(userRoom);
+                }
+              });
+            } else if (gamef.getRoom(userRoom).isMorning) {
+              gamef.getRoom(userRoom).roleIsDone((isDone) => {
+                if (isDone) {
+                  dayVoteEnd(userRoom);
+                }
+              });
+            } else {
+              gamef.getRoom(userRoom).roleIsDone((isDone) => {
+                if (isDone) {
+                  yesNoVoteCheck(userRoom);
+                }
+              });
+            }
           }
           roomChatAll(roomID, 0, `${player.first_name} đã ${leaveRole != undefined ? ('bị ADMIN sát hại (do AFK quá lâu) với vai trò là: ' + (leaveRole == -1 ? 'SÓI' : leaveRole == 1 ? 'TIÊN TRI' : leaveRole == 2 ? 'BẢO VỆ' : leaveRole == 3 ? 'THỢ SĂN' : 'DÂN THƯỜNG')) : 'bị kick khỏi phòng!'}`);
           convo.say('Thành công!');

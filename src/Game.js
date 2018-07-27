@@ -33,6 +33,7 @@ class Room {
         this.ingame = false;
         this.day = 0;
         this.isNight = false;
+        this.isMorning = true;
         this.chatON = true;
         this.wolfsCount = 0;
         this.villagersCount = 0;
@@ -57,6 +58,7 @@ class Room {
         this.ingame = false;
         this.day = 0;
         this.isNight = false;
+        this.isMorning = true;
         this.chatON = true;
         this.wolfsCount = 0;
         this.villagersCount = 0;
@@ -237,6 +239,8 @@ class Room {
         console.log(`$ ROOM ${this.id + 1} > DAY <=> NIGHT SWITCH`);
         if (!this.isNight) {
             this.day++;
+        } else {
+            this.isMorning = true;
         }
         this.isNight = !this.isNight;
         this.voteList = [];
@@ -246,6 +250,9 @@ class Room {
         this.fireID = -1;
         // this.saveID = -1;
         this.chatON = true;
+    }
+    setMorning(isMorning){
+        this.isMorning = isMorning;
     }
     vote(joinID, voteID) {
         if (voteID == -1) {
