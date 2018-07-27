@@ -152,7 +152,7 @@ function gameIsNotEndCheck(userRoom, callback) {
   });
 }
 
-function dayVoteEnd() {
+function dayVoteEnd(userRoom) {
   const newStart = async () => {
     gamef.getRoom(userRoom).findOutDeathID();
     gamef.getRoom(userRoom).cancelSchedule();
@@ -459,7 +459,7 @@ bot.on('message', (payload, chat) => {
             // kiểm tra đã VOTE XONG chưa?
             gamef.getRoom(userRoom).roleIsDone((isDone) => {
               if (isDone) {
-                dayVoteEnd();
+                dayVoteEnd(userRoom);
               }
             });
           }
@@ -490,7 +490,7 @@ bot.on('postback:LEAVE_ROOM', (payload, chat) => {
       chat.say(`Bạn đã tự sát!`);
       gamef.getRoom(userRoom).roleIsDone((isDone) => {
         if (isDone) {
-          dayVoteEnd();
+          dayVoteEnd(userRoom);
         }
       });
     }
