@@ -367,9 +367,10 @@ class Game {
         let len = this.room[roomID].players.length;
         let roleListTxt = "Đang tạo game với: 1 TIÊN TRI, 1 BẢO VỆ";
         this.room[roomID].setRole(1, 1); // 1 TIÊN TRI
-        this.room[roomID].setRole(2, 1); // 1 BẢO VỆ
+        //this.room[roomID].setRole(2, 1); // 1 BẢO VỆ
         if (len < 6) { // 3,4,5
             this.room[roomID].setRole(-1, 1);  // 1 SÓI
+            this.room[roomID].setRole(4, 1); // 1 BÁN SÓI
             roleListTxt += ", 1 SÓI, " + (len - 3) + " DÂN";
         } else if (len < 10) { // 6,7,8,9
             this.room[roomID].setRole(-1, 2);  // 2 SÓI
