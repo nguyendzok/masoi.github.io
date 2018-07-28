@@ -385,16 +385,16 @@ class Game {
             this.room[roomID].setRole(-1, 2);  // 2 SÓI -6*2
             this.room[roomID].setRole(3, 1);  // 1 THỢ SĂN +3
             this.room[roomID].setRole(4, 1); // 1 BÁN SÓI -6
-            roleListTxt += ", 2 SÓI, 1 THỢ SĂN, 1 BÁN SÓI, " + (len - 6) + ` DÂN (CÂN BẰNG: ${7+3-6*2+3-6+(len - 6)})`;
+            roleListTxt += ", 2 SÓI, 1 THỢ SĂN, 1 BÁN SÓI, " + (len - 6) + ` DÂN (CÂN BẰNG: ${7+3-6*2+3-3+(len - 6)})`;
         } else if (len < 12) { // 10,11
             this.room[roomID].setRole(-1, 3);  // 3 SÓI -6*3
             this.room[roomID].setRole(3, 1);  // 1 THỢ SĂN +3
             roleListTxt += ", 3 SÓI, 1 THỢ SĂN, " + (len - 6) + ` DÂN (CÂN BẰNG: ${7+3-6*3+3+(len - 6)})`;
-        } else if (len < 14) {
-            this.room[roomID].setRole(-1, 3);  // 3 SÓI - 6*3
+        } else { //12,13,14,15
+            this.room[roomID].setRole(-1, 3);  // 2 SÓI - 6*3
             this.room[roomID].setRole(3, 1);  // 1 THỢ SĂN +3
-            this.room[roomID].setRole(4, 1); // 1 BÁN SÓI -6
-            roleListTxt += ", 3 SÓI, 1 THỢ SĂN, 1 BÁN SÓI, " + (len - 7) + ` DÂN (CÂN BẰNG: ${7+3-6*3+3-6+(len - 7)})`;
+            this.room[roomID].setRole(4, 1); // 2 BÁN SÓI -3*2
+            roleListTxt += ", 2 SÓI, 1 THỢ SĂN, 2 BÁN SÓI, " + (len - 7) + ` DÂN (CÂN BẰNG: ${7+3-6*2+3-3*2+(len - 7)})`;
             // this.room[roomID].setRole(4,1);  // 1 CUPID - ghép đôi
         }
         this.room[roomID].playersTxt = [];
