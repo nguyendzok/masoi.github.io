@@ -490,9 +490,9 @@ bot.on('message', (payload, chat) => {
 bot.on('attachment', (payload, chat) => {
   let joinID = payload.sender.id;
   bot.say(joinID, `\`\`\`\nNội dung bạn vừa gửi không được Bot hỗ trợ!\n\`\`\``);
-  let type = payload.message.attachments.type;
-  let url = payload.message.attachments.url;
-  console.log(`Type: ${type} | URL: ${url}`);
+  let type = payload.message.attachments[0].type;
+  let url = payload.message.attachments[0].url;
+  console.log(`$ ROOM ${userRoom + 1} CHAT > ${joinID}: Attachment content`);
   bot.sendAttachment(joinID,type,url).catch(err => {
     console.log(err);
   });
