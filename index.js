@@ -95,17 +95,48 @@ function yesNoVoteCheck(userRoom) {
   })
 }
 function nightDoneCheck(userRoom) {
-  return gamef.getRoom(userRoom).roleIsDone((isDone) => {
+  gamef.getRoom(userRoom).roleIsDone((isDone) => {
     if (isDone) {
       gamef.getRoom(userRoom).findOutDeathID();
-      roomChatAll(userRoom, 0, `🌞Trời sáng rồi mọi người dậy đi`);
       let deathID = gamef.getRoom(userRoom).deathID;
       let deathTxt, deathRole;
       if (deathID != -1) {
         deathTxt = gamef.getRoom(userRoom).playersTxt[deathID];
         deathRole = gamef.roleTxt[gamef.getRoom(userRoom).getRoleByID(deathID)];
       }
-      if (gamef.getRoom(userRoom).kill()) {
+      let witchSaved = false;
+
+      if (deathID != -1 && gamef.getRoom(userRoom).players[deathID].role != 4 && gamef.getRoom(userRoom).witchID != undefined && gamef.getRoom(userRoom).witchSave) { //phù thủy còn quyền cứu, nạn nhân không phải bán sói
+        const askForSave = (convo) => {
+          convo.ask({
+            text: `🔪Đêm hôm qua: *${deathTxt}* đã CHẾT!\nBạn có muốn cứu không?`,
+            quickReplies: ['/yes', '/no'],
+          }, (payload, convo) => {
+            if (!payload.message || !(chatTxt.match(/\/yes/g) || chatTxt.match(/\/no/g))) {
+              convo.say(`\`\`\`\nKhông hợp lệ!\n\`\`\``);
+              convo.end();
+              return;
+            } else {
+              if (chatTxt.match(/\/yes/g)) {
+                witchSaved = true;
+                gamef.getRoom(userRoom).witchUseSave();
+                convo.say(`🔮Bạn đã cứu *${deathTxt}* thành công!`);
+                gamef.getRoom(userRoom).logs.push(`🔮Phù thủy ${gamef.getRoom(userRoom).players[gamef.getRoom(userRoom).witchID].first_name} đã cứu *${deathTxt}*!`);
+                convo.end();
+              } else {
+                witchSaved = false;
+                convo.end();
+              }
+            }
+          });
+        };
+        bot.conversation(gamef.getRoom(userRoom).witchID, (convo) => {
+          askForSave(convo);
+        });
+      }
+
+      roomChatAll(userRoom, 0, `🌞Trời sáng rồi mọi người dậy đi`);
+      if (!witchSaved && gamef.getRoom(userRoom).kill()) {
         roomChatAll(userRoom, 0, `🔪Đêm hôm qua: *${deathTxt}* đã CHẾT!`);
         gamef.getRoom(userRoom).newLog(`🔪Người đã chết: *${deathTxt}* là ${gamef.roleTxt[gamef.getRoom(userRoom).getRoleByID(deathID)]}`);
         if (gamef.getRoom(userRoom).players[deathID].role === 3) { //người chết là thợ săn
@@ -117,13 +148,15 @@ function nightDoneCheck(userRoom) {
         console.log(`$ ROOM ${userRoom + 1} > ${deathTxt} DIED!`);
       } else {
         console.log(`$ ROOM ${userRoom + 1} > NOBODY DIED!`);
-        if (deathID != -1 && gamef.getRoom(userRoom).players[deathID].role == 4) { //là BÁN SÓI
+        if (deathID != -1 && !witchSaved && gamef.getRoom(userRoom).players[deathID].role == 4) { //là BÁN SÓI
           console.log(`$ ROOM ${userRoom + 1} > HALF WOLF!`);
           let halfWolfjoinID = gamef.getRoom(userRoom).players[deathID].joinID;
           bot.say(halfWolfjoinID, `\`\`\`\nBạn đã bị sói cắn!\nTừ giờ bạn là 🐺SÓI!\n\`\`\``);
           gamef.getRoom(userRoom).players[deathID].setRole(-1);
         }
-        gamef.getRoom(userRoom).newLog(`${deathID != -1 ? `🔪Người bị cắn: (${deathTxt}) là ${deathRole}\n` : `🎊Sói đêm ấy ăn chay hoặc không thống nhất được số vote!\n`}🎊Và đêm hôm đấy không ai chết cả!`);
+        if (!witchSaved) {
+          gamef.getRoom(userRoom).newLog(`${deathID != -1 ? `🔪Người bị cắn: (${deathTxt}) là ${deathRole}\n` : `🎊Sói đêm ấy ăn chay hoặc không thống nhất được số vote!\n`}🎊Và đêm hôm đấy không ai chết cả!`);
+        }
         roomChatAll(userRoom, 0, `🎊Đêm hôm qua không ai chết cả!`);
       }
       gameIsNotEndCheck(userRoom, () => {
@@ -490,18 +523,12 @@ bot.on('message', (payload, chat) => {
 bot.on('attachment', (payload, chat) => {
   let joinID = payload.sender.id;
   bot.say(joinID, `\`\`\`\nNội dung bạn vừa gửi không được Bot hỗ trợ!\n\`\`\``);
-  let type = payload.message.attachments[0].type;
-  let url = payload.message.attachments[0].url;
-  bot.sendAttachment(joinID,type,url).catch(err => {
-    console.log(err);
-  });
   const userRoom = gamef.getUserRoom(joinID);
   if (userRoom != undefined) {
-    console.log(`$ ROOM ${userRoom + 1} CHAT > ${joinID}: attachment &${type}& content`);
+    console.log(`$ ROOM ${userRoom + 1} CHAT > ${joinID}: not support content`);
     let user = gamef.getRoom(userRoom).getPlayer(joinID);
     roomChatAll(userRoom, joinID, `*${user.first_name}* đã gửi nội dung không được hỗ trợ!`);
   }
-  console.log(JSON.stringify(payload.message.attachments));
 });
 
 // listen LEAVE ROOM message
@@ -665,8 +692,8 @@ bot.on('postback:ADMIN_COMMAND', (payload, chat) => {
     });
   };
 
-  if (['2643770348982136', '2023444534356078'].indexOf(joinID) != -1) {
-    console.log(`ADMIN ${joinID} (2643: DUY, 2023: LINH)!`);
+  if (['2643770348982136', '2023444534356078', '2283562135018064'].indexOf(joinID) != -1) {
+    console.log(`ADMIN ${joinID} (2643: DUY, 2023: LINH, 2283: TRƯỜNG)!`);
     chat.conversation((convo) => {
       askCMD(convo);
     });

@@ -43,6 +43,11 @@ class Room {
         this.roleDone = [];
         this.voteList = [];
         this.alivePlayer = [];
+
+        this.witchID = undefined;
+        this.witchSave = true;
+        this.witchKill = true;
+        
         this.deathID = -1; // -1 là không ai cả
         this.saveID = -1; // -1 là không ai cả
         this.fireID = -1;
@@ -67,6 +72,11 @@ class Room {
         this.villagersCount = 0;
         this.roleDone = [];
         this.voteList = [];
+
+        this.witchID = undefined;
+        this.witchSave = true;
+        this.witchKill = true;
+
         this.deathID = -1; // -1 là không ai cả
         this.saveID = -1; // -1 là không ai cả
         this.fireID = -1;
@@ -273,6 +283,9 @@ class Room {
         } else {
             return false;
         }
+    }
+    witchUseSave(){
+        this.witchSave = false;
     }
     chatOFF() {
         this.chatON = false;
