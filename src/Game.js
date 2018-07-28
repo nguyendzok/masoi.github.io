@@ -45,8 +45,8 @@ class Room {
         this.alivePlayer = [];
 
         this.witchID = undefined;
-        this.witchSave = true;
-        this.witchKill = true;
+        this.witchSaveRemain = true;
+        this.witchKillRemain = true;
         
         this.deathID = -1; // -1 là không ai cả
         this.saveID = -1; // -1 là không ai cả
@@ -74,8 +74,8 @@ class Room {
         this.voteList = [];
 
         this.witchID = undefined;
-        this.witchSave = true;
-        this.witchKill = true;
+        this.witchSaveRemain = true;
+        this.witchKillRemain = true;
 
         this.deathID = -1; // -1 là không ai cả
         this.saveID = -1; // -1 là không ai cả
@@ -191,6 +191,12 @@ class Room {
             return false;
         }
     }
+    witchKillAction(killID){
+        if (killID != -1 && this.players[killID]) {
+            this.witchKillRemain = false;
+            this.killAction(killID);
+        }
+    }
     save(joinID, voteID) {
         if (!this.roleDone[joinID] && this.saveID != voteID && this.players[voteID] && this.alivePlayer[this.players[voteID].joinID]) {
             this.logs.push(`${this.getPlayer(joinID).first_name} bảo vệ: (${this.playersTxt[voteID]})`);
@@ -285,7 +291,7 @@ class Room {
         }
     }
     witchUseSave(){
-        this.witchSave = false;
+        this.witchSaveRemain = false;
     }
     chatOFF() {
         this.chatON = false;
@@ -378,9 +384,10 @@ class Game {
         console.log(`$ ROOM ${roomID + 1} > RANDOM ROLE FOR ${this.room[roomID].players.length} PLAYERS`);
         let len = this.room[roomID].players.length;
         let roleListTxt = "🎲Đang tạo game với: 1 TIÊN TRI, 1 BẢO VỆ";
-        this.setRole(roomID, 1, 1); // 1 TIÊN TRI +7
+        //this.setRole(roomID, 1, 1); // 1 TIÊN TRI +7
         this.setRole(roomID, 2, 1); // 1 BẢO VỆ +3
         if (len < 6) { // 3,4,5
+            this.setRole(roomID, 5, 1); // 1 PHÙ THỦY +4
             this.setRole(roomID, -1, 1);  // 1 SÓI -6
             roleListTxt += ", 1 SÓI, " + (len - 3) + ` DÂN (CÂN BẰNG: ${7+3-6+(len - 3)})`;
         } else if (len < 8) { // 6,7

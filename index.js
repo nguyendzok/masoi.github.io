@@ -55,7 +55,12 @@ async function roomRoleChat(roomID) {
           bot.say(m.joinID, `🐺Bạn là BÁN SÓI!\nBạn vẫn còn là DÂN! Ngủ tiếp đi!\nID CẢ LÀNG:\n${playersList}`);
           gamef.getRoom(roomID).roleDoneBy(m.joinID);
         } else if (m.role == 5) { // Phù thủy
-          bot.say(m.joinID, `🔮Phù thủy dậy đi! Đêm nay bạn muốn giết ai không?\n/kill <id>\n/skip để bỏ qua!\n${playersList}`);
+          if (gamef.getRoom(userRoom).witchKillRemain){
+            bot.say(m.joinID, `🔮Phù thủy dậy đi! Đêm nay bạn muốn giết ai không?\n/kill <id>\n/skip để bỏ qua!\n${playersList}`);
+          } else {
+            bot.say(m.joinID, `🔮Bạn là Phù thủy!\nBạn đã sử dụng quyền giết của mình!\n${playersList}`);
+            gamef.getRoom(roomID).roleDoneBy(m.joinID);
+          }
         } else {
           bot.say(m.joinID, `💩Bạn là DÂN! Ngủ tiếp đi :))\n👨‍👩‍👦‍👦ID CẢ LÀNG:\n${playersList}`);
           gamef.getRoom(roomID).roleDoneBy(m.joinID);
@@ -108,7 +113,7 @@ function nightDoneCheck(userRoom) {
       }
       let witchSaved = false;
 
-      if (deathID != -1 && gamef.getRoom(userRoom).players[deathID].role != 4 && gamef.getRoom(userRoom).witchID != undefined && gamef.getRoom(userRoom).witchSave) { //phù thủy còn quyền cứu, nạn nhân không phải bán sói
+      if (deathID != -1 && gamef.getRoom(userRoom).players[deathID].role != 4 && gamef.getRoom(userRoom).witchID != undefined && gamef.getRoom(userRoom).witchSaveRemain) { //phù thủy còn quyền cứu, nạn nhân không phải bán sói
         const askForSave = (convo) => {
           convo.ask({
             text: `🔪Đêm hôm qua: *${deathTxt}* đã CHẾT!\nBạn có muốn cứu không?`,
@@ -123,7 +128,7 @@ function nightDoneCheck(userRoom) {
                 witchSaved = true;
                 gamef.getRoom(userRoom).witchUseSave();
                 convo.say(`🔮Bạn đã cứu *${deathTxt}* thành công!`);
-                gamef.getRoom(userRoom).logs.push(`🔮Phù thủy ${gamef.getRoom(userRoom).players[gamef.getRoom(userRoom).witchID].first_name} đã cứu *${deathTxt}*!`);
+                gamef.getRoom(userRoom).newLog(`🔮Phù thủy ${gamef.getRoom(userRoom).players[gamef.getRoom(userRoom).witchID].first_name} đã cứu *${deathTxt}*!`);
                 convo.end();
               } else {
                 witchSaved = false;
@@ -189,7 +194,7 @@ function gameIsNotEndCheck(userRoom, callback) {
       } else {
         console.log(`$ ROOM ${userRoom + 1} > END GAME > ${winner === -1 ? '🐺SÓI' : '💩DÂN'} thắng!`);
         await roomChatAll(userRoom, 0, [`🏆Trò chơi đã kết thúc...\n${winner === -1 ? '🐺SÓI' : '💩DÂN'} thắng!`, `🎮Bạn có thể sẵn sàng để bắt đầu chơi lại, hoặc tiếp tục trò chuyện với các người chơi khác trong phòng!`]);
-        gamef.getRoom(userRoom).logs.push(`🏆Trò chơi đã kết thúc với: ${gamef.getRoom(userRoom).wolfsCount} SÓI/ ${gamef.getRoom(userRoom).villagersCount} DÂN!`)
+        gamef.getRoom(userRoom).newLog(`🏆Trò chơi đã kết thúc với: ${gamef.getRoom(userRoom).wolfsCount} SÓI/ ${gamef.getRoom(userRoom).villagersCount} DÂN!`)
         await roomChatAll(userRoom, 0, gamef.getRoom(userRoom).logs.join(`\n`));
         gamef.getRoom(userRoom).resetRoom();
       }
@@ -463,6 +468,28 @@ bot.on('message', (payload, chat) => {
           }
         } else {
           chat.say('```\nBạn không thể trò chuyện trong đêm!\n```');
+        }
+      } else if (userRole == 5) { // là phù thủy
+        if (gamef.getRoom(userRoom).witchKillRemain) {
+          if (chatTxt.match(/\/kill.[0-9]+/g)) {// giết
+            let voteID = chatTxt.match(/[0-9]+/g)[0];
+            if (!gamef.getRoom(userRoom).witchKillAction(voteID)) {
+              chat.say(`\`\`\`\nBạn không thể giết người chơi đã chết!\n\`\`\``);
+            } else {
+              chat.say(`⛔Bạn đã giết ${gamef.getRoom(userRoom).playersTxt[voteID]}!`);
+              gamef.getRoom(userRoom).newLog(`⛔Phù thủy đã giết ${gamef.getRoom(userRoom).playersTxt[voteID]}!`)
+              // kiểm tra đã VOTE xong chưa?
+              nightDoneCheck(userRoom);
+            }
+          } else if (chatTxt.match(/\/skip/g)) {
+            chat.say('🎊Bạn đã không giết ai!');
+            // kiểm tra đã VOTE xong chưa?
+            nightDoneCheck(userRoom);
+          } else {
+            chat.say('```\nBạn không thể trò chuyện trong đêm!\n```');
+          }
+        } else {
+          chat.say('```\nBạn không còn quyền giết ai!\n```');
         }
       }
     } else {
