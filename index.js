@@ -105,13 +105,13 @@ function nightDoneCheck(userRoom) {
         deathTxt = gamef.getRoom(userRoom).playersTxt[deathID];
       }
       if (gamef.getRoom(userRoom).kill()) {
-        roomChatAll(userRoom, 0, `Đêm hôm qua (${deathTxt}) đã bị cắn!`);
-        gamef.getRoom(userRoom).newLog(`Người bị cắn: (${deathTxt}) là ${gamef.roleTxt[gamef.getRoom(userRoom).getRoleByID(deathID)]}`);
+        roomChatAll(userRoom, 0, `Đêm hôm qua: *${deathTxt}* đã CHẾT!`);
+        gamef.getRoom(userRoom).newLog(`Người đã chết: *${deathTxt}* là ${gamef.roleTxt[gamef.getRoom(userRoom).getRoleByID(deathID)]}`);
         if (gamef.getRoom(userRoom).players[deathID].role === 3) { //người chết là thợ săn
           let fireID = gamef.getRoom(userRoom).fireID;
           let deathFireTxt = gamef.getRoom(userRoom).playersTxt[fireID];
-          roomChatAll(userRoom, 0, `🔫Thợ săn vừa chết đã ngắm bắn (${deathFireTxt})!`);
-          gamef.getRoom(userRoom).newLog(`🔫Thợ săn vừa chết đã ngắm bắn (${deathFireTxt}) là ${gamef.roleTxt[gamef.getRoom(userRoom).getRoleByID(fireID)]}`);
+          roomChatAll(userRoom, 0, `Và *${deathFireTxt}* đã CHẾT!`);
+          gamef.getRoom(userRoom).newLog(`Và *${deathFireTxt}* đã CHẾT là ${gamef.roleTxt[gamef.getRoom(userRoom).getRoleByID(fireID)]}`);
         }
         console.log(`$ ROOM ${userRoom + 1} > ${deathTxt} DIED!`);
       } else {
@@ -134,7 +134,7 @@ function nightDoneCheck(userRoom) {
 
         let time = new Date(Date.now() + 5 * 60 * 1000);
         gamef.getRoom(userRoom).addSchedule(time, () => {
-          roomChatAll(userRoom, 0, `CÒN 1 PHÚT THẢO LUẬN\nCác bạn nên cân nhắc kĩ, tránh lan man, nhanh chóng tìm ra kẻ đang nghi nhất!`);
+          roomChatAll(userRoom, 0, `CÒN 1 PHÚT THẢO LUẬN\nCác bạn nên cân nhắc kĩ, tránh lan man, nhanh chóng tìm ra kẻ đáng nghi nhất!`);
           console.log(`$ ROOM ${userRoom + 1} > 1 MINUTE REMAINING`);
           let time = new Date(Date.now() + 1 * 60 * 1000);
           gamef.getRoom(userRoom).addSchedule(time, () => {
@@ -418,7 +418,7 @@ bot.on('message', (payload, chat) => {
         if (chatTxt.match(/\/fire.[0-9]+/g)) {//fire
           let voteID = chatTxt.match(/[0-9]+/g)[0];
           if (!gamef.getRoom(userRoom).fire(joinID, voteID)) {
-            chat.say(`\`\`\`\nBạn không thể ngắm bắn người chơi đã chết!\n\`\`\``);
+            chat.say(`\`\`\`\nBạn không thể ngắm bắn 1 người 2 đêm liên tiếp hoặc người chơi đã chết!\n\`\`\``);
           } else {
             chat.say(`Bạn đã ngắm bắn ${gamef.getRoom(userRoom).playersTxt[voteID]}!`);
             // kiểm tra đã VOTE xong chưa?
