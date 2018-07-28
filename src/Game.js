@@ -311,6 +311,7 @@ class Game {
         this.roleTxt[2] = '🗿BẢO VỆ';
         this.roleTxt[3] = '🔫THỢ SĂN';
         this.roleTxt[4] = '🐺BÁN SÓI';
+        this.roleTxt[5] = '🔮PHÙ THỦY';
     }
     getUserRoom(joinID) {
         return this.userRoom[joinID];
@@ -426,6 +427,9 @@ class Game {
             this.room[roomID].logs.push(`${this.roleTxt[role]} > ${this.room[roomID].players[rand].first_name}`);
             this.room[roomID].players[rand].role = role;
             count--;
+            if (role == 5) { // Phù thủy
+                this.room[roomID].witchID = rand;
+            }
         }
     }
 }

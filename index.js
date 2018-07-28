@@ -54,6 +54,8 @@ async function roomRoleChat(roomID) {
         } else if (m.role == 4) { // Bán sói
           bot.say(m.joinID, `🐺Bạn là BÁN SÓI!\nBạn vẫn còn là DÂN! Ngủ tiếp đi!\nID CẢ LÀNG:\n${playersList}`);
           gamef.getRoom(roomID).roleDoneBy(m.joinID);
+        } else if (m.role == 5) { // Phù thủy
+          bot.say(m.joinID, `🔮Phù thủy dậy đi! Đêm nay bạn muốn giết ai không?\n/kill <id>\n/skip để bỏ qua!\n${playersList}`);
         } else {
           bot.say(m.joinID, `💩Bạn là DÂN! Ngủ tiếp đi :))\n👨‍👩‍👦‍👦ID CẢ LÀNG:\n${playersList}`);
           gamef.getRoom(roomID).roleDoneBy(m.joinID);
