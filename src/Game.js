@@ -228,6 +228,7 @@ class Room {
     roleIsDone(callback) {
         console.log("$ ROOM " + (this.id + 1) + " > ROLE DONE: " + this.roleDoneCount + '/' + (this.wolfsCount + this.villagersCount));
         if (this.roleDoneCount == (this.wolfsCount + this.villagersCount)) {
+            console.log("$ ROOM " + (this.id + 1) + " > ROLE OK");
             callback(true);
         }
     }
