@@ -158,7 +158,7 @@ function nightDoneCheck(userRoom) {
       if (deathID != -1 && gamef.getRoom(userRoom).players[deathID].role != 4 && gamef.getRoom(userRoom).witchID != undefined && gamef.getRoom(userRoom).witchSaveRemain) { //phù thủy còn quyền cứu, nạn nhân không phải bán sói
         const askForSave = (convo) => {
           convo.ask({
-            text: `🔪Đêm hôm qua: *${deathTxt}* đã CHẾT!\nBạn có muốn cứu không?`,
+            text: `🔪Đêm hôm qua: *${deathTxt}* đã CHẾT!\nBạn có muốn cứu không?\n/yes hay /no ?`,
             quickReplies: ['/yes', '/no'],
           }, (payload, convo) => {
             if (!payload.message || !(payload.message.text.match(/\/yes/g) || payload.message.text.match(/\/no/g))) {
@@ -169,7 +169,7 @@ function nightDoneCheck(userRoom) {
               if (payload.message.text.match(/\/yes/g)) { //yes
                 gamef.getRoom(userRoom).witchUseSave();
                 convo.say(`🔮Bạn đã cứu *${deathTxt}* thành công!`);
-                gamef.getRoom(userRoom).newLog(`🔮Phù thủy ${gamef.getRoom(userRoom).players[gamef.getRoom(userRoom).witchID].first_name} đã cứu *${deathTxt}*!`);
+                gamef.getRoom(userRoom).newLog(`🔮Phù thủy ${gamef.getRoom(userRoom).getPlayer(gamef.getRoom(userRoom).witchID).first_name} đã cứu *${deathTxt}*!`);
                 convo.end();
                 dayNotify(userRoom, true);
               } else { // no
@@ -479,7 +479,7 @@ bot.on('message', (payload, chat) => {
               chat.say(`\`\`\`\nBạn không thể giết người chơi đã chết!\n\`\`\``);
             } else {
               chat.say(`⛔Bạn đã giết ${gamef.getRoom(userRoom).playersTxt[voteID]}!`);
-              gamef.getRoom(userRoom).newLog(`⛔Phù thủy đã giết ${gamef.getRoom(userRoom).playersTxt[voteID]}!`)
+              gamef.getRoom(userRoom).newLog(`⛔Phù thủy ${gamef.getRoom(userRoom).getPlayer(gamef.getRoom(userRoom).witchID).first_name} đã giết ${gamef.getRoom(userRoom).playersTxt[voteID]}!`)
               // kiểm tra đã VOTE xong chưa?
               nightDoneCheck(userRoom);
             }
