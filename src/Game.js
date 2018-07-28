@@ -199,7 +199,7 @@ class Room {
     }
     save(joinID, voteID) {
         if (!this.roleDone[joinID] && this.saveID != voteID && this.players[voteID] && this.alivePlayer[this.players[voteID].joinID]) {
-            this.logs.push(`${this.getPlayer(joinID).first_name} bảo vệ: (${this.playersTxt[voteID]})`);
+            this.logs.push(`🗿${this.getPlayer(joinID).first_name} bảo vệ: (${this.playersTxt[voteID]})`);
             this.saveID = voteID;
             this.roleDoneBy(joinID);
             return true;
@@ -209,7 +209,7 @@ class Room {
     }
     fire(joinID, voteID) {
         if (!this.roleDone[joinID] && this.fireID != voteID && this.players[voteID] && this.alivePlayer[this.players[voteID].joinID]) {
-            this.logs.push(`${this.getPlayer(joinID).first_name} ngắm bắn: (${this.playersTxt[voteID]})`);
+            this.logs.push(`🔫${this.getPlayer(joinID).first_name} ngắm bắn: (${this.playersTxt[voteID]})`);
             this.fireID = voteID;
             this.roleDoneBy(joinID);
             return true;
@@ -435,7 +435,7 @@ class Game {
             this.room[roomID].players[rand].role = role;
             count--;
             if (role == 5) { // Phù thủy
-                this.room[roomID].witchID = rand;
+                this.room[roomID].witchID = this.room[roomID].players[rand].joinID;
             }
         }
     }
