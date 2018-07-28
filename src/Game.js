@@ -389,10 +389,10 @@ class Game {
         console.log(`$ ROOM ${roomID + 1} > RANDOM ROLE FOR ${this.room[roomID].players.length} PLAYERS`);
         let len = this.room[roomID].players.length;
         let roleListTxt = "🎲Đang tạo game với: 1 TIÊN TRI, 1 BẢO VỆ";
-        //this.setRole(roomID, 1, 1); // 1 TIÊN TRI +7
+        this.setRole(roomID, 1, 1); // 1 TIÊN TRI +7
         this.setRole(roomID, 2, 1); // 1 BẢO VỆ +3
         if (len < 6) { // 3,4,5
-            this.setRole(roomID, 5, 1); // 1 PHÙ THỦY +4
+            // this.setRole(roomID, 5, 1); // 1 PHÙ THỦY +4
             this.setRole(roomID, -1, 1);  // 1 SÓI -6
             roleListTxt += ", 1 SÓI, " + (len - 3) + ` DÂN (CÂN BẰNG: ${7+3-6+(len - 3)})`;
         } else if (len < 8) { // 6,7
