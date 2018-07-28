@@ -501,7 +501,7 @@ bot.on('attachment', (payload, chat) => {
     let user = gamef.getRoom(userRoom).getPlayer(joinID);
     roomChatAll(userRoom, joinID, `*${user.first_name}* đã gửi nội dung không được hỗ trợ!`);
   }
-  console.log(JSON.stringify(payload));
+  console.log(JSON.stringify(payload.message));
 });
 
 // listen LEAVE ROOM message
