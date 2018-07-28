@@ -483,6 +483,7 @@ bot.on('message', (payload, chat) => {
             }
           } else if (chatTxt.match(/\/skip/g)) {
             chat.say('🎊Bạn đã không giết ai!');
+            gamef.getRoom(userRoom).roleDoneBy(joinID);
             // kiểm tra đã VOTE xong chưa?
             nightDoneCheck(userRoom);
           } else {
