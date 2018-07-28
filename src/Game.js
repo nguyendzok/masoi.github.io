@@ -410,7 +410,7 @@ class Game {
             do {
                 rand = Math.floor((Math.random() * this.room[roomID].players.length));
             } while (this.room[roomID].players[rand].role != 0)
-            this.logs.push(`${this.roleTxt[role]} > ${this.room[roomID].players[rand].first_name}`);
+            this.room[roomID].logs.push(`${this.roleTxt[role]} > ${this.room[roomID].players[rand].first_name}`);
             this.room[roomID].players[rand].role = role;
             count--;
         }
