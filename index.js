@@ -161,12 +161,12 @@ function nightDoneCheck(userRoom) {
             text: `🔪Đêm hôm qua: *${deathTxt}* đã CHẾT!\nBạn có muốn cứu không?`,
             quickReplies: ['/yes', '/no'],
           }, (payload, convo) => {
-            if (!payload.message || !(chatTxt.match(/\/yes/g) || chatTxt.match(/\/no/g))) {
+            if (!payload.message || !(payload.message.text.match(/\/yes/g) || payload.message.text.match(/\/no/g))) {
               convo.say(`\`\`\`\nKhông hợp lệ!\n\`\`\``);
               convo.end();
               return;
             } else {
-              if (chatTxt.match(/\/yes/g)) { //yes
+              if (payload.message.text.match(/\/yes/g)) { //yes
                 gamef.getRoom(userRoom).witchUseSave();
                 convo.say(`🔮Bạn đã cứu *${deathTxt}* thành công!`);
                 gamef.getRoom(userRoom).newLog(`🔮Phù thủy ${gamef.getRoom(userRoom).players[gamef.getRoom(userRoom).witchID].first_name} đã cứu *${deathTxt}*!`);
