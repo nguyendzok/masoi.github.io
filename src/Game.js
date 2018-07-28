@@ -162,6 +162,9 @@ class Room {
         }
     }
     killAction(deathID) {
+        if (this.roleDone[this.players[deathID].joinID]){
+            this.roleDoneCount--;
+        }
         this.alivePlayer[this.players[deathID].joinID] = false;
         this.playersTxt[deathID] = '💀CHẾT:' + this.playersTxt[deathID].substr(2, this.playersTxt[deathID].length - 2) + '💀';
         if (this.players[deathID].role === -1) {
@@ -370,8 +373,8 @@ class Game {
         console.log(`$ ROOM ${roomID + 1} > RANDOM ROLE FOR ${this.room[roomID].players.length} PLAYERS`);
         let len = this.room[roomID].players.length;
         let roleListTxt = "Đang tạo game với: 1 TIÊN TRI, 1 BẢO VỆ";
-        this.room[roomID].setRole(1, 1); // 1 TIÊN TRI
-        this.room[roomID].setRole(2, 1); // 1 BẢO VỆ
+        this.room[roomID].setRole(1, 1); // 1 TIÊN TRI +7
+        this.room[roomID].setRole(2, 1); // 1 BẢO VỆ +3
         if (len < 6) { // 3,4,5
             this.room[roomID].setRole(-1, 1);  // 1 SÓI
             roleListTxt += ", 1 SÓI, " + (len - 3) + " DÂN";

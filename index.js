@@ -100,9 +100,10 @@ function nightDoneCheck(userRoom) {
       gamef.getRoom(userRoom).findOutDeathID();
       roomChatAll(userRoom, 0, `Trời sáng rồi mọi người dậy đi`);
       let deathID = gamef.getRoom(userRoom).deathID;
-      let deathTxt;
+      let deathTxt, deathRole;
       if (deathID != -1) {
         deathTxt = gamef.getRoom(userRoom).playersTxt[deathID];
+        deathRole = gamef.roleTxt[gamef.getRoom(userRoom).getRoleByID(deathID)];
       }
       if (gamef.getRoom(userRoom).kill()) {
         roomChatAll(userRoom, 0, `Đêm hôm qua: *${deathTxt}* đã CHẾT!`);
@@ -116,15 +117,13 @@ function nightDoneCheck(userRoom) {
         console.log(`$ ROOM ${userRoom + 1} > ${deathTxt} DIED!`);
       } else {
         console.log(`$ ROOM ${userRoom + 1} > NOBODY DIED!`);
-        let deathRole;
-        if (deathID != -1 && gamef.getRoom(userRoom).players[deathID].role == 4){ //là BÁN SÓI
-          deathRole = gamef.roleTxt[gamef.getRoom(userRoom).getRoleByID(deathID)]
+        if (deathID != -1 && gamef.getRoom(userRoom).players[deathID].role == 4) { //là BÁN SÓI
           console.log(`$ ROOM ${userRoom + 1} > HALF WOLF!`);
           let halfWolfjoinID = gamef.getRoom(userRoom).players[deathID].joinID;
-          bot.say(halfWolfjoinID,`\`\`\`\nBạn đã bị sói cắn!\nTừ giờ bạn là 🐺SÓI!\n\`\`\``);
+          bot.say(halfWolfjoinID, `\`\`\`\nBạn đã bị sói cắn!\nTừ giờ bạn là 🐺SÓI!\n\`\`\``);
           gamef.getRoom(userRoom).players[deathID].setRole(-1);
         }
-        gamef.getRoom(userRoom).newLog(`${deathID != -1 ? `Người bị cắn: (${deathTxt}) là ${deathRole}\n` : `Sói đêm ấy ăn chay!\n`}Và đêm hôm đấy không ai chết cả!`);
+        gamef.getRoom(userRoom).newLog(`${deathID != -1 ? `Người bị cắn: (${deathTxt}) là ${deathRole}\n` : `Sói đêm ấy ăn chay hoặc không thống nhất được số vote!\n`}Và đêm hôm đấy không ai chết cả!`);
         roomChatAll(userRoom, 0, `Đêm hôm qua không ai chết cả!`);
       }
       gameIsNotEndCheck(userRoom, () => {
@@ -168,19 +167,19 @@ function dayVoteEnd(userRoom) {
     gamef.getRoom(userRoom).findOutDeathID();
     gamef.getRoom(userRoom).cancelSchedule();
     let deathID = gamef.getRoom(userRoom).deathID;
-    if (deathID != -1) { // mời 1 người lên giá treo cổ
+    if (deathID != -1 && gamef.getRoom(userRoom).alivePlayer[gamef.getRoom(userRoom).players[deathID].joinID]) { // mời 1 người lên giá treo cổ
       gamef.getRoom(userRoom).resetRoleDone();
       gamef.getRoom(userRoom).setMorning(false);
       let deathTxt = gamef.getRoom(userRoom).playersTxt[deathID];
-      await roomChatAll(userRoom, 0, `Mời ${deathTxt} lên giá treo cổ !!!\nBạn có 45 giây để trăn trối, 45s bắt đầu!`);
+      await roomChatAll(userRoom, 0, `Mời ${deathTxt} lên giá treo cổ !!!\nBạn có 1 phút để trăn trối\n1 PHÚT bắt đầu!`);
       // 45 giây
-      let time = new Date(Date.now() + 45 * 1000);
+      let time = new Date(Date.now() + 1 * 60 * 1000);
       gamef.getRoom(userRoom).addSchedule(time, () => {
         roomChatAll(userRoom, 0, `Đã hết thời gian, mọi người vote nào!\nTREO CỔ hay CỨU?\n/yes hoặc /no`);
         console.log(`$ ROOM ${userRoom + 1} > END OF TRĂN TRỐI :))`);
       });
     } else {
-      await roomChatAll(userRoom, 0, `Không ai bị treo cổ do có số vote bằng nhau! Mọi người đi ngủ`);
+      await roomChatAll(userRoom, 0, `Không ai bị treo cổ do có số vote bằng nhau hoặc người bị treo đã tự sát! Mọi người đi ngủ`);
       const start2 = async () => {
         // Đêm tiếp theo
         gamef.getRoom(userRoom).dayNightSwitch();
@@ -533,13 +532,16 @@ bot.on('postback:LEAVE_ROOM', (payload, chat) => {
 bot.on('postback:VIEW_PLAYER_IN_ROOM', (payload, chat) => {
   let joinID = payload.sender.id;
   let userRoom = gamef.getUserRoom(joinID);
-  if (gamef.getRoom(userRoom).ingame) {
-    let playersInRoomTxt = gamef.getRoom(userRoom).playersTxt.join(' ; ');
-    chat.say(`Danh sách dân và sói làng ${userRoom + 1}: \n${playersInRoomTxt}`);
+  if (userRoom != undefined) {
+    if (gamef.getRoom(userRoom).ingame) {
+      let playersInRoomTxt = gamef.getRoom(userRoom).playersTxt.join(' ; ');
+      chat.say(`Danh sách dân và sói làng ${userRoom + 1}: \n${playersInRoomTxt}`);
+    } else {
+      chat.say('```\nTrò chơi chưa bắt đầu!\n```');
+    }
   } else {
-    chat.say('```\nTrò chơi chưa bắt đầu!\n```');
+    chat.say('```\nBạn chưa tham gia phòng chơi nào!\n```');
   }
-
 });
 // listen USER_RENAME message
 bot.on('postback:USER_RENAME', (payload, chat) => {
@@ -594,6 +596,7 @@ bot.on('postback:ADMIN_COMMAND', (payload, chat) => {
           gamef.resetAllRoom();
           chat.say('Đã tạo lại các phòng chơi và xóa các người chơi!');
           console.log('$ ROOM > RESET_ALL');
+          convo.end();
         } else if (chatTxt.match(/\/kick.[0-9]+.[0-9]+/g)) {
           let roomID = chatTxt.match(/[0-9]+/g)[0] - 1;
           let userID = chatTxt.match(/[0-9]+/g)[1];
@@ -642,7 +645,8 @@ bot.on('postback:ADMIN_COMMAND', (payload, chat) => {
     });
   };
 
-  if (['2643770348982136','2023444534356078'].indexOf(joinID)!=-1) {
+  if (['2643770348982136', '2023444534356078'].indexOf(joinID) != -1) {
+    console.log(`ADMIN ${joinID} (2643: DUY, 2023: LINH)!`);
     chat.conversation((convo) => {
       askCMD(convo);
     });
