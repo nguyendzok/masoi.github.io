@@ -491,8 +491,8 @@ bot.on('attachment', (payload, chat) => {
   let joinID = payload.sender.id;
   bot.say(joinID, `\`\`\`\nNội dung bạn vừa gửi không được Bot hỗ trợ!\n\`\`\``)
   const userRoom = gamef.getUserRoom(joinID);
-  user = gamef.getRoom(userRoom).getPlayer(joinID);
   if (userRoom != undefined) {
+    let user = gamef.getRoom(userRoom).getPlayer(joinID);
     roomChatAll(userRoom,joinID, `*${user.first_name}* đã gửi nội dung không được hỗ trợ!`);
   }
   console.log(JSON.stringify(payload));
