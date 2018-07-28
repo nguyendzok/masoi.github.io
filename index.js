@@ -493,11 +493,9 @@ bot.on('attachment', (payload, chat) => {
   const userRoom = gamef.getUserRoom(joinID);
   user = gamef.getRoom(userRoom).getPlayer(joinID);
   if (userRoom != undefined) {
-    roomChatAll(userRoom,joinID, [`*${user.first_name}* đã gửi đính kèm:`,{
-      attachment: 'image',
-      url: payload.attachment.url,
-    }]);
+    roomChatAll(userRoom,joinID, `*${user.first_name}* đã gửi nội dung không được hỗ trợ!`);
   }
+  console.log(JSON.stringify(payload));
 });
 
 // listen LEAVE ROOM message
