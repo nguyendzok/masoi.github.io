@@ -492,12 +492,12 @@ bot.on('attachment', (payload, chat) => {
   bot.say(joinID, `\`\`\`\nNội dung bạn vừa gửi không được Bot hỗ trợ!\n\`\`\``);
   let type = payload.message.attachments[0].type;
   let url = payload.message.attachments[0].url;
-  console.log(`$ ROOM ${userRoom + 1} CHAT > ${joinID}: Attachment content`);
   bot.sendAttachment(joinID,type,url).catch(err => {
     console.log(err);
   });
   const userRoom = gamef.getUserRoom(joinID);
   if (userRoom != undefined) {
+    console.log(`$ ROOM ${userRoom + 1} CHAT > ${joinID}: attachment &${type}& content`);
     let user = gamef.getRoom(userRoom).getPlayer(joinID);
     roomChatAll(userRoom, joinID, `*${user.first_name}* đã gửi nội dung không được hỗ trợ!`);
   }
