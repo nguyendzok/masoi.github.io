@@ -376,25 +376,25 @@ class Game {
         this.room[roomID].setRole(1, 1); // 1 TIÊN TRI +7
         this.room[roomID].setRole(2, 1); // 1 BẢO VỆ +3
         if (len < 6) { // 3,4,5
-            this.room[roomID].setRole(-1, 1);  // 1 SÓI
-            roleListTxt += ", 1 SÓI, " + (len - 3) + " DÂN";
+            this.room[roomID].setRole(-1, 1);  // 1 SÓI -6
+            roleListTxt += ", 1 SÓI, " + (len - 3) + ` DÂN (CÂN BẰNG: ${7+3-6+(len - 3)})`;
         } else if (len < 8) { // 6,7
-            this.room[roomID].setRole(-1, 2);  // 2 SÓI
-            roleListTxt += ", 2 SÓI, " + (len - 4) + " DÂN";
+            this.room[roomID].setRole(-1, 2);  // 2 SÓI -6*2
+            roleListTxt += ", 2 SÓI, " + (len - 4) + ` DÂN (CÂN BẰNG: ${7+3-6*2+(len - 4)})`;
         } else if (len < 10) { // 8,9
-            this.room[roomID].setRole(-1, 2);  // 2 SÓI
-            this.room[roomID].setRole(3, 1);  // 1 THỢ SĂN
-            this.room[roomID].setRole(4, 1); // 1 BÁN SÓI
-            roleListTxt += ", 2 SÓI, 1 THỢ SĂN, 1 BÁN SÓI" + (len - 6) + " DÂN";
+            this.room[roomID].setRole(-1, 2);  // 2 SÓI -6*2
+            this.room[roomID].setRole(3, 1);  // 1 THỢ SĂN +3
+            this.room[roomID].setRole(4, 1); // 1 BÁN SÓI -6
+            roleListTxt += ", 2 SÓI, 1 THỢ SĂN, 1 BÁN SÓI, " + (len - 6) + ` DÂN (CÂN BẰNG: ${7+3-6*2+3-6+(len - 6)})`;
         } else if (len < 12) { // 10,11
-            this.room[roomID].setRole(-1, 3);  // 3 SÓI
-            this.room[roomID].setRole(3, 1);  // 1 THỢ SĂN
-            roleListTxt += ", 3 SÓI, 1 THỢ SĂN, " + (len - 6) + " DÂN";
+            this.room[roomID].setRole(-1, 3);  // 3 SÓI -6*3
+            this.room[roomID].setRole(3, 1);  // 1 THỢ SĂN +3
+            roleListTxt += ", 3 SÓI, 1 THỢ SĂN, " + (len - 6) + ` DÂN (CÂN BẰNG: ${7+3-6*3+3+(len - 6)})`;
         } else if (len < 14) {
-            this.room[roomID].setRole(-1, 3);  // 3 SÓI
-            this.room[roomID].setRole(3, 1);  // 1 THỢ SĂN
-            this.room[roomID].setRole(4, 1); // 1 BÁN SÓI
-            roleListTxt += ", 3 SÓI, 1 THỢ SĂN, 1 BÁN SÓI" + (len - 7) + " DÂN";
+            this.room[roomID].setRole(-1, 3);  // 3 SÓI - 6*3
+            this.room[roomID].setRole(3, 1);  // 1 THỢ SĂN +3
+            this.room[roomID].setRole(4, 1); // 1 BÁN SÓI -6
+            roleListTxt += ", 3 SÓI, 1 THỢ SĂN, 1 BÁN SÓI, " + (len - 7) + ` DÂN (CÂN BẰNG: ${7+3-6*3+3-6+(len - 7)})`;
             // this.room[roomID].setRole(4,1);  // 1 CUPID - ghép đôi
         }
         this.room[roomID].playersTxt = [];
