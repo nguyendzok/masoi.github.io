@@ -55,7 +55,7 @@ async function roomRoleChat(roomID) {
           bot.say(m.joinID, `🐺Bạn là BÁN SÓI!\nBạn vẫn còn là DÂN! Ngủ tiếp đi!\nID CẢ LÀNG:\n${playersList}`);
           gamef.getRoom(roomID).roleDoneBy(m.joinID);
         } else if (m.role == 5) { // Phù thủy
-          if (gamef.getRoom(roomID).witchKillRemain){
+          if (gamef.getRoom(roomID).witchKillRemain) {
             bot.say(m.joinID, `🔮Phù thủy dậy đi! Đêm nay bạn muốn giết ai không?\n/kill <id>\n/skip để bỏ qua!\n${playersList}`);
           } else {
             bot.say(m.joinID, `🔮Bạn là Phù thủy!\nBạn đã sử dụng quyền giết của mình!\n${playersList}`);
@@ -101,6 +101,49 @@ function yesNoVoteCheck(userRoom) {
     });
   })
 }
+function dayNotify(userRoom, witchSaved) {
+  roomChatAll(userRoom, 0, `🌞Trời sáng rồi mọi người dậy đi`);
+  if (!witchSaved && gamef.getRoom(userRoom).kill()) {
+    roomChatAll(userRoom, 0, `🔪Đêm hôm qua: *${deathTxt}* đã CHẾT!`);
+    gamef.getRoom(userRoom).newLog(`🔪Người đã chết: *${deathTxt}* là ${gamef.roleTxt[gamef.getRoom(userRoom).getRoleByID(deathID)]}`);
+    if (gamef.getRoom(userRoom).players[deathID].role === 3) { //người chết là thợ săn
+      let fireID = gamef.getRoom(userRoom).fireID;
+      let deathFireTxt = gamef.getRoom(userRoom).playersTxt[fireID];
+      roomChatAll(userRoom, 0, `🔪Và *${deathFireTxt}* đã CHẾT!`);
+      gamef.getRoom(userRoom).newLog(`🔪Và *${deathFireTxt}* đã CHẾT là ${gamef.roleTxt[gamef.getRoom(userRoom).getRoleByID(fireID)]}`);
+    }
+    console.log(`$ ROOM ${userRoom + 1} > ${deathTxt} DIED!`);
+  } else {
+    console.log(`$ ROOM ${userRoom + 1} > NOBODY DIED!`);
+    if (deathID != -1 && !witchSaved && gamef.getRoom(userRoom).players[deathID].role == 4) { //là BÁN SÓI
+      console.log(`$ ROOM ${userRoom + 1} > HALF WOLF!`);
+      let halfWolfjoinID = gamef.getRoom(userRoom).players[deathID].joinID;
+      bot.say(halfWolfjoinID, `\`\`\`\nBạn đã bị sói cắn!\nTừ giờ bạn là 🐺SÓI!\n\`\`\``);
+      gamef.getRoom(userRoom).players[deathID].setRole(-1);
+    }
+    if (!witchSaved) {
+      gamef.getRoom(userRoom).newLog(`${deathID != -1 ? `🔪Người bị cắn: (${deathTxt}) là ${deathRole}\n` : `🎊Sói đêm ấy ăn chay hoặc không thống nhất được số vote!\n`}🎊Và đêm hôm đấy không ai chết cả!`);
+    }
+    roomChatAll(userRoom, 0, `🎊Đêm hôm qua không ai chết cả!`);
+  }
+  gameIsNotEndCheck(userRoom, () => {
+    let playersInRoomTxt = gamef.getRoom(userRoom).playersTxt.join(' ; ');
+    roomChatAll(userRoom, 0, `⏰Mọi người có 6 phút thảo luận!`);
+    gamef.getRoom(userRoom).dayNightSwitch();
+
+    let time = new Date(Date.now() + 5 * 60 * 1000);
+    gamef.getRoom(userRoom).addSchedule(time, () => {
+      roomChatAll(userRoom, 0, `⏰CÒN 1 PHÚT THẢO LUẬN\nCác bạn nên cân nhắc kĩ, tránh lan man, nhanh chóng tìm ra kẻ đáng nghi nhất!`);
+      console.log(`$ ROOM ${userRoom + 1} > 1 MINUTE REMAINING`);
+      let time = new Date(Date.now() + 1 * 60 * 1000);
+      gamef.getRoom(userRoom).addSchedule(time, () => {
+        roomChatAll(userRoom, 0, `⏰Đã hết thời gian, mọi người vote một người để treo cổ!\n/vote <id> để treo cổ 1 người\n${playersInRoomTxt}`);
+        gamef.getRoom(userRoom).chatOFF();
+        console.log(`$ ROOM ${userRoom + 1} > END OF DISCUSSION!`);
+      });
+    });
+  });
+}
 function nightDoneCheck(userRoom) {
   gamef.getRoom(userRoom).roleIsDone((isDone) => {
     if (isDone) {
@@ -111,7 +154,6 @@ function nightDoneCheck(userRoom) {
         deathTxt = gamef.getRoom(userRoom).playersTxt[deathID];
         deathRole = gamef.roleTxt[gamef.getRoom(userRoom).getRoleByID(deathID)];
       }
-      let witchSaved = false;
 
       if (deathID != -1 && gamef.getRoom(userRoom).players[deathID].role != 4 && gamef.getRoom(userRoom).witchID != undefined && gamef.getRoom(userRoom).witchSaveRemain) { //phù thủy còn quyền cứu, nạn nhân không phải bán sói
         const askForSave = (convo) => {
@@ -124,15 +166,15 @@ function nightDoneCheck(userRoom) {
               convo.end();
               return;
             } else {
-              if (chatTxt.match(/\/yes/g)) {
-                witchSaved = true;
+              if (chatTxt.match(/\/yes/g)) { //yes
                 gamef.getRoom(userRoom).witchUseSave();
                 convo.say(`🔮Bạn đã cứu *${deathTxt}* thành công!`);
                 gamef.getRoom(userRoom).newLog(`🔮Phù thủy ${gamef.getRoom(userRoom).players[gamef.getRoom(userRoom).witchID].first_name} đã cứu *${deathTxt}*!`);
                 convo.end();
-              } else {
-                witchSaved = false;
+                dayNotify(userRoom, true);
+              } else { // no
                 convo.end();
+                dayNotify(userRoom, false);
               }
             }
           });
@@ -140,49 +182,9 @@ function nightDoneCheck(userRoom) {
         bot.conversation(gamef.getRoom(userRoom).witchID, (convo) => {
           askForSave(convo);
         });
-      }
-
-      roomChatAll(userRoom, 0, `🌞Trời sáng rồi mọi người dậy đi`);
-      if (!witchSaved && gamef.getRoom(userRoom).kill()) {
-        roomChatAll(userRoom, 0, `🔪Đêm hôm qua: *${deathTxt}* đã CHẾT!`);
-        gamef.getRoom(userRoom).newLog(`🔪Người đã chết: *${deathTxt}* là ${gamef.roleTxt[gamef.getRoom(userRoom).getRoleByID(deathID)]}`);
-        if (gamef.getRoom(userRoom).players[deathID].role === 3) { //người chết là thợ săn
-          let fireID = gamef.getRoom(userRoom).fireID;
-          let deathFireTxt = gamef.getRoom(userRoom).playersTxt[fireID];
-          roomChatAll(userRoom, 0, `🔪Và *${deathFireTxt}* đã CHẾT!`);
-          gamef.getRoom(userRoom).newLog(`🔪Và *${deathFireTxt}* đã CHẾT là ${gamef.roleTxt[gamef.getRoom(userRoom).getRoleByID(fireID)]}`);
-        }
-        console.log(`$ ROOM ${userRoom + 1} > ${deathTxt} DIED!`);
       } else {
-        console.log(`$ ROOM ${userRoom + 1} > NOBODY DIED!`);
-        if (deathID != -1 && !witchSaved && gamef.getRoom(userRoom).players[deathID].role == 4) { //là BÁN SÓI
-          console.log(`$ ROOM ${userRoom + 1} > HALF WOLF!`);
-          let halfWolfjoinID = gamef.getRoom(userRoom).players[deathID].joinID;
-          bot.say(halfWolfjoinID, `\`\`\`\nBạn đã bị sói cắn!\nTừ giờ bạn là 🐺SÓI!\n\`\`\``);
-          gamef.getRoom(userRoom).players[deathID].setRole(-1);
-        }
-        if (!witchSaved) {
-          gamef.getRoom(userRoom).newLog(`${deathID != -1 ? `🔪Người bị cắn: (${deathTxt}) là ${deathRole}\n` : `🎊Sói đêm ấy ăn chay hoặc không thống nhất được số vote!\n`}🎊Và đêm hôm đấy không ai chết cả!`);
-        }
-        roomChatAll(userRoom, 0, `🎊Đêm hôm qua không ai chết cả!`);
+        dayNotify(userRoom, false);
       }
-      gameIsNotEndCheck(userRoom, () => {
-        let playersInRoomTxt = gamef.getRoom(userRoom).playersTxt.join(' ; ');
-        roomChatAll(userRoom, 0, `⏰Mọi người có 6 phút thảo luận!`);
-        gamef.getRoom(userRoom).dayNightSwitch();
-
-        let time = new Date(Date.now() + 5 * 60 * 1000);
-        gamef.getRoom(userRoom).addSchedule(time, () => {
-          roomChatAll(userRoom, 0, `⏰CÒN 1 PHÚT THẢO LUẬN\nCác bạn nên cân nhắc kĩ, tránh lan man, nhanh chóng tìm ra kẻ đáng nghi nhất!`);
-          console.log(`$ ROOM ${userRoom + 1} > 1 MINUTE REMAINING`);
-          let time = new Date(Date.now() + 1 * 60 * 1000);
-          gamef.getRoom(userRoom).addSchedule(time, () => {
-            roomChatAll(userRoom, 0, `⏰Đã hết thời gian, mọi người vote một người để treo cổ!\n/vote <id> để treo cổ 1 người\n${playersInRoomTxt}`);
-            gamef.getRoom(userRoom).chatOFF();
-            console.log(`$ ROOM ${userRoom + 1} > END OF DISCUSSION!`);
-          });
-        });
-      });
     }
   });
 }
