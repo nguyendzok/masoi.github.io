@@ -493,7 +493,6 @@ bot.on('attachment', (payload, chat) => {
   bot.say(joinID, {
     attachment: payload.message.attachments.type,
     url: payload.message.attachments.url,
-    sticker_id: payload.message.attachments.sticker_id
   }).catch(err => {
     console.log(err);
   });
