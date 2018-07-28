@@ -44,7 +44,7 @@ async function roomRoleChat(roomID) {
         let villagersList = gamef.getRoom(roomID).villagersTxt.join(' ; ');
         let playersList = gamef.getRoom(roomID).playersTxt.join(' ; ');
         if (m.role == -1) {//SÓI
-          bot.say(m.joinID, `🐺Sói ơi dậy đi! Đêm nay sói muốn cắn ai?\n/vote <id> để cắn 1 ai đó\n/vote -1 để ăn chay!\n👨‍👩‍👦‍👦ID CẢ LÀNG:\n${playersList}\n🐺ID TEAM SÓI:\n${wolfList}\n💩ID TEAM DÂN:\n${villagersList}`);
+          bot.say(m.joinID, `🐺Sói ơi dậy đi! Đêm nay sói muốn cắn ai?\n/vote <id> để cắn 1 ai đó\n👨‍👩‍👦‍👦ID CẢ LÀNG:\n${playersList}\n🐺ID TEAM SÓI:\n${wolfList}\n💩ID TEAM DÂN:\n${villagersList}`);
         } else if (m.role == 1) { // tiên tri
           bot.say(m.joinID, `🔍Tiên tri dậy đi! Tiên tri muốn kiểm tra ai?\n/see <id> để kiểm tra\n${playersList}`);
         } else if (m.role == 2) { // Bảo vệ
@@ -489,10 +489,14 @@ bot.on('message', (payload, chat) => {
 
 bot.on('attachment', (payload, chat) => {
   let joinID = payload.sender.id;
-  bot.say(joinID, `\`\`\`\nNội dung bạn vừa gửi không được Bot không hỗ trợ!\n\`\`\``)
+  bot.say(joinID, `\`\`\`\nNội dung bạn vừa gửi không được Bot hỗ trợ!\n\`\`\``)
   const userRoom = gamef.getUserRoom(joinID);
+  user = gamef.getRoom(userRoom).getPlayer(joinID);
   if (userRoom != undefined) {
-
+    roomChatAll(userRoom,joinID, [`*${user.first_name}* đã gửi đính kèm:`,{
+      attachment: 'image',
+      url: payload.attachment.url,
+    }]);
   }
 });
 
