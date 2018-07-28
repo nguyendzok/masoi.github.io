@@ -365,7 +365,7 @@ bot.on('message', (payload, chat) => {
       if (userRole == -1) {// là SÓI
         if (!chatTxt.match(/\/vote.-?[0-9]+/g)) {//chat
           if (gamef.getRoom(userRoom).chatON) {
-            roomWolfChatAll(userRoom, joinID, '*'+user.first_name + '*: ' + chatTxt);
+            roomWolfChatAll(userRoom, joinID, '*' + user.first_name + '*: ' + chatTxt);
           }
         } else {// SÓI VOTE
           let voteID = chatTxt.match(/-?[0-9]+/g)[0];
@@ -374,11 +374,11 @@ bot.on('message', (payload, chat) => {
             if (gamef.getRoom(userRoom).vote(joinID, voteID)) {
               if (voteID == -1) { //ăn chay (phiếu trống)
                 await chat.say(`🍴Bạn đã vote ăn chay!`);
-                roomWolfChatAll(userRoom, joinID, '🍴'+user.first_name + ' đã vote ăn chay!');
+                roomWolfChatAll(userRoom, joinID, '🍴' + user.first_name + ' đã vote ăn chay!');
               } else {
                 let voteKill = gamef.getRoom(userRoom).playersTxt[voteID];
                 await chat.say(`🍗Bạn đã vote cắn ${voteKill}`);
-                roomWolfChatAll(userRoom, joinID, '🍗'+user.first_name + ' đã vote cắn ' + voteKill);
+                roomWolfChatAll(userRoom, joinID, '🍗' + user.first_name + ' đã vote cắn ' + voteKill);
               }
             } else {
               chat.say("```\nBạn không thể thực hiện vote 2 lần hoặc vote người chơi đã chết!\n```");
@@ -435,7 +435,7 @@ bot.on('message', (payload, chat) => {
         if (!chatTxt.match(/\/vote.-?[0-9]+/g)) {
           if (!chatTxt.match(/\/yes/g) && !chatTxt.match(/\/no/g)) {
             if (gamef.getRoom(userRoom).chatON || (gamef.getRoom(userRoom).deathID != -1 && gamef.getRoom(userRoom).deathID === gamef.getRoom(userRoom).getPlayer(joinID).id)) { //check xem còn bật chat không?
-              roomChatAll(userRoom, joinID, '*'+user.first_name + '*: ' + chatTxt);
+              roomChatAll(userRoom, joinID, '*' + user.first_name + '*: ' + chatTxt);
             } else {
               chat.say('```\nBạn không thể trò chuyện\n```');
             }
@@ -489,11 +489,18 @@ bot.on('message', (payload, chat) => {
 
 bot.on('attachment', (payload, chat) => {
   let joinID = payload.sender.id;
-  bot.say(joinID, `\`\`\`\nNội dung bạn vừa gửi không được Bot hỗ trợ!\n\`\`\``)
+  bot.say(joinID, `\`\`\`\nNội dung bạn vừa gửi không được Bot hỗ trợ!\n\`\`\``);
+  bot.say(joinID, {
+    attachment: payload.message.attachments.type,
+    url: payload.message.attachments.url,
+    sticker_id: payload.message.attachments.sticker_id
+  }).catch(err => {
+    console.log(err);
+  });
   const userRoom = gamef.getUserRoom(joinID);
   if (userRoom != undefined) {
     let user = gamef.getRoom(userRoom).getPlayer(joinID);
-    roomChatAll(userRoom,joinID, `*${user.first_name}* đã gửi nội dung không được hỗ trợ!`);
+    roomChatAll(userRoom, joinID, `*${user.first_name}* đã gửi nội dung không được hỗ trợ!`);
   }
   console.log(JSON.stringify(payload));
 });
