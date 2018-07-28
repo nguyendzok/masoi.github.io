@@ -165,6 +165,11 @@ class Room {
         if (this.roleDone[this.players[deathID].joinID]){
             this.roleDoneCount--;
         }
+        if (this.players[deathID].role == 5) { //là phù thủy
+            this.witchID = undefined;
+            this.witchKillAction = false;
+            this.witchSaveRemain = false;
+        }
         this.alivePlayer[this.players[deathID].joinID] = false;
         this.playersTxt[deathID] = '💀CHẾT:' + this.playersTxt[deathID].substr(2, this.playersTxt[deathID].length - 2) + '💀';
         if (this.players[deathID].role === -1) {

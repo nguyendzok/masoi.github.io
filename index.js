@@ -102,6 +102,13 @@ function yesNoVoteCheck(userRoom) {
   })
 }
 function dayNotify(userRoom, witchSaved) {
+  let deathID = gamef.getRoom(userRoom).deathID;
+  let deathTxt, deathRole;
+  if (deathID != -1) {
+    deathTxt = gamef.getRoom(userRoom).playersTxt[deathID];
+    deathRole = gamef.roleTxt[gamef.getRoom(userRoom).getRoleByID(deathID)];
+  }
+  
   roomChatAll(userRoom, 0, `🌞Trời sáng rồi mọi người dậy đi`);
   if (!witchSaved && gamef.getRoom(userRoom).kill()) {
     roomChatAll(userRoom, 0, `🔪Đêm hôm qua: *${deathTxt}* đã CHẾT!`);
@@ -149,10 +156,9 @@ function nightDoneCheck(userRoom) {
     if (isDone) {
       gamef.getRoom(userRoom).findOutDeathID();
       let deathID = gamef.getRoom(userRoom).deathID;
-      let deathTxt, deathRole;
+      let deathTxt;
       if (deathID != -1) {
         deathTxt = gamef.getRoom(userRoom).playersTxt[deathID];
-        deathRole = gamef.roleTxt[gamef.getRoom(userRoom).getRoleByID(deathID)];
       }
 
       if (deathID != -1 && gamef.getRoom(userRoom).players[deathID].role != 4 && gamef.getRoom(userRoom).witchID != undefined && gamef.getRoom(userRoom).witchSaveRemain) { //phù thủy còn quyền cứu, nạn nhân không phải bán sói
