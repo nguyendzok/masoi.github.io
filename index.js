@@ -490,10 +490,9 @@ bot.on('message', (payload, chat) => {
 bot.on('attachment', (payload, chat) => {
   let joinID = payload.sender.id;
   bot.say(joinID, `\`\`\`\nNội dung bạn vừa gửi không được Bot hỗ trợ!\n\`\`\``);
-  bot.say(joinID, {
-    attachment: payload.message.attachments.type,
-    url: payload.message.attachments.url,
-  }).catch(err => {
+  let type = payload.message.attachments.type;
+  let url = payload.message.attachments.url;
+  bot.sendAttachment(joinID,type,url).catch(err => {
     console.log(err);
   });
   const userRoom = gamef.getUserRoom(joinID);
