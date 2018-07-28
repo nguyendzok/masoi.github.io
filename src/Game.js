@@ -123,6 +123,7 @@ class Room {
             do {
                 rand = Math.floor((Math.random() * this.players.length));
             } while (this.players[rand].role != 0)
+            this.logs.push(`${this.roleTxt[role]} > ${this.players[rand].first_name}`);
             this.players[rand].role = role;
             count--;
         }

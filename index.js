@@ -153,7 +153,8 @@ function gameIsNotEndCheck(userRoom, callback) {
         callback();
       } else {
         console.log(`$ ROOM ${userRoom + 1} > END GAME > ${winner === -1 ? '🐺SÓI' : '💩DÂN'} thắng!`);
-        await roomChatAll(userRoom, 0, [`🎮Trò chơi đã kết thúc...\n${winner === -1 ? '🐺SÓI' : '💩DÂN'} thắng!`, `🎮Bạn có thể sẵn sàng để bắt đầu chơi lại, hoặc tiếp tục trò chuyện với các người chơi khác trong phòng!`]);
+        await roomChatAll(userRoom, 0, [`🏆Trò chơi đã kết thúc...\n${winner === -1 ? '🐺SÓI' : '💩DÂN'} thắng!`, `🎮Bạn có thể sẵn sàng để bắt đầu chơi lại, hoặc tiếp tục trò chuyện với các người chơi khác trong phòng!`]);
+        gamef.getRoom(userRoom).logs.push(`🏆Trò chơi đã kết thúc với: ${gamef.getRoom(userRoom).wolfsCount} SÓI/ ${gamef.getRoom(userRoom).villagersCount} DÂN!`)
         await roomChatAll(userRoom, 0, gamef.getRoom(userRoom).logs.join(`\n`));
         gamef.getRoom(userRoom).resetRoom();
       }
@@ -364,7 +365,7 @@ bot.on('message', (payload, chat) => {
       if (userRole == -1) {// là SÓI
         if (!chatTxt.match(/\/vote.-?[0-9]+/g)) {//chat
           if (gamef.getRoom(userRoom).chatON) {
-            roomWolfChatAll(userRoom, joinID, user.first_name + ': ' + chatTxt);
+            roomWolfChatAll(userRoom, joinID, '*'+user.first_name + '*: ' + chatTxt);
           }
         } else {// SÓI VOTE
           let voteID = chatTxt.match(/-?[0-9]+/g)[0];
@@ -434,7 +435,7 @@ bot.on('message', (payload, chat) => {
         if (!chatTxt.match(/\/vote.-?[0-9]+/g)) {
           if (!chatTxt.match(/\/yes/g) && !chatTxt.match(/\/no/g)) {
             if (gamef.getRoom(userRoom).chatON || (gamef.getRoom(userRoom).deathID != -1 && gamef.getRoom(userRoom).deathID === gamef.getRoom(userRoom).getPlayer(joinID).id)) { //check xem còn bật chat không?
-              roomChatAll(userRoom, joinID, user.first_name + ': ' + chatTxt);
+              roomChatAll(userRoom, joinID, '*'+user.first_name + '*: ' + chatTxt);
             } else {
               chat.say('```\nBạn không thể trò chuyện\n```');
             }
@@ -484,6 +485,15 @@ bot.on('message', (payload, chat) => {
     chat.say('```\nBạn đã chết! Xin giữ im lặng! \n```')
   }
   console.log(`$ ROOM ${userRoom + 1} CHAT > ${joinID}: ${chatTxt}`);
+});
+
+bot.on('attachment', (payload, chat) => {
+  let joinID = payload.sender.id;
+  bot.say(joinID, `\`\`\`\nNội dung bạn vừa gửi không được Bot không hỗ trợ!\n\`\`\``)
+  const userRoom = gamef.getUserRoom(joinID);
+  if (userRoom != undefined) {
+
+  }
 });
 
 // listen LEAVE ROOM message
