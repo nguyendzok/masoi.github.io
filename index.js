@@ -442,7 +442,7 @@ bot.on('message', (payload, chat) => {
             let voteID = chatTxt.match(/[0-9]+/g)[0];
             let role = gamef.getRoom(userRoom).getRoleByID(voteID);
             await chat.say(`${voteID} là ${role == -1 ? '🐺SÓI' : role == 1 ? '🔍TIÊN TRI, Bạn đùa tớ à :v' : '💩PHE DÂN'}`);
-            gamef.getRoom(userRoom).newLog(`${user.first_name} soi (${gamef.getRoom(userRoom).playersTxt[voteID]}) là ${role == -1 ? '🐺SÓI' : role == 1 ? 'TỰ SOI MÌNH! GG' : '💩PHE DÂN'}`);
+            gamef.getRoom(userRoom).newLog(`🔍${user.first_name} soi (${gamef.getRoom(userRoom).playersTxt[voteID]}) là ${role == -1 ? '🐺SÓI' : role == 1 ? 'TỰ SOI MÌNH! GG' : '💩PHE DÂN'}`);
             gamef.getRoom(userRoom).roleDoneBy(joinID);
             // kiểm tra đã VOTE xong chưa?
             nightDoneCheck(userRoom);
