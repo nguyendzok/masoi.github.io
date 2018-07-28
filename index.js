@@ -108,7 +108,7 @@ function dayNotify(userRoom, witchSaved) {
     deathTxt = gamef.getRoom(userRoom).playersTxt[deathID];
     deathRole = gamef.roleTxt[gamef.getRoom(userRoom).getRoleByID(deathID)];
   }
-  
+
   roomChatAll(userRoom, 0, `🌞Trời sáng rồi mọi người dậy đi`);
   if (!witchSaved && gamef.getRoom(userRoom).kill()) {
     roomChatAll(userRoom, 0, `🔪Đêm hôm qua: *${deathTxt}* đã CHẾT!`);
@@ -224,7 +224,7 @@ function dayVoteEnd(userRoom) {
       // 1 phút trăn trối
       let time = new Date(Date.now() + 1 * 60 * 1000);
       gamef.getRoom(userRoom).addSchedule(time, () => {
-        roomChatAll(userRoom, 0, `⏰Đã hết thời gian, mọi người vote nào!\n👍TREO CỔ hay 👎CỨU?\n/yes hoặc /no`);
+        roomChatAll(userRoom, 0, `⏰Đã hết thời gian, mọi người vote nào!\n👎TREO CỔ hay 👍CỨU?\n/yes hoặc /no`);
         console.log(`$ ROOM ${userRoom + 1} > END OF TRĂN TRỐI :))`);
       });
     } else {
@@ -514,13 +514,13 @@ bot.on('message', (payload, chat) => {
             if (gamef.getRoom(userRoom).deathID != -1) {
               if (chatTxt.match(/\/yes/g)) { //vote treo cổ
                 gamef.getRoom(userRoom).killOrSaveVote(joinID, true);
-                chat.say(`👍Bạn đã vote treo! (${gamef.getRoom(userRoom).saveOrKill})`);
-                roomChatAll(userRoom, joinID, `👍${user.first_name} đã vote treo! (${gamef.getRoom(userRoom).saveOrKill})`);
+                chat.say(`👎Bạn đã vote treo! (${gamef.getRoom(userRoom).saveOrKill})`);
+                roomChatAll(userRoom, joinID, `👎${user.first_name} đã vote treo! (${gamef.getRoom(userRoom).saveOrKill})`);
                 yesNoVoteCheck(userRoom);
               } else { //vote tha
                 gamef.getRoom(userRoom).killOrSaveVote(joinID, false);
-                chat.say(`👎Bạn đã vote tha! (${gamef.getRoom(userRoom).saveOrKill})`);
-                roomChatAll(userRoom, joinID, `👎${user.first_name} đã vote tha! (${gamef.getRoom(userRoom).saveOrKill})`);
+                chat.say(`👍Bạn đã vote tha! (${gamef.getRoom(userRoom).saveOrKill})`);
+                roomChatAll(userRoom, joinID, `👍${user.first_name} đã vote tha! (${gamef.getRoom(userRoom).saveOrKill})`);
                 yesNoVoteCheck(userRoom);
               }
             }
