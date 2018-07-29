@@ -594,6 +594,7 @@ bot.on('attachment', (payload, chat) => {
   const userRoom = gamef.getUserRoom(joinID);
   if (userRoom != undefined) {
     console.log(`$ ROOM ${userRoom + 1} CHAT > ${joinID}: not support content`);
+    console.log(JSON.stringify(payload.message.attachments));
     let user = gamef.getRoom(userRoom).getPlayer(joinID);
     roomChatAll(userRoom, joinID, `*${user.first_name}* đã gửi nội dung không được hỗ trợ!`);
   }
