@@ -47,6 +47,7 @@ class Room {
         this.witchID = undefined;
         this.witchSaveRemain = true;
         this.witchKillRemain = true;
+        this.witchKillID = undefined;
         
         this.deathID = -1; // -1 là không ai cả
         this.saveID = -1; // -1 là không ai cả
@@ -76,6 +77,7 @@ class Room {
         this.witchID = undefined;
         this.witchSaveRemain = true;
         this.witchKillRemain = true;
+        this.witchKillID = undefined;
 
         this.deathID = -1; // -1 là không ai cả
         this.saveID = -1; // -1 là không ai cả
@@ -196,10 +198,22 @@ class Room {
             return false;
         }
     }
-    witchKillAction(killID){
+    witchKillVote(killID){
         if (killID != -1 && this.players[killID]) {
             this.witchKillRemain = false;
-            this.killAction(killID);
+            this.witchKillID = killID;
+            return true;
+        } else {
+            return false;
+        }
+    }
+    witchKillAction(){
+        if (this.witchKillID!=undefined && this.players[this.witchKillID]){
+            this.killAction(this.witchKillID);
+            this.witchKillID = undefined;
+            return true;
+        } else {
+            return false;
         }
     }
     save(joinID, voteID) {
