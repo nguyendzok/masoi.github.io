@@ -207,10 +207,11 @@ class Room {
             return false;
         }
     }
-    witchKillAction(){
+    witchKillAction(callback){
         if (this.witchKillID!=undefined && this.players[this.witchKillID]){
             this.killAction(this.witchKillID);
             this.witchKillID = undefined;
+            callback(this.witchKillID);
             return true;
         } else {
             return false;
