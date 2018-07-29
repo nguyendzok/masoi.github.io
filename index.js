@@ -590,18 +590,27 @@ bot.on('message', (payload, chat) => {
 
 bot.on('attachment', (payload, chat) => {
   let joinID = payload.sender.id;
+  const userRoom = gamef.getUserRoom(joinID);
   let img = payload.message.attachments[0];
   if (img.type != 'image') {
     chat.say(`\`\`\`\nNội dung bạn vừa gửi không được Bot hỗ trợ!\n\`\`\``);
+    if (userRoom != undefined) {
+      console.log(`$ ROOM ${userRoom + 1} CHAT > ${joinID}: not support content`);
+      console.log(JSON.stringify(payload.message.attachments));
+      let user = gamef.getRoom(userRoom).getPlayer(joinID);
+      roomChatAll(userRoom, joinID, `*${user.first_name}* đã gửi nội dung không được hỗ trợ!`);
+    }
   } else {
     chat.sendAttachment('image', img.payload.url);
-  }
-  const userRoom = gamef.getUserRoom(joinID);
-  if (userRoom != undefined) {
-    console.log(`$ ROOM ${userRoom + 1} CHAT > ${joinID}: not support content`);
-    console.log(JSON.stringify(payload.message.attachments));
-    let user = gamef.getRoom(userRoom).getPlayer(joinID);
-    roomChatAll(userRoom, joinID, `*${user.first_name}* đã gửi nội dung không được hỗ trợ!`);
+    chat.say()
+    if (userRoom != undefined) {
+      console.log(`$ ROOM ${userRoom + 1} CHAT > ${joinID}: IMAGE content`);
+      let user = gamef.getRoom(userRoom).getPlayer(joinID);
+      roomChatAll(userRoom, joinID, [`*${user.first_name}* đã gửi 1 sticker/ảnh/gif!`, {
+        attachment: 'image',
+        url: img.payload.url
+      }]);
+    }
   }
 });
 
