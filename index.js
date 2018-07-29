@@ -492,14 +492,14 @@ bot.on('message', (payload, chat) => {
           if (!gamef.getRoom(userRoom).fire(joinID, voteID)) {
             chat.say(`\`\`\`\nBạn không thể ngắm bắn 1 người 2 đêm liên tiếp hoặc người chơi đã chết!\n\`\`\``);
           } else {
-            if (voteID!=-1){
+            if (voteID != -1) {
               chat.say(`🔫Bạn đã ngắm bắn ${gamef.getRoom(userRoom).playersTxt[voteID]}!`);
               gamef.getRoom(userRoom).newLog(`🔫Thợ săn đã ngắm bắn ${gamef.getRoom(userRoom).playersTxt[voteID]}!`);
             } else {
               chat.say(`🔫Bạn đã ngắm bắn lên trời!`);
               gamef.getRoom(userRoom).newLog(`🔫Thợ săn đã ngắm bắn lên trời!`)
             }
-            
+
             // kiểm tra đã VOTE xong chưa?
             nightDoneCheck(userRoom);
           }
@@ -590,7 +590,12 @@ bot.on('message', (payload, chat) => {
 
 bot.on('attachment', (payload, chat) => {
   let joinID = payload.sender.id;
-  bot.say(joinID, `\`\`\`\nNội dung bạn vừa gửi không được Bot hỗ trợ!\n\`\`\``);
+  let img = payload.message.attachments[0];
+  if (img.type != 'image') {
+    chat.say(`\`\`\`\nNội dung bạn vừa gửi không được Bot hỗ trợ!\n\`\`\``);
+  } else {
+    chat.sendAttachment('image', img.payload.url);
+  }
   const userRoom = gamef.getUserRoom(joinID);
   if (userRoom != undefined) {
     console.log(`$ ROOM ${userRoom + 1} CHAT > ${joinID}: not support content`);
