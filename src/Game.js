@@ -229,8 +229,11 @@ class Room {
         }
     }
     fire(joinID, voteID) {
+        if (voteID == -1){ //bắn lên trời
+            this.roleDoneBy(joinID);
+            return true;
+        }
         if (!this.roleDone[joinID] && this.fireID != voteID && this.players[voteID] && this.alivePlayer[this.players[voteID].joinID]) {
-            this.logs.push(`🔫${this.getPlayer(joinID).first_name} ngắm bắn: (${this.playersTxt[voteID]})`);
             this.fireID = voteID;
             this.roleDoneBy(joinID);
             return true;

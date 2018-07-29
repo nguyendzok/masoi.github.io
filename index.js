@@ -56,7 +56,7 @@ async function roomRoleChat(roomID) {
           gamef.getRoom(roomID).roleDoneBy(m.joinID);
         } else if (m.role == 5) { // Phù thủy
           if (gamef.getRoom(roomID).witchKillRemain) {
-            bot.say(m.joinID, `🔮Bạn là Phù thủy!\n${gamef.getRoom(roomID).witchSaveRemain ? '☑Bạn còn quyền cứu' : '⛔Bạn đã dùng quyền cứu!'}\n☑/kill <id> để giết\n /skip để bỏ qua\n${playersList}`);
+            bot.say(m.joinID, `🔮Bạn là Phù thủy!\n${gamef.getRoom(roomID).witchSaveRemain ? '☑Bạn còn quyền cứu' : '⛔Bạn đã dùng quyền cứu!'}\n☑/kill <id> để giết\n☑/skip để bỏ qua\n${playersList}`);
           } else {
             bot.say(m.joinID, `🔮Bạn là Phù thủy!\n${gamef.getRoom(roomID).witchSaveRemain ? '☑Bạn còn quyền cứu' : '⛔Bạn đã dùng quyền cứu!'}\n⛔Bạn đã dùng quyền giết!\n${playersList}`);
             gamef.getRoom(roomID).roleDoneBy(m.joinID);
@@ -114,24 +114,25 @@ function dayNotify(userRoom, witchSaved) {
   // SÓI CẮN
   if (!witchSaved && gamef.getRoom(userRoom).kill()) {
     dieCount++;
-    roomChatAll(userRoom, 0, `🔪*${deathTxt}* đã CHẾT!`);
+    roomChatAll(userRoom, 0, `🔪 *${deathTxt}* đã CHẾT!`);
     gamef.getRoom(userRoom).newLog(`🔪${deathRole} *${deathTxt}* đã bị SÓI cắn!`);
     console.log(`$ ROOM ${userRoom + 1} > ${deathTxt} DIED!`);
     if (gamef.getRoom(userRoom).players[deathID].role === 3) { //người chết là thợ săn
       dieCount++;
       let fireID = gamef.getRoom(userRoom).fireID;
       let deathFireTxt = gamef.getRoom(userRoom).playersTxt[fireID];
-      roomChatAll(userRoom, 0, `🔪*${deathFireTxt}* đã CHẾT!`);
+      roomChatAll(userRoom, 0, `🔪 *${deathFireTxt}* đã CHẾT!`);
       gamef.getRoom(userRoom).newLog(`🔪Thợ săn chết đã ghim ${gamef.roleTxt[gamef.getRoom(userRoom).getRoleByID(fireID)]} *${deathFireTxt}*`);
       console.log(`$ ROOM ${userRoom + 1} > ${deathFireTxt} DIED!`);
     }
   }
   // PHÙ THỦY giết
   if (gamef.getRoom(userRoom).witchKillID != undefined) {
+    let killID = gamef.getRoom(userRoom).witchKillID;
+    let deathByMagicTxt = gamef.getRoom(userRoom).playersTxt[killID];
     gamef.getRoom(userRoom).witchKillAction((witchKillID) => {
       dieCount++;
-      let deathByMagicTxt = gamef.getRoom(userRoom).playersTxt[witchKillID];
-      roomChatAll(userRoom, 0, `🔪*${deathByMagicTxt}* đã CHẾT!`);
+      roomChatAll(userRoom, 0, `🔪 *${deathByMagicTxt}* đã CHẾT!`);
       gamef.getRoom(userRoom).newLog(`🔪Phù thủy đã phù phép chết ${gamef.roleTxt[gamef.getRoom(userRoom).getRoleByID(witchKillID)]} *${deathByMagicTxt}*`);
       console.log(`$ ROOM ${userRoom + 1} > ${witchKillID}: ${deathByMagicTxt} DIED by witch!`);
     });
@@ -193,7 +194,7 @@ function nightDoneCheck(userRoom) {
             if (payload.message.text.match(/\/yes/g)) { //yes
               gamef.getRoom(userRoom).witchUseSave();
               convo.say(`🔮Bạn đã cứu *${deathTxt}* thành công!`);
-              gamef.getRoom(userRoom).newLog(`🔮Phù thủy ${gamef.getRoom(userRoom).getPlayer(gamef.getRoom(userRoom).witchID).first_name} đã cứu *${deathTxt}*!`);
+              gamef.getRoom(userRoom).newLog(`🔮Phù thủy *${gamef.getRoom(userRoom).getPlayer(gamef.getRoom(userRoom).witchID).first_name}* đã cứu *${deathTxt}*!`);
               convo.end();
               dayNotify(userRoom, true);
             } else { // no
@@ -463,7 +464,7 @@ bot.on('message', (payload, chat) => {
             let voteID = chatTxt.match(/[0-9]+/g)[0];
             let role = gamef.getRoom(userRoom).getRoleByID(voteID);
             await chat.say(`${voteID} là ${role == -1 ? '🐺SÓI' : role == 1 ? '🔍TIÊN TRI, Bạn đùa tớ à :v' : '💩PHE DÂN'}`);
-            gamef.getRoom(userRoom).newLog(`🔍${user.first_name} soi (${gamef.getRoom(userRoom).playersTxt[voteID]}) là ${role == -1 ? '🐺SÓI' : role == 1 ? 'TỰ SOI MÌNH! GG' : '💩PHE DÂN'}`);
+            gamef.getRoom(userRoom).newLog(`🔍${user.first_name} soi *${gamef.getRoom(userRoom).playersTxt[voteID]}* ra ${role == -1 ? '🐺SÓI' : role == 1 ? 'TỰ SOI MÌNH! GG' : '💩PHE DÂN'}`);
             gamef.getRoom(userRoom).roleDoneBy(joinID);
             // kiểm tra đã VOTE xong chưa?
             nightDoneCheck(userRoom);
@@ -486,12 +487,19 @@ bot.on('message', (payload, chat) => {
           chat.say('```\nBạn không thể trò chuyện trong đêm!\n```');
         }
       } else if (userRole == 3) { // là thợ săn
-        if (chatTxt.match(/\/fire.[0-9]+/g)) {//fire
-          let voteID = chatTxt.match(/[0-9]+/g)[0];
+        if (chatTxt.match(/\/fire.-?[0-9]+/g)) {//fire
+          let voteID = chatTxt.match(/-?[0-9]+/g)[0];
           if (!gamef.getRoom(userRoom).fire(joinID, voteID)) {
             chat.say(`\`\`\`\nBạn không thể ngắm bắn 1 người 2 đêm liên tiếp hoặc người chơi đã chết!\n\`\`\``);
           } else {
-            chat.say(`🔫Bạn đã ngắm bắn ${gamef.getRoom(userRoom).playersTxt[voteID]}!`);
+            if (voteID!=-1){
+              chat.say(`🔫Bạn đã ngắm bắn ${gamef.getRoom(userRoom).playersTxt[voteID]}!`);
+              gamef.getRoom(userRoom).newLog(`🔫Thợ săn đã ngắm bắn ${gamef.getRoom(userRoom).playersTxt[voteID]}!`);
+            } else {
+              chat.say(`🔫Bạn đã ngắm bắn lên trời!`);
+              gamef.getRoom(userRoom).newLog(`🔫Thợ săn đã ngắm bắn lên trời!`)
+            }
+            
             // kiểm tra đã VOTE xong chưa?
             nightDoneCheck(userRoom);
           }
