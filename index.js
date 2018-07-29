@@ -55,10 +55,10 @@ async function roomRoleChat(roomID) {
           bot.say(m.joinID, `🐺Bạn là BÁN SÓI!\nBạn vẫn còn là DÂN! Ngủ tiếp đi!\nID CẢ LÀNG:\n${playersList}`);
           gamef.getRoom(roomID).roleDoneBy(m.joinID);
         } else if (m.role == 5) { // Phù thủy
-          if (gamef.getRoom(roomID).witchKillRemain || gamef.getRoom(roomID).witchSaveRemain) {
-            bot.say(m.joinID, `🔮Bạn là Phù thủy!\nHãy chờ đợi các role khác hoàn thành :3\n${playersList}`);
+          if (gamef.getRoom(roomID).witchKillRemain) {
+            bot.say(m.joinID, `🔮Bạn là Phù thủy!\n${gamef.getRoom(roomID).witchSaveRemain?'☑Bạn còn quyền cứu':'⛔Bạn đã dùng quyền cứu!'}\n☑/vote <id> để giết\n/skip để bỏ qua\n${playersList}`);
           } else {
-            bot.say(m.joinID, `🔮Bạn là Phù thủy!\nBạn đã sử dụng hết quyền của mình!\n${playersList}`);
+            bot.say(m.joinID, `🔮Bạn là Phù thủy!\n${gamef.getRoom(roomID).witchSaveRemain?'☑Bạn còn quyền cứu':'⛔Bạn đã dùng quyền cứu!'}\n⛔Bạn đã dùng quyền giết!\n${playersList}`);
             gamef.getRoom(roomID).roleDoneBy(m.joinID);
           }
         } else {
@@ -127,13 +127,13 @@ function dayNotify(userRoom, witchSaved) {
     }
   }
   // PHÙ THỦY giết
-  if (gamef.getRoom(userRoom).witchKillID!=undefined && gamef.getRoom(userRoom).witchKillAction()){ 
+  if (gamef.getRoom(userRoom).witchKillID!=undefined && gamef.getRoom(userRoom).witchKillID!=-1 && gamef.getRoom(userRoom).witchKillAction()){ 
     dieCount++;
     let witchKillID = gamef.getRoom(userRoom).witchKillID;
     let deathByMagicTxt = gamef.getRoom(userRoom).playersTxt[witchKillID];
+    console.log(`$ ROOM ${userRoom + 1} > ${witchKillID}: ${deathByMagicTxt} DIED by witch!`);
     roomChatAll(userRoom, 0, `🔪*${deathByMagicTxt}* đã CHẾT!`);
     gamef.getRoom(userRoom).newLog(`🔪Phù thủy đã phù phép chết ${gamef.roleTxt[gamef.getRoom(userRoom).getRoleByID(witchKillID)]} *${deathByMagicTxt}*`);
-    console.log(`$ ROOM ${userRoom + 1} > ${deathByMagicTxt} DIED!`);
   }
   //là BÁN SÓI
   if (deathID != -1 && gamef.getRoom(userRoom).players[deathID].role == 4) { 
