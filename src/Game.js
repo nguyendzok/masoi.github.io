@@ -422,7 +422,7 @@ class Game {
             roleListTxt += ", 2 SÓI, ";
             this.setRole(roomID, -1, 2);  // 2 SÓI -6*2
             let villagersRemain = (len - 4), balance = 7 + 3 - 6 * 2 + (len - 4);
-            if (trueFalseRandom()) {
+            if (this.trueFalseRandom()) {
                 this.setRole(roomID, 5, 1); // 1 PHÙ THỦY +4
                 villagersRemain--;
                 balance += 4 - 1;

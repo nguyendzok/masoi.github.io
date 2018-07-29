@@ -352,7 +352,8 @@ bot.on('postback:JOIN_ROOM', (payload, chat) => {
       let roomID = parseInt(roomTxt) - 1;
 
       if (gamef.getRoom(roomID).ingame) {
-        chat.say(`\`\`\`\nPhòng đã vào chơi rồi, vui lòng chọn phòng khác!\n\`\`\``);
+        convo.say(`\`\`\`\nPhòng đã vào chơi rồi, vui lòng chọn phòng khác!\n\`\`\``);
+        convo.end();
         return;
       } else {
         // save room number for user
