@@ -115,7 +115,7 @@ function dayNotify(userRoom, witchSaved) {
   if (!witchSaved && gamef.getRoom(userRoom).kill()) {
     dieCount++;
     roomChatAll(userRoom, 0, `🔪 *${deathTxt}* đã CHẾT!`);
-    gamef.getRoom(userRoom).newLog(`🔪${deathRole} *${deathTxt}* đã bị SÓI cắn!`);
+    gamef.getRoom(userRoom).newLog(`🔪 *${deathTxt}* là ${deathRole} đã bị SÓI cắn!`);
     console.log(`$ ROOM ${userRoom + 1} > ${deathTxt} DIED!`);
     if (gamef.getRoom(userRoom).players[deathID].role === 3) { //người chết là thợ săn
       dieCount++;
