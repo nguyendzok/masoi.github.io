@@ -93,8 +93,8 @@ function yesNoVoteCheck(userRoom) {
       const start2 = async () => {
         // Đêm tiếp theo
         gamef.getRoom(userRoom).dayNightSwitch();
-        await roomChatAll(userRoom, 0, `🌛Đêm thứ ${gamef.getRoom(userRoom).day}`);
-        gamef.getRoom(userRoom).newLog(`🌛Đêm thứ ${gamef.getRoom(userRoom).day}`);
+        await roomChatAll(userRoom, 0, `🌛Đêm thứ ${gamef.getRoom(userRoom).day}🌛`);
+        gamef.getRoom(userRoom).newLog(`🌛Đêm thứ ${gamef.getRoom(userRoom).day}🌛`);
         await roomRoleChat(userRoom);
       };
       start2();
@@ -233,8 +233,8 @@ function dayVoteEnd(userRoom) {
         const start2 = async () => {
           // Đêm tiếp theo
           gamef.getRoom(userRoom).dayNightSwitch();
-          await roomChatAll(userRoom, 0, `🌛Đêm thứ ${gamef.getRoom(userRoom).day}`);
-          gamef.getRoom(userRoom).newLog(`🌛Đêm thứ ${gamef.getRoom(userRoom).day}`);
+          await roomChatAll(userRoom, 0, `🌛Đêm thứ ${gamef.getRoom(userRoom).day}🌛`);
+          gamef.getRoom(userRoom).newLog(`🌛Đêm thứ ${gamef.getRoom(userRoom).day}🌛`);
           await roomRoleChat(userRoom);
         };
         start2();
@@ -374,8 +374,8 @@ bot.on('postback:READY_ROOM', (payload, chat) => {
               await roomChatAll(userRoom, 0, [`Tất cả mọi người đã sẵn sàng! Game sẽ bắt đầu...`, roleListTxt]);
               //while(){
               gamef.getRoom(userRoom).dayNightSwitch();
-              await roomChatAll(userRoom, 0, `🌛Đêm thứ ${gamef.getRoom(userRoom).day}`);
-              gamef.getRoom(userRoom).newLog(`🌛Đêm thứ ${gamef.getRoom(userRoom).day}`);
+              await roomChatAll(userRoom, 0, `🌛Đêm thứ ${gamef.getRoom(userRoom).day}🌛`);
+              gamef.getRoom(userRoom).newLog(`🌛Đêm thứ ${gamef.getRoom(userRoom).day}🌛`);
               await roomRoleChat(userRoom);
               //}
             }
