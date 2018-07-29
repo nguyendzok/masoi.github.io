@@ -169,7 +169,7 @@ class Room {
         }
         if (this.players[deathID].role == 5) { //người chết là phù thủy
             this.witchID = undefined;
-            this.witchKillAction = false;
+            this.witchKillRemain = false;
             this.witchSaveRemain = false;
         }
         if (this.alivePlayer[this.players[deathID].joinID]) {
