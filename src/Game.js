@@ -292,6 +292,7 @@ class Room {
         this.roleDone = [];
         this.roleDoneCount = 0;
         this.deathID = -1;
+        this.saveOrKill = 0;
         // this.fireID = -1;
         // this.saveID = -1;
         this.chatON = true;
