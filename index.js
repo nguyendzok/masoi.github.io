@@ -94,7 +94,7 @@ function yesNoVoteCheck(userRoom) {
         // Đêm tiếp theo
         gamef.getRoom(userRoom).dayNightSwitch();
         await roomChatAll(userRoom, 0, `🌛Đêm thứ ${gamef.getRoom(userRoom).day}🌛`);
-        gamef.getRoom(userRoom).newLog(`🌛Đêm thứ ${gamef.getRoom(userRoom).day}🌛`);
+        gamef.getRoom(userRoom).newLog(`🌛Đêm thứ ${gamef.getRoom(userRoom).day}🌛++++++++++`);
         await roomRoleChat(userRoom);
       };
       start2();
@@ -256,7 +256,7 @@ function dayVoteEnd(userRoom) {
           // Đêm tiếp theo
           gamef.getRoom(userRoom).dayNightSwitch();
           await roomChatAll(userRoom, 0, `🌛Đêm thứ ${gamef.getRoom(userRoom).day}🌛`);
-          gamef.getRoom(userRoom).newLog(`🌛Đêm thứ ${gamef.getRoom(userRoom).day}🌛`);
+          gamef.getRoom(userRoom).newLog(`🌛Đêm thứ ${gamef.getRoom(userRoom).day}🌛++++++++++`);
           await roomRoleChat(userRoom);
         };
         start2();
@@ -397,7 +397,7 @@ bot.on('postback:READY_ROOM', (payload, chat) => {
               //while(){
               gamef.getRoom(userRoom).dayNightSwitch();
               await roomChatAll(userRoom, 0, `🌛Đêm thứ ${gamef.getRoom(userRoom).day}🌛`);
-              gamef.getRoom(userRoom).newLog(`🌛Đêm thứ ${gamef.getRoom(userRoom).day}🌛`);
+              gamef.getRoom(userRoom).newLog(`🌛Đêm thứ ${gamef.getRoom(userRoom).day}🌛++++++++++`);
               await roomRoleChat(userRoom);
               //}
             }
