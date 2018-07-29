@@ -210,8 +210,9 @@ class Room {
     witchKillAction(callback){
         if (this.witchKillID!=undefined && this.players[this.witchKillID]){
             this.killAction(this.witchKillID);
+            let killID = this.witchKillID;
             this.witchKillID = undefined;
-            callback(this.witchKillID);
+            callback(killID);
             return true;
         } else {
             return false;

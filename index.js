@@ -56,7 +56,7 @@ async function roomRoleChat(roomID) {
           gamef.getRoom(roomID).roleDoneBy(m.joinID);
         } else if (m.role == 5) { // Phù thủy
           if (gamef.getRoom(roomID).witchKillRemain) {
-            bot.say(m.joinID, `🔮Bạn là Phù thủy!\n${gamef.getRoom(roomID).witchSaveRemain ? '☑Bạn còn quyền cứu' : '⛔Bạn đã dùng quyền cứu!'}\n☑/vote <id> để giết\n/skip để bỏ qua\n${playersList}`);
+            bot.say(m.joinID, `🔮Bạn là Phù thủy!\n${gamef.getRoom(roomID).witchSaveRemain ? '☑Bạn còn quyền cứu' : '⛔Bạn đã dùng quyền cứu!'}\n☑/kill <id> để giết\n /skip để bỏ qua\n${playersList}`);
           } else {
             bot.say(m.joinID, `🔮Bạn là Phù thủy!\n${gamef.getRoom(roomID).witchSaveRemain ? '☑Bạn còn quyền cứu' : '⛔Bạn đã dùng quyền cứu!'}\n⛔Bạn đã dùng quyền giết!\n${playersList}`);
             gamef.getRoom(roomID).roleDoneBy(m.joinID);
