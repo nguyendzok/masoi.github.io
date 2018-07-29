@@ -92,7 +92,6 @@ async function roomRoleChat(roomID) {
       start();
     } else {
       bot.say(m.joinID, "Bạn đã chết =))");
-      gamef.getRoom(roomID).roleDoneBy(m.joinID);
     }
   })
 }
