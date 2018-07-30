@@ -416,7 +416,7 @@ class Game {
         return Math.random() >= 0.5;
     }
     roleRandom(roomID) {
-        this.subscriberList = []; //danh sách người chơi đợi để tham gia phòng
+        this.room[roomID].subscriberList = []; //danh sách người chơi đợi để tham gia phòng
 
         console.log(`$ ROOM ${roomID + 1} > RANDOM ROLE FOR ${this.room[roomID].players.length} PLAYERS`);
         let len = this.room[roomID].players.length;
