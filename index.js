@@ -42,27 +42,27 @@ async function roomRoleChat(roomID) {
       let villagersList = gamef.getRoom(roomID).villagersTxt.join(' ; ');
       let playersList = gamef.getRoom(roomID).playersTxt.join(' ; ');
       if (m.role == -1) {//SÓI
-        await bot.say(m.joinID, [{
+        bot.say(m.joinID, [{
           attachment: 'image',
           url: 'http://hstatic.net/936/1000019936/10/2015/7-28/masoi.jpg'
         }, `🐺Sói ơi dậy đi! Đêm nay sói muốn cắn ai?\n/vote <id> để cắn 1 ai đó\n👨‍👩‍👦‍👦ID CẢ LÀNG:\n${playersList}\n🐺ID TEAM SÓI:\n${wolfList}\n💩ID TEAM DÂN:\n${villagersList}`]);
       } else if (m.role == 1) { // tiên tri
-        await bot.say(m.joinID, [{
+        bot.say(m.joinID, [{
           attachment: 'image',
           url: 'http://hstatic.net/936/1000019936/10/2015/11-18/tien-tri.jpg'
         }, `🔍Tiên tri dậy đi! Tiên tri muốn kiểm tra ai?\n/see <id> để kiểm tra\n${playersList}`]);
       } else if (m.role == 2) { // Bảo vệ
-        await bot.say(m.joinID, [{
+        bot.say(m.joinID, [{
           attachment: 'image',
           url: 'http://hstatic.net/936/1000019936/10/2015/7-28/baove.jpg'
         }, `🗿Bảo vệ dậy đi! Đêm nay bạn muốn bảo vệ ai?\n/save <id> để bảo vệ\n${playersList}`]);
       } else if (m.role == 3) { // Thợ săn
-        await bot.say(m.joinID, [{
+        bot.say(m.joinID, [{
           attachment: 'image',
           url: 'http://hstatic.net/936/1000019936/10/2015/7-28/thosan.jpg'
         }, `🔫Thợ săn dậy đi! Đêm nay bạn muốn bắn ai?\n/fire <id> để ngắm bắn\n${playersList}`]);
       } else if (m.role == 4) { // Bán sói
-        await bot.say(m.joinID, [{
+        bot.say(m.joinID, [{
           attachment: 'image',
           url: 'http://hstatic.net/936/1000019936/10/2015/7-28/phanboi.jpg'
         }, `🐺Bạn là BÁN SÓI!\nBạn vẫn còn là DÂN! Ngủ tiếp đi!\nID CẢ LÀNG:\n${playersList}`]);
@@ -75,19 +75,19 @@ async function roomRoleChat(roomID) {
           sayTxt = `🔮Bạn là Phù thủy!\n${gamef.getRoom(roomID).witchSaveRemain ? '☑Bạn còn quyền cứu' : '⛔Bạn đã dùng quyền cứu!'}\n⛔Bạn đã dùng quyền giết!\n${playersList}`;
           gamef.getRoom(roomID).roleDoneBy(m.joinID);
         }
-        await bot.say(m.joinID, [{
+        bot.say(m.joinID, [{
           attachment: 'image',
           url: 'http://hstatic.net/936/1000019936/10/2015/7-28/phuthuy.jpg'
         }, sayTxt]);
       } else {
-        await bot.say(m.joinID, [{
+        bot.say(m.joinID, [{
           attachment: 'image',
           url: 'http://hstatic.net/936/1000019936/10/2015/7-28/danlang.jpg'
         }, `💩Bạn là DÂN! Ngủ tiếp đi :))\n👨‍👩‍👦‍👦ID CẢ LÀNG:\n${playersList}`]);
         gamef.getRoom(roomID).roleDoneBy(m.joinID);
       }
     } else {
-      await bot.say(m.joinID, "Đêm nay bạn đã chết =))");
+      bot.say(m.joinID, "Đêm nay bạn đã chết =))");
     }
   })
 }
@@ -98,18 +98,18 @@ async function yesNoVoteCheck(userRoom) {
     let deathTxt = gamef.getRoom(userRoom).playersTxt[deathID];
     if (gamef.getRoom(userRoom).saveOrKill < 0) {
       gamef.getRoom(userRoom).kill();
-      await roomChatAll(userRoom, 0, `👻Đã treo cổ ${deathTxt}! Mọi người đi ngủ`);
+      roomChatAll(userRoom, 0, `👻Đã treo cổ ${deathTxt}! Mọi người đi ngủ`);
       gamef.getRoom(userRoom).newLog(`👻Mọi người đã treo cổ (${deathTxt})! với ${(gamef.getRoom(userRoom).aliveCount() + 1 + gamef.getRoom(userRoom).saveOrKill) / 2} tha/${(gamef.getRoom(userRoom).aliveCount() + 1 - gamef.getRoom(userRoom).saveOrKill) / 2} treo`);
     } else {
-      await roomChatAll(userRoom, 0, `😇Đã tha chết cho ${deathTxt}! Mọi người đi ngủ`);
+      roomChatAll(userRoom, 0, `😇Đã tha chết cho ${deathTxt}! Mọi người đi ngủ`);
       gamef.getRoom(userRoom).newLog(`😇Mọi người tha chết cho (${deathTxt}) với ${(gamef.getRoom(userRoom).aliveCount() + gamef.getRoom(userRoom).saveOrKill) / 2} tha/${(gamef.getRoom(userRoom).aliveCount() - gamef.getRoom(userRoom).saveOrKill) / 2} treo`);
     }
     gameIsNotEndCheck(userRoom, async () => {
       // Đêm tiếp theo
       gamef.getRoom(userRoom).dayNightSwitch();
-      await roomChatAll(userRoom, 0, `🌛Đêm thứ ${gamef.getRoom(userRoom).day}🌛`);
+      roomChatAll(userRoom, 0, `🌛Đêm thứ ${gamef.getRoom(userRoom).day}🌛`);
       gamef.getRoom(userRoom).newLog(`🌛Đêm thứ ${gamef.getRoom(userRoom).day}🌛++++++++++`);
-      await roomRoleChat(userRoom);
+      roomRoleChat(userRoom);
     });
   })
 }
@@ -126,14 +126,14 @@ async function dayNotify(userRoom, witchSaved) {
   // SÓI CẮN
   if (!witchSaved && gamef.getRoom(userRoom).kill()) {
     dieCount++;
-    await roomChatAll(userRoom, 0, `🔪 *${deathTxt}* đã CHẾT!`);
+    roomChatAll(userRoom, 0, `🔪 *${deathTxt}* đã CHẾT!`);
     gamef.getRoom(userRoom).newLog(`🔪 *${deathTxt}* là ${deathRole} đã bị SÓI cắn!`);
     console.log(`$ ROOM ${userRoom + 1} > ${deathTxt} DIED!`);
     if (gamef.getRoom(userRoom).players[deathID].role === 3) { //người chết là thợ săn
       dieCount++;
       let fireID = gamef.getRoom(userRoom).fireID;
       let deathFireTxt = gamef.getRoom(userRoom).playersTxt[fireID];
-      await roomChatAll(userRoom, 0, `🔪 *${deathFireTxt}* đã CHẾT!`);
+      roomChatAll(userRoom, 0, `🔪 *${deathFireTxt}* đã CHẾT!`);
       gamef.getRoom(userRoom).newLog(`🔪Thợ săn chết đã ghim ${gamef.roleTxt[gamef.getRoom(userRoom).getRoleByID(fireID)]} *${deathFireTxt}*`);
       console.log(`$ ROOM ${userRoom + 1} > ${deathFireTxt} DIED!`);
     }
@@ -144,7 +144,7 @@ async function dayNotify(userRoom, witchSaved) {
     let deathByMagicTxt = gamef.getRoom(userRoom).playersTxt[killID];
     gamef.getRoom(userRoom).witchKillAction(async (witchKillID) => {
       dieCount++;
-      await roomChatAll(userRoom, 0, `🔪 *${deathByMagicTxt}* đã CHẾT!`);
+      roomChatAll(userRoom, 0, `🔪 *${deathByMagicTxt}* đã CHẾT!`);
       gamef.getRoom(userRoom).newLog(`🔪Phù thủy đã phù phép chết ${gamef.roleTxt[gamef.getRoom(userRoom).getRoleByID(witchKillID)]} *${deathByMagicTxt}*`);
       console.log(`$ ROOM ${userRoom + 1} > ${witchKillID}: ${deathByMagicTxt} DIED by witch!`);
     });
@@ -161,7 +161,7 @@ async function dayNotify(userRoom, witchSaved) {
   if (dieCount == 0) {
     console.log(`$ ROOM ${userRoom + 1} > NOBODY DIED!`);
     gamef.getRoom(userRoom).newLog(`${deathID != -1 ? `🔪 *${deathTxt}* bị cắn nhưng không chết!\n` : `🎊Sói không thống nhất được số vote!\n`}🎊Đêm hôm đấy không ai chết cả!`);
-    await roomChatAll(userRoom, 0, `🎊Đêm hôm qua không ai chết cả!`);
+    roomChatAll(userRoom, 0, `🎊Đêm hôm qua không ai chết cả!`);
   }
 
   gameIsNotEndCheck(userRoom, () => {
@@ -239,8 +239,8 @@ function gameIsNotEndCheck(userRoom, callback) {
         gamef.getRoom(userRoom).newLog(`🏆Trò chơi đã kết thúc với: ${gamef.getRoom(userRoom).wolfsCount} SÓI/ ${gamef.getRoom(userRoom).villagersCount} DÂN!`)
         await roomChatAll(userRoom, 0, gamef.getRoom(userRoom).logs.join(`\n`));
         //subscriber
-        gamef.getRoom(userRoom).subscriberList.forEach((joinID)=>{
-          bot.say(joinID, `Trò chơi ở phòng ${userRoom+1} đã kết thúc!\nHãy nhanh chóng tham gia phòng trước khi trò chơi bắt đầu lại!`)
+        await asyncForEach(gamef.getRoom(userRoom).subscriberList, async (joinID)=>{
+          await bot.say(joinID, `Trò chơi ở phòng ${userRoom+1} đã kết thúc!\nHãy nhanh chóng tham gia phòng trước khi trò chơi bắt đầu lại!`)
         })
         gamef.getRoom(userRoom).resetRoom();
       }
@@ -258,7 +258,7 @@ function dayVoteEnd(userRoom) {
       gamef.getRoom(userRoom).resetRoleDone();
       gamef.getRoom(userRoom).setMorning(false);
       let deathTxt = gamef.getRoom(userRoom).playersTxt[deathID];
-      await roomChatAll(userRoom, 0, `😈Mời ${deathTxt} lên giá treo cổ !!!\n⏰Bạn có 1 phút để trăn trối\n1 PHÚT bắt đầu!`);
+      roomChatAll(userRoom, 0, `😈Mời ${deathTxt} lên giá treo cổ !!!\n⏰Bạn có 1 phút để trăn trối\n1 PHÚT bắt đầu!`);
       // 1 phút trăn trối
       let time = new Date(Date.now() + 1 * 60 * 1000);
       gamef.getRoom(userRoom).addSchedule(time, () => {
@@ -346,7 +346,7 @@ bot.on('postback:JOIN_ROOM', (payload, chat) => {
       let roomID = parseInt(roomTxt) - 1;
 
       if (gamef.getRoom(roomID).ingame) {
-        convo.say(`\`\`\`\nPhòng đã vào chơi rồi, vui lòng chọn phòng khác!\n\`\`\``);
+        convo.say(`\`\`\`\nPhòng đã vào chơi rồi! Bạn sẽ được thông báo khi trò chơi kết thúc!\n\`\`\``);
         gamef.getRoom(roomID).subscribe(joinID);
         convo.end();
         return;
@@ -403,7 +403,7 @@ bot.on('postback:READY_ROOM', (payload, chat) => {
       const start = async () => {
         await asyncForEach(gamef.getRoom(userRoom).players, async (m) => {
           if (m) {
-            await bot.say(m.joinID, `${user.first_name} đã sẵn sàng! (${gamef.getRoom(userRoom).readyCount}/${gamef.getRoom(userRoom).players.length})`)
+            bot.say(m.joinID, `${user.first_name} đã sẵn sàng! (${gamef.getRoom(userRoom).readyCount}/${gamef.getRoom(userRoom).players.length})`)
           }
         })
         gamef.gameIsReady(userRoom, (gameReady) => {
