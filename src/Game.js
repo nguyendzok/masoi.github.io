@@ -53,6 +53,8 @@ class Room {
         this.saveID = -1; // -1 là không ai cả
         this.fireID = -1;
         this.saveOrKill = 0; // nếu vote cứu thì +1, vote treo cổ thì -1.  nhỏ hơn 0 thì treo
+
+        this.subscriberList = [];
     }
     resetRoom() {
         this.wolfsID = [];
@@ -83,6 +85,8 @@ class Room {
         this.saveID = -1; // -1 là không ai cả
         this.fireID = -1;
         this.saveOrKill = 0; // nếu vote cứu thì +1, vote treo cổ thì -1.  nhỏ hơn 0 thì treo
+
+        this.subscriberList = []; //danh sách người chơi đợi để tham gia phòng
 
         this.players.forEach((p, index, arr) => {
             arr[index].ready = false;
@@ -326,6 +330,9 @@ class Room {
     aliveCount() {
         return this.villagersCount + this.wolfsCount;
     }
+    subscribe(joinID){
+        this.subscriberList[joinID] = true;
+    }
 }
 
 class Game {
@@ -479,6 +486,9 @@ class Game {
                 this.room[roomID].witchID = this.room[roomID].players[rand].joinID;
             }
         }
+    }
+    module(factory) {
+        return factory.apply(this, [this]);
     }
 }
 
