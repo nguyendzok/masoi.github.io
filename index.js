@@ -394,6 +394,14 @@ bot.on('postback:READY_ROOM', (payload, chat) => {
   const joinID = payload.sender.id;
   const userRoom = gamef.getUserRoom(joinID);
   if (userRoom != undefined) {
+
+    //////////////////////////////////////
+    gamef.getRoom(userRoom).subscriberList.forEach((joinID) => {
+      bot.say(joinID, `Trò chơi ở phòng ${userRoom + 1} đã kết thúc!\nHãy nhanh chóng tham gia phòng trước khi trò chơi bắt đầu lại!`);
+      console.log(`>>> REMINDER: ${joinID}`);
+    });
+    //////////////////////////////////////
+
     console.log("$ ROOM " + (userRoom + 1) + " > READY > " + joinID);
     // set status READY
     joinUser = gamef.searchUserInRoom(joinID, userRoom);
