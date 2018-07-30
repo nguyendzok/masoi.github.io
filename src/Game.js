@@ -481,10 +481,9 @@ class Game {
         }
     }
 }
-var gamef = new Game();
+
 module.exports = {
     Game,
     Room,
-    Player,
-    gamef
+    Player
 };
