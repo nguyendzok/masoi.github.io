@@ -239,7 +239,7 @@ function gameIsNotEndCheck(userRoom, callback) {
         gamef.getRoom(userRoom).newLog(`🏆Trò chơi đã kết thúc với: ${gamef.getRoom(userRoom).wolfsCount} SÓI/ ${gamef.getRoom(userRoom).villagersCount} DÂN!`)
         await roomChatAll(userRoom, 0, gamef.getRoom(userRoom).logs.join(`\n`));
         //subscriber
-        console.log(`$ ROOM ${userRoom + 1} > REMINDER LENGTH: ${gamef.getRoom(userRoom).subscriberList.length}`);
+        console.log(`$ ROOM ${userRoom + 1} > SUBSCRIBE REMINDER FOR ${gamef.getRoom(userRoom).subscriberList.length} PLAYERS`);
         gamef.getRoom(userRoom).subscriberList.forEach((joinID) => {
           bot.say(joinID, `Trò chơi ở phòng ${userRoom + 1} đã kết thúc!\nHãy nhanh chóng tham gia phòng trước khi trò chơi bắt đầu lại!`);
           console.log(`>>> REMINDER: ${joinID}`);
@@ -353,11 +353,6 @@ bot.on('postback:JOIN_ROOM', (payload, chat) => {
         convo.end();
         return;
       } else {
-
-        //////////////////////////////////////
-        gamef.getRoom(roomID).subscribe(joinID);
-        //////////////////////////////////////
-
         // save room number for user
         gamef.setUserRoom(joinID, roomID);
         // add new player to room
@@ -399,15 +394,6 @@ bot.on('postback:READY_ROOM', (payload, chat) => {
   const joinID = payload.sender.id;
   const userRoom = gamef.getUserRoom(joinID);
   if (userRoom != undefined) {
-
-    //////////////////////////////////////
-    console.log('SUBSCRIBE LIST: '+JSON.stringify(gamef.getRoom(userRoom).subscriberList));
-    gamef.getRoom(userRoom).subscriberList.forEach((joinID) => {
-      bot.say(joinID, `Trò chơi ở phòng ${userRoom + 1} đã kết thúc!\nHãy nhanh chóng tham gia phòng trước khi trò chơi bắt đầu lại!`);
-      console.log(`>>> REMINDER: ${joinID}`);
-    });
-    //////////////////////////////////////
-
     console.log("$ ROOM " + (userRoom + 1) + " > READY > " + joinID);
     // set status READY
     joinUser = gamef.searchUserInRoom(joinID, userRoom);

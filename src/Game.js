@@ -332,7 +332,7 @@ class Room {
         if (this.subscriberList.indexOf(joinID)==-1){
             this.subscriberList.push(joinID);
         }
-        console.log(`$ ROOM ${this.id+1} > SUBSCRIBER > ${this.subscriberList.length} > ${joinID}`);
+        console.log(`$ ROOM ${this.id+1} > SUBSCRIBER ${this.subscriberList.length} > ${joinID}`);
     }
 }
 
