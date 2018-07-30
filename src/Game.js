@@ -482,10 +482,9 @@ class Game {
     }
 }
 var gamef = new Game();
-module.exports = gamef;
-// {
-//     Game,
-//     Room,
-//     Player,
-//     gamef
-// };
+module.exports = {
+    Game,
+    Room,
+    Player,
+    gamef
+};

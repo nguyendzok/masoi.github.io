@@ -1,4 +1,4 @@
-const gamef = require('../Game.js');
+const {gamef} = require('../Game.js');
 
 module.exports = (bot) => {
     // listen USER_RENAME message

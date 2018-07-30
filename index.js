@@ -10,8 +10,8 @@ var schedule = require('node-schedule')
 // const EventEmitter = require('events').EventEmitter
 // var async = require("async");
 // var Q = require("q");
-//const { Game, Room, Player, gamef } = require('./src/Game.js');
-const gamef = require('./src/Game.js');
+const { Game, Room, Player, gamef } = require('./src/Game.js');
+// const gamef = require('./src/Game.js');
 const menuTienIch = require('./src/Menu/TienIch');
 
 // const eventEmitter = new EventEmitter()
