@@ -353,6 +353,11 @@ bot.on('postback:JOIN_ROOM', (payload, chat) => {
         convo.end();
         return;
       } else {
+        
+        //////////////////////////////////////
+        gamef.getRoom(roomID).subscribe(joinID);
+        //////////////////////////////////////
+
         // save room number for user
         gamef.setUserRoom(joinID, roomID);
         // add new player to room
