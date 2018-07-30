@@ -222,7 +222,7 @@ class Room {
     }
     save(joinID, voteID) {
         if (!this.roleDone[joinID] && this.saveID != voteID && this.players[voteID] && this.alivePlayer[this.players[voteID].joinID]) {
-            this.logs.push(`🗿${this.getPlayer(joinID).first_name} bảo vệ: (${this.playersTxt[voteID]})`);
+            this.logs.push(`🗿 *${this.getPlayer(joinID).first_name}* bảo vệ *${this.playersTxt[voteID]}*`);
             this.saveID = voteID;
             this.roleDoneBy(joinID);
             return true;
