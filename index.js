@@ -482,11 +482,15 @@ bot.on('message', (payload, chat) => {
       } else if (userRole == 1) { // là tiên tri
         if (chatTxt.match(/\/see.[0-9]+/g)) {//see
           const startTT = async () => {
-            let voteID = chatTxt.match(/[0-9]+/g)[0];
-            let role = gamef.getRoom(userRoom).getRoleByID(voteID);
-            await chat.say(`${voteID} là ${role == -1 ? '🐺SÓI' : role == 1 ? '🔍TIÊN TRI, Bạn đùa tớ à :v' : '💩PHE DÂN'}`);
-            gamef.getRoom(userRoom).newLog(`🔍${user.first_name} soi *${gamef.getRoom(userRoom).playersTxt[voteID]}* ra ${role == -1 ? '🐺SÓI' : role == 1 ? 'TỰ SOI MÌNH! GG' : '💩PHE DÂN'}`);
-            gamef.getRoom(userRoom).roleDoneBy(joinID);
+            if (!gamef.getRoom(userRoom).roleDone[joinID]) { // chưa soi ai
+              let voteID = chatTxt.match(/[0-9]+/g)[0];
+              let role = gamef.getRoom(userRoom).getRoleByID(voteID);
+              await chat.say(`${voteID} là ${role == -1 ? '🐺SÓI' : role == 1 ? '🔍TIÊN TRI, Bạn đùa tớ à :v' : '💩PHE DÂN'}`);
+              gamef.getRoom(userRoom).newLog(`🔍${user.first_name} soi *${gamef.getRoom(userRoom).playersTxt[voteID]}* ra ${role == -1 ? '🐺SÓI' : role == 1 ? 'TỰ SOI MÌNH! GG' : '💩PHE DÂN'}`);
+              gamef.getRoom(userRoom).roleDoneBy(joinID);
+            } else {
+              chat.say('```\nBạn không thể soi 2 lần!\n```');
+            }
             // kiểm tra đã VOTE xong chưa?
             nightDoneCheck(userRoom);
           }

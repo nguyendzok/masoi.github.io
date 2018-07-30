@@ -233,7 +233,7 @@ class Room {
         }
     }
     fire(joinID, voteID) {
-        if (voteID == -1) { //bắn lên trời
+        if (voteID == -1 && !this.roleDone[joinID]) { //bắn lên trời
             this.roleDoneBy(joinID);
             return true;
         }
