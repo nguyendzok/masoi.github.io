@@ -329,7 +329,9 @@ class Room {
         return this.villagersCount + this.wolfsCount;
     }
     subscribe(joinID){
-        this.subscriberList[joinID] = true;
+        if (this.subscriberList.indexOf(joinID)==-1){
+            this.subscriberList.push(joinID);
+        }
         console.log(`$ ROOM ${this.id+1} > SUBSCRIBER > ${this.subscriberList.length} > ${joinID}`);
     }
 }
