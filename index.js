@@ -353,7 +353,7 @@ bot.on('postback:JOIN_ROOM', (payload, chat) => {
         convo.end();
         return;
       } else {
-        
+
         //////////////////////////////////////
         gamef.getRoom(roomID).subscribe(joinID);
         //////////////////////////////////////
@@ -401,6 +401,7 @@ bot.on('postback:READY_ROOM', (payload, chat) => {
   if (userRoom != undefined) {
 
     //////////////////////////////////////
+    console.log('SUBSCRIBE LIST: '+JSON.stringify(gamef.getRoom(userRoom).subscriberList));
     gamef.getRoom(userRoom).subscriberList.forEach((joinID) => {
       bot.say(joinID, `Trò chơi ở phòng ${userRoom + 1} đã kết thúc!\nHãy nhanh chóng tham gia phòng trước khi trò chơi bắt đầu lại!`);
       console.log(`>>> REMINDER: ${joinID}`);

@@ -330,6 +330,7 @@ class Room {
     }
     subscribe(joinID){
         this.subscriberList[joinID] = true;
+        console.log(`$ ROOM ${this.id+1} > SUBSCRIBER > ${this.subscriberList.length} > ${joinID}`);
     }
 }
 
