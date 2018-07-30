@@ -10,8 +10,9 @@ var schedule = require('node-schedule')
 // const EventEmitter = require('events').EventEmitter
 // var async = require("async");
 // var Q = require("q");
-const { Game, Room, Player } = require('./src/Game.js');
-var gamef = new Game();
+//const { Game, Room, Player, gamef } = require('./src/Game.js');
+const gamef = require('./src/Game.js');
+const menuTienIch = require('./src/Menu/TienIch');
 
 // const eventEmitter = new EventEmitter()
 
@@ -708,43 +709,7 @@ bot.on('postback:VIEW_PLAYER_IN_ROOM', (payload, chat) => {
     chat.say('```\nBạn chưa tham gia phòng chơi nào!\n```');
   }
 });
-// listen USER_RENAME message
-bot.on('postback:USER_RENAME', (payload, chat) => {
-  let joinID = payload.sender.id;
-  let userRoom = gamef.getUserRoom(joinID);
-  if (userRoom == undefined) {
-    chat.say('```\nBạn cần tham gia 1 phòng chơi trước khi đổi tên!\n```');
-    return;
-  }
-  let user = gamef.getRoom(userRoom).getPlayer(joinID);
 
-  const askName = (convo) => {
-    convo.ask(`Tên hiện tại của bạn: ${user.first_name}\nĐể hủy đổi tên: /cancel\nNhập tên bạn muốn đổi thành:`, (payload, convo) => {
-      if (!payload.message) {
-        convo.say('```\nVui lòng nhập tên hợp lệ\n```');
-        convo.end();
-        return;
-      } else {
-        const chatTxt = payload.message.text;
-        if (!chatTxt.match(/\/cancel/g)) {
-          const startR = async () => {
-            await convo.say(`Đã đổi tên thành công!`);
-            await roomChatAll(userRoom, joinID, `${user.first_name} đã đổi tên thành ${chatTxt}!`)
-            user.setFirstName(chatTxt);
-            convo.end();
-          }
-          startR();
-        } else {
-          convo.say(`Bạn đã hủy không đổi tên!`)
-          convo.end();
-        }
-      }
-    });
-  };
-  chat.conversation((convo) => {
-    askName(convo);
-  });
-});
 // listen ADMIN_COMMAND message
 bot.on('postback:ADMIN_COMMAND', (payload, chat) => {
   let joinID = payload.sender.id;
@@ -977,4 +942,5 @@ bot.hear(['help', 'menu', 'hướng dẫn', 'trợ giúp'], (payload, chat) => {
 //   })
 // })
 
+bot.module(menuTienIch);
 bot.start(process.env.PORT || 3000);
