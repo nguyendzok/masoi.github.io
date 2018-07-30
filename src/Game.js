@@ -86,8 +86,6 @@ class Room {
         this.fireID = -1;
         this.saveOrKill = 0; // nếu vote cứu thì +1, vote treo cổ thì -1.  nhỏ hơn 0 thì treo
 
-        this.subscriberList = []; //danh sách người chơi đợi để tham gia phòng
-
         this.players.forEach((p, index, arr) => {
             arr[index].ready = false;
             arr[index].role = 0; // -1: SÓI / 0: DÂN / 1: tiên tri / 2: bảo vệ
@@ -418,6 +416,8 @@ class Game {
         return Math.random() >= 0.5;
     }
     roleRandom(roomID) {
+        this.subscriberList = []; //danh sách người chơi đợi để tham gia phòng
+
         console.log(`$ ROOM ${roomID + 1} > RANDOM ROLE FOR ${this.room[roomID].players.length} PLAYERS`);
         let len = this.room[roomID].players.length;
         let roleListTxt = "🎲Đang tạo game với: 1 TIÊN TRI, 1 BẢO VỆ";

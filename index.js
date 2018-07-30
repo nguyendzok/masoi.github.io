@@ -239,8 +239,10 @@ function gameIsNotEndCheck(userRoom, callback) {
         gamef.getRoom(userRoom).newLog(`🏆Trò chơi đã kết thúc với: ${gamef.getRoom(userRoom).wolfsCount} SÓI/ ${gamef.getRoom(userRoom).villagersCount} DÂN!`)
         await roomChatAll(userRoom, 0, gamef.getRoom(userRoom).logs.join(`\n`));
         //subscriber
+        console.log(`>>> REMINDER LENGTH: ${gamef.getRoom(userRoom).subscriberList}`);
         await asyncForEach(gamef.getRoom(userRoom).subscriberList, async (joinID)=>{
-          await bot.say(joinID, `Trò chơi ở phòng ${userRoom+1} đã kết thúc!\nHãy nhanh chóng tham gia phòng trước khi trò chơi bắt đầu lại!`)
+          await bot.say(joinID, `Trò chơi ở phòng ${userRoom+1} đã kết thúc!\nHãy nhanh chóng tham gia phòng trước khi trò chơi bắt đầu lại!`);
+          console.log(`>>> REMINDER: ${joinID}`);
         })
         gamef.getRoom(userRoom).resetRoom();
       }
