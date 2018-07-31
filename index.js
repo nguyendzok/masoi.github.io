@@ -12,7 +12,52 @@ var schedule = require('node-schedule')
 // var Q = require("q");
 const { Game, Room, Player } = require('./src/Game.js');
 const menuTienIch = require('./src/Menu/TienIch');
+const menuHelp = require('./src/Menu/Help');
+
 const gamef = new Game();
+const bot = new BootBot({
+  accessToken: process.env.ACCESS_TOKEN,
+  verifyToken: process.env.VERIFY_TOKEN,
+  appSecret: process.env.APP_SECRET
+})
+
+// bot config
+bot.setGreetingText("Chào mừng bạn đến với Phạm Ngọc Duy GAME bot, hãy bắt đầu trò chơi :3")
+bot.setGetStartedButton((payload, chat) => {
+  chat.say('🐺MA SÓI GAME').then(() => {
+    chat.say({
+      text: `Chào mừng bạn, để bắt đầu hãy chat 'help' hoặc 'trợ giúp' để được hướng dẫn cách chơi!'`,
+      quickReplies: ['help', 'trợ giúp'],
+    });
+  })
+
+});
+const actionButtons = [
+  {
+    type: 'nested', title: 'Tham gia...',
+    call_to_actions: [
+      { type: 'postback', title: 'Tham gia phòng', payload: 'JOIN_ROOM' },
+      { type: 'postback', title: 'Sẵn sàng!', payload: 'READY_ROOM' },
+      { type: 'postback', title: 'Rời phòng/Tự sát', payload: 'LEAVE_ROOM' },
+    ]
+  },
+  {
+    type: 'nested', title: 'Tiện ích khi chơi...',
+    call_to_actions: [
+      { type: 'postback', title: 'Đổi tên', payload: 'USER_RENAME' },
+      { type: 'postback', title: 'Xem DS dân làng', payload: 'VIEW_PLAYER_IN_ROOM' },
+      { type: 'postback', title: '(ADMIN ONLY) COMMAND', payload: 'ADMIN_COMMAND' },
+    ]
+  },
+  { type: 'postback', title: 'Trợ giúp', payload: 'HELP' },
+];
+bot.setPersistentMenu(actionButtons, false);
+
+
+//import module
+gamef.module(menuTienIch, bot);
+gamef.module(menuHelp, bot);
+
 
 // const eventEmitter = new EventEmitter()
 
@@ -286,44 +331,6 @@ function dayVoteEnd(userRoom) {
   newStart();
 }
 
-const bot = new BootBot({
-  accessToken: process.env.ACCESS_TOKEN,
-  verifyToken: process.env.VERIFY_TOKEN,
-  appSecret: process.env.APP_SECRET
-})
-
-// bot config
-bot.setGreetingText("Chào mừng bạn đến với Phạm Ngọc Duy GAME bot, hãy bắt đầu trò chơi :3")
-bot.setGetStartedButton((payload, chat) => {
-  chat.say('🐺MA SÓI GAME').then(() => {
-    chat.say({
-      text: `Chào mừng bạn, để bắt đầu hãy chat 'help' hoặc 'trợ giúp' để được hướng dẫn cách chơi!'`,
-      quickReplies: ['help', 'trợ giúp'],
-    });
-  })
-
-});
-const actionButtons = [
-  {
-    type: 'nested', title: 'Tham gia...',
-    call_to_actions: [
-      { type: 'postback', title: 'Tham gia phòng', payload: 'JOIN_ROOM' },
-      { type: 'postback', title: 'Sẵn sàng!', payload: 'READY_ROOM' },
-      { type: 'postback', title: 'Rời phòng/Tự sát', payload: 'LEAVE_ROOM' },
-    ]
-  },
-  {
-    type: 'nested', title: 'Tiện ích khi chơi...',
-    call_to_actions: [
-      { type: 'postback', title: 'Đổi tên', payload: 'USER_RENAME' },
-      { type: 'postback', title: 'Xem DS dân làng', payload: 'VIEW_PLAYER_IN_ROOM' },
-      { type: 'postback', title: '(ADMIN ONLY) COMMAND', payload: 'ADMIN_COMMAND' },
-    ]
-  },
-  { type: 'postback', title: 'Trợ giúp', payload: 'HELP' },
-];
-bot.setPersistentMenu(actionButtons, false);
-
 // listen JOIN ROOM
 bot.on('postback:JOIN_ROOM', (payload, chat) => {
   let joinID = payload.sender.id;
@@ -437,7 +444,9 @@ bot.on('postback:READY_ROOM', (payload, chat) => {
 });
 
 // listen for ROOM CHAT and VOTE
-bot.on('message', (payload, chat) => {
+bot.on('message', (payload, chat, data) => {
+  if (data.captured) { return; }
+
   const joinID = payload.sender.id;
   const chatTxt = payload.message.text;
   const userRoom = gamef.getUserRoom(joinID);
@@ -705,61 +714,6 @@ bot.on('postback:LEAVE_ROOM', (payload, chat) => {
   }
 });
 
-// listen VIEW_PLAYER_IN_ROOM message
-// bot.on('postback:VIEW_PLAYER_IN_ROOM', (payload, chat) => {
-//   let joinID = payload.sender.id;
-//   let userRoom = gamef.getUserRoom(joinID);
-//   if (userRoom != undefined) {
-//     if (gamef.getRoom(userRoom).ingame) {
-//       let playersInRoomTxt = gamef.getRoom(userRoom).playersTxt.join(' ; ');
-//       chat.say(`👨‍👩‍👦‍👦Danh sách dân và sói làng ${userRoom + 1}: \n${playersInRoomTxt}`);
-//     } else {
-//       chat.say('```\nTrò chơi chưa bắt đầu!\n```');
-//     }
-//   } else {
-//     chat.say('```\nBạn chưa tham gia phòng chơi nào!\n```');
-//   }
-// });
-gamef.module(menuTienIch, bot);
-
-
-// listen USER_RENAME message
-bot.on('postback:USER_RENAME', (payload, chat) => {
-  let joinID = payload.sender.id;
-  let userRoom = gamef.getUserRoom(joinID);
-  if (userRoom == undefined) {
-    chat.say('```\nBạn cần tham gia 1 phòng chơi trước khi đổi tên!\n```');
-    return;
-  }
-  let user = gamef.getRoom(userRoom).getPlayer(joinID);
-
-  const askName = (convo) => {
-    convo.ask(`Tên hiện tại của bạn: ${user.first_name}\nĐể hủy đổi tên: /cancel\nNhập tên bạn muốn đổi thành:`, (payload, convo) => {
-      if (!payload.message) {
-        convo.say('```\nVui lòng nhập tên hợp lệ\n```');
-        convo.end();
-        return;
-      } else {
-        const chatTxt = payload.message.text;
-        if (!chatTxt.match(/\/cancel/g)) {
-          const startR = async () => {
-            await convo.say(`Đã đổi tên thành công!`);
-            await roomChatAll(userRoom, joinID, `${user.first_name} đã đổi tên thành ${chatTxt}!`)
-            user.setFirstName(chatTxt);
-            convo.end();
-          }
-          startR();
-        } else {
-          convo.say(`Bạn đã hủy không đổi tên!`)
-          convo.end();
-        }
-      }
-    });
-  };
-  chat.conversation((convo) => {
-    askName(convo);
-  });
-});
 // listen ADMIN_COMMAND message
 bot.on('postback:ADMIN_COMMAND', (payload, chat) => {
   let joinID = payload.sender.id;
@@ -834,162 +788,5 @@ bot.on('postback:ADMIN_COMMAND', (payload, chat) => {
     chat.say('```\nBạn không có quyền thực hiện yêu cầu này!\n```');
   }
 });
-// listen HELP button
-bot.on('postback:HELP', (payload, chat) => {
-  chat.getUserProfile().then((user) => {
-    chat.say(`Xin chào ${user.last_name + ' ' + user.first_name}! \n` +
-      `Để bắt đầu, bạn hãy mở MENU (nút 3 dấu gạch ngang) bên dưới.\n` +
-      `Chọn menu: Tham gia... > Tham gia phòng chơi\n` +
-      `Chọn một phòng chơi từ danh sách để tham gia một phòng!\n` +
-      `Sau khi tham gia thành công, bạn có thể chat với các người chơi khác trong phòng\n` +
-      `Tham gia > 'Sẵn sàng!' để thể hiện bạn sẽ tham gia chơi, còn không, hãy chọn 'Rời phòng chơi' để tránh ảnh hưởng người chơi khác\n` +
-      `Khi tất cả mọi người đã sẵn sàng (ít nhất 3 người), trò chơi sẽ bắt đầu! \n` +
-      `Trong khi chơi, bạn sẽ vote bằng cách chat với nội dung: /vote <id>\n` +
-      `VD: /vote 1 \n` +
-      `Bạn có thể xem <id> người chơi từ menu: Tiện ích khi chơi... > Các người chơi cùng phòng `);
-  })
-});
-// listen to HELP
-bot.hear(['help', 'menu', 'hướng dẫn', 'trợ giúp'], (payload, chat) => {
-  chat.getUserProfile().then((user) => {
-    chat.say(`Xin chào ${user.last_name + ' ' + user.first_name}! \n` +
-      `Để bắt đầu, bạn hãy mở MENU (nút 3 dấu gạch ngang) bên dưới.\n` +
-      `Chọn menu: Tham gia... > Tham gia phòng chơi\n` +
-      `Chọn một phòng chơi từ danh sách để tham gia một phòng!\n` +
-      `Sau khi tham gia thành công, bạn có thể chat với các người chơi khác trong phòng\n` +
-      `Tham gia > 'Sẵn sàng!' để thể hiện bạn sẽ tham gia chơi, còn không, hãy chọn 'Rời phòng chơi' để tránh ảnh hưởng người chơi khác\n` +
-      `Khi tất cả mọi người đã sẵn sàng (ít nhất 3 người), trò chơi sẽ bắt đầu! \n` +
-      `Trong khi chơi, bạn sẽ vote bằng cách chat với nội dung: /vote <id>\n` +
-      `VD: /vote 1 \n` +
-      `Bạn có thể xem <id> người chơi từ menu: Tiện ích khi chơi... > Các người chơi cùng phòng `);
-  })
-})
-
-
-// app.set('port', (8080 || process.env.PORT))
-// app.use(bodyParser.urlencoded({ extended: false }))
-// app.use(bodyParser.json())
-
-// app.get('/', function (req, res) {
-//   res.send("Server MA SÓI đang chạy...")
-// })
-
-// app.get('/webhook/', function (req, res) {
-//   if (req.query['hub.verify_token'] === process.env.VERIFY_TOKEN) {
-//     return res.send(req.query['hub.challenge'])
-//   }
-//   res.send('wrong token')
-// })
-
-// app.listen(app.get('port'), function () {
-//   console.log('Started on port', app.get('port'))
-// })
-
-// bot.hear(['help'], (payload, chat) => {
-//   // Send a text message with buttons
-//   chat.say({
-//     text: 'What do you need help with?',
-//     buttons: [
-//       { type: 'postback', title: 'Settings', payload: 'HELP_SETTINGS' },
-//       { type: 'postback', title: 'FAQ', payload: 'HELP_FAQ' },
-//       { type: 'postback', title: 'Talk to a human', payload: 'HELP_HUMAN' }
-//     ]
-//   });
-// });
-// bot.hear('setup', (payload, chat) => {
-//   const getBucketSlug = (convo) => {
-//     convo.ask("What's your Bucket's slug?", (payload, convo) => {
-//       var slug = payload.message.text;
-//       convo.set('slug', slug)
-//       convo.say("setting slug as "+slug).then(() => getBucketReadKey(convo));
-//     })
-//   }
-//   const getBucketReadKey = (convo) => {
-//     convo.ask("What's your Bucket's read key?", (payload, convo) => {
-//       var readkey = payload.message.text;
-//       convo.set('read_key', readkey)
-//       convo.say('setting read_key as '+readkey).then(() => getBucketWriteKey(convo))
-//     })
-//   }
-//   const getBucketWriteKey = (convo) => {
-//     convo.ask("What's your Bucket's write key?", (payload, convo) => {
-//       var writekey = payload.message.text
-//       convo.set('write_key', writekey)
-//       convo.say('setting write_key as '+writekey).then(() => finishing(convo))
-//     })
-//   }
-//   const finishing = (convo) => {
-//     var newConfigInfo = {
-//       slug: convo.get('slug'),
-//       read_key: convo.get('read_key'),
-//       write_key: convo.get('write_key')
-//     }
-//     config.bucket = newConfigInfo
-//     convo.say('All set :)')
-//     convo.end();
-//   }
-
-//   chat.conversation((convo) => {
-//     getBucketSlug(convo)
-//   })
-// })
-
-// bot.hear('config', (payload, chat) => {
-//   if(JSON.stringify(config.bucket) === undefined){
-//     chat.say("No config found :/ Be sure to run 'setup' to add your bucket details")
-//   }
-//   chat.say("A config has been found :) "+ JSON.stringify(config.bucket))
-// })
-
-// bot.hear('create', (payload, chat) => {
-//   chat.conversation((convo) => {
-//     convo.ask("What would you like your reminder to be? etc 'I have an appointment tomorrow from 10 to 11 AM' the information will be added automatically", (payload, convo) => {
-//       datetime = chrono.parseDate(payload.message.text)
-//       var params = {
-//         write_key: config.bucket.write_key,
-//         type_slug: 'reminders',
-//         title: payload.message.text,
-//         metafields: [
-//          {
-//            key: 'date',
-//            type: 'text',
-//            value: datetime
-//          }
-//         ]
-//       }
-//       Cosmic.addObject(config, params, function(error, response){
-//         if(!error){
-//           eventEmitter.emit('new', response.object.slug, datetime)
-//           convo.say("reminder added correctly :)")
-//           convo.end()
-//         } else {
-//           convo.say("there seems to be a problem. . .")
-//           convo.end()
-//         }
-//       })
-//     })
-//   })
-// })
-
-// bot.hear('help', (payload, chat) => {
-//   chat.say('Here are the following commands for use.')
-//   chat.say("'create': add a new reminder")
-//   chat.say("'setup': add your bucket info such as slug and write key")
-//   chat.say("'config': lists your current bucket config")
-// })
-
-// eventEmitter.on('new', function(itemSlug, time) {
-//   schedule.scheduleJob(time, function(){
-//     Cosmic.getObject(config, {slug: itemSlug}, function(error, response){
-//       if(response.object.metadata.date == new Date(time).toISOString()){
-//         bot.say(BotUserId, response.object.title)
-//         console.log('firing reminder')
-//       } else {
-//         eventEmitter.emit('new', response.object.slug, response.object.metafield.date.value)
-//         console.log('times do not match checking again at '+response.object.metadata.date)
-//       }
-//     })
-//   })
-// })
 
 bot.start(process.env.PORT || 3000);
