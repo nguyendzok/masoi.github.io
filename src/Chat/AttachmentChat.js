@@ -8,15 +8,15 @@ module.exports = (gamef, bot) => {
         if (img.type != 'image') {
             chat.say(`\`\`\`\nNội dung bạn vừa gửi không được Bot hỗ trợ!\n\`\`\``);
             if (userRoom != undefined) {
-                console.log(`$ ROOM ${userRoom + 1} CHAT > ${joinID}: not support content`);
-                console.log(JSON.stringify(payload.message.attachments));
                 let user = gamef.getRoom(userRoom).getPlayer(joinID);
+                console.log(`$ ROOM ${userRoom + 1} CHAT > ${user.first_name}: not support content`);
+                console.log(JSON.stringify(payload.message.attachments));
                 roomChatAll(bot, gamef.getRoom(userRoom).players, joinID, `*${user.first_name}* đã gửi nội dung không được hỗ trợ!`);
             }
         } else {
             if (userRoom != undefined) {
+                let user = gamef.getRoom(userRoom).getPlayer(joinID);
                 if (gamef.getRoom(userRoom).alivePlayer[joinID]) { // nếu còn sống
-                    user = gamef.getRoom(userRoom).getPlayer(joinID);
                     if (gamef.getRoom(userRoom).isNight) { // ban đêm
                         let userRole = gamef.getRoom(userRoom).getRole(joinID);
                         if (userRole == -1) {// là SÓI
@@ -43,7 +43,7 @@ module.exports = (gamef, bot) => {
                 } else {
                     chat.say('```\nBạn đã chết! Xin giữ im lặng! \n```')
                 }
-                console.log(`$ ROOM ${userRoom + 1} CHAT > ${joinID}: IMAGE content`);
+                console.log(`$ ROOM ${userRoom + 1} CHAT > ${user.first_name}: IMAGE content`);
             }
         }
     });

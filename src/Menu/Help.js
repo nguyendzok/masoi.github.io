@@ -1,4 +1,4 @@
-module.exports = (gamef, bot) => {
+module.exports = (bot) => {
     // listen HELP button
     bot.on('postback:HELP', (payload, chat) => {
         chat.getUserProfile().then((user) => {
