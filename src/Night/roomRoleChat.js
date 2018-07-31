@@ -1,12 +1,12 @@
 const { asyncForEach } = require('../Chat/Utils');
 
-module.exports = async (gamef, bot, roomID) => {
-    await asyncForEach(gamef.getRoom(roomID).players, async (m) => {
-        if (m && gamef.getRoom(roomID).alivePlayer[m.joinID]) {
-            console.log(`$ ROOM ${roomID + 1} > ${gamef.roleTxt[m.role]} > ${m.first_name}`);
-            let wolfList = gamef.getRoom(roomID).wolfsTxt.join(' ; ');
-            let villagersList = gamef.getRoom(roomID).villagersTxt.join(' ; ');
-            let playersList = gamef.getRoom(roomID).playersTxt.join(' ; ');
+module.exports = async (gamef, bot, userRoom) => {
+    await asyncForEach(gamef.getRoom(userRoom).players, async (m) => {
+        if (m && gamef.getRoom(userRoom).alivePlayer[m.joinID]) {
+            console.log(`$ ROOM ${userRoom + 1} > ${gamef.roleTxt[m.role]} > ${m.first_name}`);
+            let wolfList = gamef.getRoom(userRoom).wolfsTxt.join(' ; ');
+            let villagersList = gamef.getRoom(userRoom).villagersTxt.join(' ; ');
+            let playersList = gamef.getRoom(userRoom).playersTxt.join(' ; ');
             if (m.role == -1) {//SÓI
                 bot.say(m.joinID, [{
                     attachment: 'image',
@@ -32,14 +32,14 @@ module.exports = async (gamef, bot, roomID) => {
                     attachment: 'image',
                     url: 'http://hstatic.net/936/1000019936/10/2015/7-28/phanboi.jpg'
                 }, `🐺Bạn là BÁN SÓI!\nBạn vẫn còn là DÂN! Ngủ tiếp đi!\nID CẢ LÀNG:\n${playersList}`]);
-                gamef.getRoom(roomID).roleDoneBy(m.joinID);
+                gamef.getRoom(userRoom).roleDoneBy(m.joinID);
             } else if (m.role == 5) { // Phù thủy
                 let sayTxt;
-                if (gamef.getRoom(roomID).witchKillRemain) {
-                    sayTxt = `🔮Bạn là Phù thủy!\n${gamef.getRoom(roomID).witchSaveRemain ? '☑Bạn còn quyền cứu' : '⛔Bạn đã dùng quyền cứu!'}\n☑/kill <id> để giết\n☑/skip để bỏ qua\n${playersList}`;
+                if (gamef.getRoom(userRoom).witchKillRemain) {
+                    sayTxt = `🔮Bạn là Phù thủy!\n${gamef.getRoom(userRoom).witchSaveRemain ? '☑Bạn còn quyền cứu' : '⛔Bạn đã dùng quyền cứu!'}\n☑/kill <id> để giết\n☑/skip để bỏ qua\n${playersList}`;
                 } else {
-                    sayTxt = `🔮Bạn là Phù thủy!\n${gamef.getRoom(roomID).witchSaveRemain ? '☑Bạn còn quyền cứu' : '⛔Bạn đã dùng quyền cứu!'}\n⛔Bạn đã dùng quyền giết!\n${playersList}`;
-                    gamef.getRoom(roomID).roleDoneBy(m.joinID);
+                    sayTxt = `🔮Bạn là Phù thủy!\n${gamef.getRoom(userRoom).witchSaveRemain ? '☑Bạn còn quyền cứu' : '⛔Bạn đã dùng quyền cứu!'}\n⛔Bạn đã dùng quyền giết!\n${playersList}`;
+                    gamef.getRoom(userRoom).roleDoneBy(m.joinID);
                 }
                 bot.say(m.joinID, [{
                     attachment: 'image',
@@ -50,7 +50,7 @@ module.exports = async (gamef, bot, roomID) => {
                     attachment: 'image',
                     url: 'http://hstatic.net/936/1000019936/10/2015/7-28/danlang.jpg'
                 }, `💩Bạn là DÂN! Ngủ tiếp đi :))\n👨‍👩‍👦‍👦ID CẢ LÀNG:\n${playersList}`]);
-                gamef.getRoom(roomID).roleDoneBy(m.joinID);
+                gamef.getRoom(userRoom).roleDoneBy(m.joinID);
             }
         } else {
             bot.say(m.joinID, "Đêm nay bạn đã chết =))");

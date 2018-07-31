@@ -493,8 +493,8 @@ class Game {
     module(factory, bot) {
         return factory.apply(this, [this, bot]);
     }
-    func(factory, bot, userRoom) {
-        return factory.apply(this, [this, bot, userRoom]);
+    func(factory, bot, roomID) {
+        return factory.apply(this, [this, bot, roomID]);
     }
 }
 
