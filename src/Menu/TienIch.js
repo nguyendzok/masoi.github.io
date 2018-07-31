@@ -1,3 +1,5 @@
+const { roomChatAll } = require('../Utils');
+
 module.exports = (gamef, bot) => {
     // listen VIEW_PLAYER_IN_ROOM message
     bot.on('postback:VIEW_PLAYER_IN_ROOM', (payload, chat) => {
@@ -23,6 +25,10 @@ module.exports = (gamef, bot) => {
             chat.say('```\nBạn cần tham gia 1 phòng chơi trước khi đổi tên!\n```');
             return;
         }
+        if (gamef.getRoom(userRoom).ingame) {
+            chat.say('```\nBạn không thể đổi tên trong khi đang chơi!\n```');
+            return;
+        }
         let user = gamef.getRoom(userRoom).getPlayer(joinID);
 
         const askName = (convo) => {
@@ -36,7 +42,7 @@ module.exports = (gamef, bot) => {
                     if (!chatTxt.match(/\/cancel/g)) {
                         const startR = async () => {
                             await convo.say(`Đã đổi tên thành công!`);
-                            //await roomChatAll(userRoom, joinID, `${user.first_name} đã đổi tên thành ${chatTxt}!`)
+                            await roomChatAll(bot, userRoom, joinID, `${user.first_name} đã đổi tên thành ${chatTxt}!`)
                             user.setFirstName(chatTxt);
                             convo.end();
                         }
