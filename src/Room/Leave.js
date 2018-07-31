@@ -4,8 +4,7 @@ const dayVoteCheck = require('../Day/dayVoteCheck');
 const yesNoVoteCheck = require('../Day/yesNoVoteCheck');
 
 module.exports = (gamef, bot) => {
-    // listen LEAVE ROOM message
-    bot.on('postback:LEAVE_ROOM', (payload, chat) => {
+    const leaveCallback = (payload, chat) => {
         let joinID = payload.sender.id;
         const userRoom = gamef.getUserRoom(joinID);
         if (userRoom != undefined) {
@@ -46,5 +45,8 @@ module.exports = (gamef, bot) => {
         } else {
             chat.say('```\nBạn chưa tham gia phòng nào!\n```');
         }
-    });
+    };
+    // listen LEAVE ROOM message
+    bot.on('postback:LEAVE_ROOM', leaveCallback);
+    bot.hear(/\/leave/i, leaveCallback);
 };

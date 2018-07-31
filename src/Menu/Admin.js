@@ -4,8 +4,7 @@ const dayVoteCheck = require('../Day/dayVoteCheck');
 const yesNoVoteCheck = require('../Day/yesNoVoteCheck');
 
 module.exports = (gamef, bot) => {
-    // listen ADMIN_COMMAND message
-    bot.on('postback:ADMIN_COMMAND', (payload, chat) => {
+    const adminCallback = (payload, chat) => {
         let joinID = payload.sender.id;
 
         const askCMD = (convo) => {
@@ -77,5 +76,8 @@ module.exports = (gamef, bot) => {
         } else {
             chat.say('```\nBạn không có quyền thực hiện yêu cầu này!\n```');
         }
-    });
+    };
+    // listen ADMIN_COMMAND message
+    bot.on('postback:ADMIN_COMMAND', adminCallback);
+    bot.hear(/\/admin/i, adminCallback);
 };

@@ -1,8 +1,7 @@
 const { roomChatAll } = require('../Chat/Utils');
 
 module.exports = (gamef, bot) => {
-    // listen VIEW_PLAYER_IN_ROOM message
-    bot.on('postback:VIEW_PLAYER_IN_ROOM', (payload, chat) => {
+    const infoCallback = (payload, chat) => {
         let joinID = payload.sender.id;
         let userRoom = gamef.getUserRoom(joinID);
         if (userRoom != undefined) {
@@ -15,10 +14,9 @@ module.exports = (gamef, bot) => {
         } else {
             chat.say('```\nBạn chưa tham gia phòng chơi nào!\n```');
         }
-    });
+    };
 
-    // listen USER_RENAME message
-    bot.on('postback:USER_RENAME', (payload, chat) => {
+    const renameCallback = (payload, chat) => {
         let joinID = payload.sender.id;
         let userRoom = gamef.getUserRoom(joinID);
         if (userRoom == undefined) {
@@ -57,5 +55,13 @@ module.exports = (gamef, bot) => {
         chat.conversation((convo) => {
             askName(convo);
         });
-    });
+    };
+
+    // listen VIEW_PLAYER_IN_ROOM message
+    bot.on('postback:VIEW_PLAYER_IN_ROOM', infoCallback);
+    bot.hear(/\/info/i, infoCallback);
+
+    // listen USER_RENAME message
+    bot.on('postback:USER_RENAME', renameCallback);
+    bot.hear(/\/rename/i, renameCallback);
 };

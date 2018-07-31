@@ -2,8 +2,7 @@ const { asyncForEach, roomChatAll } = require('../Chat/Utils');
 const roomRoleChat = require('../Night/roomRoleChat');
 
 module.exports = (gamef, bot) => {
-    //listen for READY
-    bot.on('postback:READY_ROOM', (payload, chat) => {
+    const readyCallback = (payload, chat) => {
         const joinID = payload.sender.id;
         const userRoom = gamef.getUserRoom(joinID);
         if (userRoom != undefined) {
@@ -42,5 +41,8 @@ module.exports = (gamef, bot) => {
         } else {
             chat.say("```\nBạn chưa tham gia phòng nào!\n```");
         }
-    });
+    };
+    //listen for READY
+    bot.on('postback:READY_ROOM', readyCallback);
+    bot.hear(/\/ready/i, readyCallback);
 };

@@ -12,22 +12,22 @@ module.exports = (bot) => {
     });
     const actionButtons = [
         {
-            type: 'nested', title: 'Tham gia...',
+            type: 'nested', title: 'Chơi...',
             call_to_actions: [
-                { type: 'postback', title: 'Tham gia phòng', payload: 'JOIN_ROOM' },
-                { type: 'postback', title: 'Sẵn sàng!', payload: 'READY_ROOM' },
-                { type: 'postback', title: 'Rời phòng/Tự sát', payload: 'LEAVE_ROOM' },
+                { type: 'postback', title: 'Tham gia phòng /join', payload: 'JOIN_ROOM' },
+                { type: 'postback', title: 'Sẵn sàng! /ready', payload: 'READY_ROOM' },
+                { type: 'postback', title: 'Rời phòng/Tự sát /leave', payload: 'LEAVE_ROOM' },
             ]
         },
         {
             type: 'nested', title: 'Tiện ích khi chơi...',
             call_to_actions: [
-                { type: 'postback', title: 'Đổi tên', payload: 'USER_RENAME' },
-                { type: 'postback', title: 'Xem DS dân làng', payload: 'VIEW_PLAYER_IN_ROOM' },
-                { type: 'postback', title: '(ADMIN ONLY) COMMAND', payload: 'ADMIN_COMMAND' },
+                { type: 'postback', title: 'Xem DS người chơi /info', payload: 'VIEW_PLAYER_IN_ROOM' },
+                { type: 'postback', title: 'Đổi tên /rename', payload: 'USER_RENAME' },
+                { type: 'postback', title: 'ADMIN COMMAND /admin', payload: 'ADMIN_COMMAND' },
             ]
         },
-        { type: 'postback', title: 'Trợ giúp', payload: 'HELP' },
+        { type: 'postback', title: 'Trợ giúp /help', payload: 'HELP' },
     ];
     bot.setPersistentMenu(actionButtons, false);
 };
