@@ -51,8 +51,4 @@ gamef.module(leaveRoom, bot);
 // chat and vote
 gamef.module(chatAndVote, bot);
 
-
-
-
-
 bot.start(process.env.PORT || 3000);

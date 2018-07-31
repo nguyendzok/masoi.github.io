@@ -2,8 +2,7 @@ const { asyncForEach } = require('../Chat/Utils');
 const { Player } = require('../Game');
 
 module.exports = (gamef, bot) => {
-    // listen JOIN ROOM
-    bot.on('postback:JOIN_ROOM', (payload, chat) => {
+    const joinCallback = (payload, chat) => {
         let joinID = payload.sender.id;
         let userRoom = gamef.getUserRoom(joinID);
         if (userRoom != undefined) {
@@ -67,5 +66,8 @@ module.exports = (gamef, bot) => {
                 askRoom(convo);
             });
         })
-    });
+    };
+    // listen JOIN ROOM
+    bot.on('postback:JOIN_ROOM', joinCallback);
+    bot.hear(/\/join/i, joinCallback);
 };
