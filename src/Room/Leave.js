@@ -1,4 +1,7 @@
 const { roomChatAll } = require('../Chat/Utils');
+const nightDoneCheck = require('../Night/nightDoneCheck');
+const dayVoteCheck = require('../Day/dayVoteCheck');
+const yesNoVoteCheck = require('../Day/yesNoVoteCheck');
 
 module.exports = (gamef, bot) => {
     // listen LEAVE ROOM message
@@ -22,19 +25,19 @@ module.exports = (gamef, bot) => {
                 if (gamef.getRoom(userRoom).isNight) {
                     gamef.getRoom(userRoom).roleIsDone((isDone) => {
                         if (isDone) {
-                            nightDoneCheck(userRoom);
+                            gamef.func(nightDoneCheck, bot, userRoom);
                         }
                     });
                 } else if (gamef.getRoom(userRoom).isMorning) {
                     gamef.getRoom(userRoom).roleIsDone((isDone) => {
                         if (isDone) {
-                            dayVoteEnd(userRoom);
+                            gamef.func(dayVoteCheck, bot, userRoom);
                         }
                     });
                 } else {
                     gamef.getRoom(userRoom).roleIsDone((isDone) => {
                         if (isDone) {
-                            yesNoVoteCheck(userRoom);
+                            gamef.func(yesNoVoteCheck, bot, userRoom);
                         }
                     });
                 }
