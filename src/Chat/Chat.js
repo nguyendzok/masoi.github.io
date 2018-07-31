@@ -26,7 +26,7 @@ module.exports = (gamef, bot) => {
                 if (userRole == -1) {// là SÓI
                     if (!chatTxt.match(/\/vote.-?[0-9]+/g)) {//chat
                         if (gamef.getRoom(userRoom).chatON) {
-                            roomWolfChatAll(bot, gamef.getRoom(userRoom).players, joinID, '*' + user.first_name + '*: ' + chatTxt);
+                            roomWolfChatAll(bot, gamef.getRoom(userRoom).wolfsID, joinID, '*' + user.first_name + '*: ' + chatTxt);
                         }
                     } else {// SÓI VOTE
                         let voteID = chatTxt.match(/-?[0-9]+/g)[0];
@@ -35,11 +35,11 @@ module.exports = (gamef, bot) => {
                             if (gamef.getRoom(userRoom).vote(joinID, voteID)) {
                                 if (voteID == -1) { //ăn chay (phiếu trống)
                                     await chat.say(`🍴Bạn đã vote ăn chay!`);
-                                    roomWolfChatAll(bot, gamef.getRoom(userRoom).players, joinID, '🍴' + user.first_name + ' đã vote ăn chay!');
+                                    roomWolfChatAll(bot, gamef.getRoom(userRoom).wolfsID, joinID, '🍴' + user.first_name + ' đã vote ăn chay!');
                                 } else {
                                     let voteKill = gamef.getRoom(userRoom).playersTxt[voteID];
                                     await chat.say(`🍗Bạn đã vote cắn ${voteKill}`);
-                                    roomWolfChatAll(bot, gamef.getRoom(userRoom).players, joinID, '🍗' + user.first_name + ' đã vote cắn ' + voteKill);
+                                    roomWolfChatAll(bot, gamef.getRoom(userRoom).wolfsID, joinID, '🍗' + user.first_name + ' đã vote cắn ' + voteKill);
                                 }
                             } else {
                                 chat.say("```\nBạn không thể thực hiện vote 2 lần hoặc vote người chơi đã chết!\n```");

@@ -19,7 +19,7 @@ async function roomWolfChatAll(bot, wolfsID, sendID, content) {
   }
 
 module.exports = {
-    asyncForEach,
-    roomChatAll,
-    roomWolfChatAll
+    asyncForEach: asyncForEach,
+    roomChatAll: roomChatAll,
+    roomWolfChatAll: roomWolfChatAll,
 }
