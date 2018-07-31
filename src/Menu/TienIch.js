@@ -1,4 +1,4 @@
-const { roomChatAll } = require('../Utils');
+const { roomChatAll } = require('../Chat/Utils');
 
 module.exports = (gamef, bot) => {
     // listen VIEW_PLAYER_IN_ROOM message
@@ -42,7 +42,7 @@ module.exports = (gamef, bot) => {
                     if (!chatTxt.match(/\/cancel/g)) {
                         const startR = async () => {
                             await convo.say(`Đã đổi tên thành công!`);
-                            await roomChatAll(bot, userRoom, joinID, `${user.first_name} đã đổi tên thành ${chatTxt}!`)
+                            await roomChatAll(bot, gamef.getRoom(userRoom).players, joinID, `${user.first_name} đã đổi tên thành ${chatTxt}!`)
                             user.setFirstName(chatTxt);
                             convo.end();
                         }

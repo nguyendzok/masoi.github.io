@@ -13,6 +13,7 @@ var schedule = require('node-schedule')
 const { Game, Room, Player } = require('./src/Game.js');
 const menuTienIch = require('./src/Menu/TienIch');
 const menuHelp = require('./src/Menu/Help');
+const attachmentChat = require('./src/Chat/AttachmentChat');
 
 const gamef = new Game();
 const bot = new BootBot({
@@ -57,6 +58,7 @@ bot.setPersistentMenu(actionButtons, false);
 //import module
 gamef.module(menuTienIch, bot);
 gamef.module(menuHelp, bot);
+gamef.module(attachmentChat, bot);
 
 
 // const eventEmitter = new EventEmitter()
@@ -458,9 +460,9 @@ bot.on('message', (payload, chat, data) => {
     });
     return;
   }
-
+  let user = gamef.getRoom(userRoom).getPlayer(joinID);
   if (gamef.getRoom(userRoom).alivePlayer[joinID]) { // nếu còn sống
-    user = gamef.getRoom(userRoom).getPlayer(joinID);
+    
     if (gamef.getRoom(userRoom).isNight) { // ban đêm
       let userRole = gamef.getRoom(userRoom).getRole(joinID);
       if (userRole == -1) {// là SÓI
@@ -620,54 +622,7 @@ bot.on('message', (payload, chat, data) => {
   } else {
     chat.say('```\nBạn đã chết! Xin giữ im lặng! \n```')
   }
-  console.log(`$ ROOM ${userRoom + 1} CHAT > ${joinID}: ${chatTxt}`);
-});
-
-bot.on('attachment', (payload, chat) => {
-  let joinID = payload.sender.id;
-  const userRoom = gamef.getUserRoom(joinID);
-  let img = payload.message.attachments[0];
-  if (img.type != 'image') {
-    chat.say(`\`\`\`\nNội dung bạn vừa gửi không được Bot hỗ trợ!\n\`\`\``);
-    if (userRoom != undefined) {
-      console.log(`$ ROOM ${userRoom + 1} CHAT > ${joinID}: not support content`);
-      console.log(JSON.stringify(payload.message.attachments));
-      let user = gamef.getRoom(userRoom).getPlayer(joinID);
-      roomChatAll(userRoom, joinID, `*${user.first_name}* đã gửi nội dung không được hỗ trợ!`);
-    }
-  } else {
-    if (userRoom != undefined) {
-      if (gamef.getRoom(userRoom).alivePlayer[joinID]) { // nếu còn sống
-        user = gamef.getRoom(userRoom).getPlayer(joinID);
-        if (gamef.getRoom(userRoom).isNight) { // ban đêm
-          let userRole = gamef.getRoom(userRoom).getRole(joinID);
-          if (userRole == -1) {// là SÓI
-            if (gamef.getRoom(userRoom).chatON) {
-              roomWolfChatAll(userRoom, joinID, [`*${user.first_name}* đã gửi 1 sticker/ảnh/gif ...`, {
-                attachment: 'image',
-                url: img.payload.url
-              }]);
-            }
-          } else { // là các role khác
-            chat.say('```\nBạn không thể trò chuyện trong đêm!\n```');
-          }
-        } else {
-          // ban NGÀY, mọi người thảo luận
-          if (gamef.getRoom(userRoom).chatON || (gamef.getRoom(userRoom).deathID != -1 && gamef.getRoom(userRoom).deathID === gamef.getRoom(userRoom).getPlayer(joinID).id)) { //check xem còn bật chat không?
-            roomChatAll(userRoom, joinID, [`*${user.first_name}* đã gửi 1 sticker/ảnh/gif ...`, {
-              attachment: 'image',
-              url: img.payload.url
-            }]);
-          } else {
-            chat.say('```\nBạn không thể trò chuyện\n```');
-          }
-        }
-      } else {
-        chat.say('```\nBạn đã chết! Xin giữ im lặng! \n```')
-      }
-      console.log(`$ ROOM ${userRoom + 1} CHAT > ${joinID}: IMAGE content`);
-    }
-  }
+  console.log(`$ ROOM ${userRoom + 1} CHAT > ${user.first_name}: ${chatTxt}`);
 });
 
 // listen LEAVE ROOM message
