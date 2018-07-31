@@ -1,5 +1,6 @@
 const { roomChatAll } = require('../Chat/Utils');
 const roomRoleChat = require('../Night/roomRoleChat');
+const gameIsNotEndCheck = require('../gameIsNotEndCheck');
 
 module.exports = async (gamef, bot, userRoom) => {
     gamef.getRoom(userRoom).roleIsDone(async () => {
@@ -14,7 +15,7 @@ module.exports = async (gamef, bot, userRoom) => {
             roomChatAll(bot, gamef.getRoom(userRoom).players, 0, `😇Đã tha chết cho ${deathTxt}! Mọi người đi ngủ`);
             gamef.getRoom(userRoom).newLog(`😇Mọi người tha chết cho *${deathTxt}* với ${(gamef.getRoom(userRoom).aliveCount() + gamef.getRoom(userRoom).saveOrKill) / 2} tha/${(gamef.getRoom(userRoom).aliveCount() - gamef.getRoom(userRoom).saveOrKill) / 2} treo`);
         }
-        gameIsNotEndCheck(userRoom, () => {
+        gameIsNotEndCheck(gamef, bot, userRoom, () => {
             // Đêm tiếp theo
             gamef.getRoom(userRoom).dayNightSwitch();
             roomChatAll(bot, gamef.getRoom(userRoom).players, 0, `🌛Đêm thứ ${gamef.getRoom(userRoom).day}🌛`);
