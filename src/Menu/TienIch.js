@@ -36,7 +36,7 @@ module.exports = (gamef, bot) => {
                     if (!chatTxt.match(/\/cancel/g)) {
                         const startR = async () => {
                             await convo.say(`Đã đổi tên thành công!`);
-                            await roomChatAll(userRoom, joinID, `${user.first_name} đã đổi tên thành ${chatTxt}!`)
+                            //await roomChatAll(userRoom, joinID, `${user.first_name} đã đổi tên thành ${chatTxt}!`)
                             user.setFirstName(chatTxt);
                             convo.end();
                         }
