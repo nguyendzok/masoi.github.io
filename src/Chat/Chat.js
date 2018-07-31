@@ -1,6 +1,7 @@
 const { roomChatAll, roomWolfChatAll } = require('../Chat/Utils');
 const nightDoneCheck = require('../Night/nightDoneCheck');
 const dayVoteCheck = require('../Day/dayVoteCheck');
+const yesNoVoteCheck = require('../Day/yesNoVoteCheck');
 
 module.exports = (gamef, bot) => {
     // listen for ROOM CHAT and VOTE
