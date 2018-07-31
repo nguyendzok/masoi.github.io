@@ -328,11 +328,11 @@ class Room {
     aliveCount() {
         return this.villagersCount + this.wolfsCount;
     }
-    subscribe(joinID){
-        if (this.subscriberList.indexOf(joinID)==-1){
+    subscribe(joinID) {
+        if (this.subscriberList.indexOf(joinID) == -1) {
             this.subscriberList.push(joinID);
         }
-        console.log(`$ ROOM ${this.id+1} > SUBSCRIBER ${this.subscriberList.length} > ${joinID}`);
+        console.log(`$ ROOM ${this.id + 1} > SUBSCRIBER ${this.subscriberList.length} > ${joinID}`);
     }
 }
 
@@ -490,8 +490,8 @@ class Game {
             }
         }
     }
-    module(factory) {
-        return factory.apply(this, [this]);
+    module(factory, bot) {
+        return factory.apply(this, [this, bot]);
     }
 }
 

@@ -11,6 +11,7 @@ var schedule = require('node-schedule')
 // var async = require("async");
 // var Q = require("q");
 const { Game, Room, Player } = require('./src/Game.js');
+const menuTienIch = require('./src/Menu/TienIch');
 const gamef = new Game();
 
 // const eventEmitter = new EventEmitter()
@@ -705,20 +706,23 @@ bot.on('postback:LEAVE_ROOM', (payload, chat) => {
 });
 
 // listen VIEW_PLAYER_IN_ROOM message
-bot.on('postback:VIEW_PLAYER_IN_ROOM', (payload, chat) => {
-  let joinID = payload.sender.id;
-  let userRoom = gamef.getUserRoom(joinID);
-  if (userRoom != undefined) {
-    if (gamef.getRoom(userRoom).ingame) {
-      let playersInRoomTxt = gamef.getRoom(userRoom).playersTxt.join(' ; ');
-      chat.say(`👨‍👩‍👦‍👦Danh sách dân và sói làng ${userRoom + 1}: \n${playersInRoomTxt}`);
-    } else {
-      chat.say('```\nTrò chơi chưa bắt đầu!\n```');
-    }
-  } else {
-    chat.say('```\nBạn chưa tham gia phòng chơi nào!\n```');
-  }
-});
+// bot.on('postback:VIEW_PLAYER_IN_ROOM', (payload, chat) => {
+//   let joinID = payload.sender.id;
+//   let userRoom = gamef.getUserRoom(joinID);
+//   if (userRoom != undefined) {
+//     if (gamef.getRoom(userRoom).ingame) {
+//       let playersInRoomTxt = gamef.getRoom(userRoom).playersTxt.join(' ; ');
+//       chat.say(`👨‍👩‍👦‍👦Danh sách dân và sói làng ${userRoom + 1}: \n${playersInRoomTxt}`);
+//     } else {
+//       chat.say('```\nTrò chơi chưa bắt đầu!\n```');
+//     }
+//   } else {
+//     chat.say('```\nBạn chưa tham gia phòng chơi nào!\n```');
+//   }
+// });
+gamef.module(menuTienIch, bot);
+
+
 // listen USER_RENAME message
 bot.on('postback:USER_RENAME', (payload, chat) => {
   let joinID = payload.sender.id;
