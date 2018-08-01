@@ -19,16 +19,31 @@ async function roomChatAll(bot, players, sendID, content) {
     each.forEach(async (sendAction, index) => {
         try {
             await sendAction
-            console.log('## Messenger sent to ', players[index].firstName)
+            console.log('## Messenger sent to ', players[index].first_name)
         } catch (e) {
-            console.error('## ERR sent to ', e)
+            console.error('## Messenger ERR : ', e)
         }
     })
 }
+// async function roomWolfChatAll(bot, wolfsID, sendID, content) {
+//     await asyncForEach(wolfsID, async (m) => {
+//         if (m != sendID) {
+//             await bot.say(m, content);
+//         }
+//     })
+// }
 async function roomWolfChatAll(bot, wolfsID, sendID, content) {
-    await asyncForEach(wolfsID, async (m) => {
-        if (m != sendID) {
-            await bot.say(m, content);
+    let each = wolfsID.map(wID => {
+        if (wID != sendID) {
+            return bot.say(wID, content)
+        }
+    });
+    each.forEach(async (sendAction, index) => {
+        try {
+            await sendAction
+            console.log('## Messenger sent to ', index)
+        } catch (e) {
+            console.error('## Messenger ERR : ', e)
         }
     })
 }
