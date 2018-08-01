@@ -52,7 +52,7 @@ module.exports = async (gamef, bot, userRoom, witchSaved) => {
         gamef.getRoom(userRoom).newLog(`${deathID != -1 ? `🔪 *${deathTxt}* bị cắn nhưng không chết!\n` : `🎊Sói không thống nhất được số vote!\n`}🎊Đêm hôm đấy không ai chết cả!`);
         chatAllTxt += `🎊Đêm hôm qua không ai chết cả!`;
     }
-    roomChatAll(bot, gamef.getRoom(userRoom).players, 0, chatAllTxt);
+    await roomChatAll(bot, gamef.getRoom(userRoom).players, 0, chatAllTxt);
     
 
     gameIsNotEndCheck(gamef, bot, userRoom, () => {

@@ -149,7 +149,7 @@ module.exports = (gamef, bot) => {
                         if (gamef.getRoom(userRoom).vote(joinID, voteID)) {
                             if (voteID == -1) {
                                 await chat.say(`Bạn đã từ chối bỏ phiếu!`);
-                                roomChatAll(bot, gamef.getRoom(userRoom).players, joinID, `${user.first_name} đã từ chối bỏ phiếu (${gamef.getRoom(userRoom).voteList[voteID]} phiếu)`);
+                                roomChatAll(bot, gamef.getRoom(userRoom).players, joinID, `${user.first_name} đã từ chối bỏ phiếu`);
                             } else {
                                 let voteKill = gamef.getRoom(userRoom).playersTxt[voteID];
                                 await chat.say(`😈Bạn đã vote treo cổ ${voteKill} (${gamef.getRoom(userRoom).voteList[voteID]} phiếu)`);

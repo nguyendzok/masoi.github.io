@@ -23,7 +23,7 @@ module.exports = (gamef, bot, userRoom) => {
         gameIsNotEndCheck(userRoom, async () => {
           // Đêm tiếp theo
           gamef.getRoom(userRoom).dayNightSwitch();
-          await roomChatAll(bot, gamef.getRoom(userRoom).players, 0, `🌛Đêm thứ ${gamef.getRoom(userRoom).day}🌛`);
+          roomChatAll(bot, gamef.getRoom(userRoom).players, 0, `🌛Đêm thứ ${gamef.getRoom(userRoom).day}🌛`);
           gamef.getRoom(userRoom).newLog(`🌛Đêm thứ ${gamef.getRoom(userRoom).day}🌛++++++++++`);
           gamef.func(roomRoleChat, bot, userRoom);
         });
