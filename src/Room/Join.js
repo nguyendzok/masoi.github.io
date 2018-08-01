@@ -44,7 +44,7 @@ module.exports = (gamef, bot) => {
 
                     // notice new player to everyone in room
                     let playerListView = gamef.getRoomPlayerView(roomID);
-                    roomChatAll(bot, gamef.getRoom(userRoom).players, 0, [{
+                    roomChatAll(bot, gamef.getRoom(roomID).players, 0, [{
                         cards: playerListView
                     }, `${joinUser.first_name} đã tham gia phòng!`]);
 
