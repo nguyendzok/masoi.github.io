@@ -1,5 +1,5 @@
 const { asyncForEach } = require('../Chat/Utils');
-const { Player } = require('../Game');
+const { Player } = require('../MainGame/Game');
 
 module.exports = (gamef, bot) => {
     const joinCallback = (payload, chat) => {
