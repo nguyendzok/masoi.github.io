@@ -46,9 +46,8 @@ module.exports = (gamef, bot) => {
                         let playerListView = gamef.getRoomPlayerView(roomID);
                         await asyncForEach(gamef.getRoom(roomID).players, async (m) => {
                             if (m) {
-                                await bot.sendGenericTemplate(m.joinID, playerListView).then(async () => {
-                                    await bot.say(m.joinID, `${joinUser.first_name} đã tham gia phòng!`);
-                                })
+                                await bot.sendGenericTemplate(m.joinID, playerListView)
+                                await bot.say(m.joinID, `${joinUser.first_name} đã tham gia phòng!`);
                             }
                         })
                         convo.end();

@@ -1,5 +1,5 @@
 const { roomChatAll } = require('../Chat/Utils');
-const gameIsNotEndCheck = require('../gameIsNotEndCheck');
+const gameIsNotEndCheck = require('../MainGame/gameIsNotEndCheck');
 
 module.exports = async (gamef, bot, userRoom, witchSaved) => {
     let deathID = gamef.getRoom(userRoom).deathID;

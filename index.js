@@ -11,7 +11,7 @@ var schedule = require('node-schedule')
 // const eventEmitter = new EventEmitter()
 // var async = require("async");
 // var Q = require("q");
-const { Game, Room, Player } = require('./src/Game.js');
+const { Game, Room, Player } = require('./src/MainGame/Game.js');
 
 //module import
 const botSetup = require('./src/botSetup');

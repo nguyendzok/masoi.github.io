@@ -15,6 +15,5 @@ module.exports = (bot) => {
     };
     // listen HELP button
     bot.on('postback:HELP', helpCallback);
-    // listen to HELP
     bot.hear(['help', 'hướng dẫn', 'trợ giúp', 'giúp', /\/help/i], helpCallback);
 };

@@ -1,6 +1,6 @@
 const { roomChatAll } = require('../Chat/Utils');
 const roomRoleChat = require('../Night/roomRoleChat');
-const gameIsNotEndCheck = require('../gameIsNotEndCheck');
+const gameIsNotEndCheck = require('../MainGame/gameIsNotEndCheck');
 
 module.exports = async (gamef, bot, userRoom) => {
     gamef.getRoom(userRoom).roleIsDone(async () => {
