@@ -1,4 +1,4 @@
-const { asyncForEach } = require('../Chat/Utils');
+const { asyncForEach, roomChatAll } = require('../Chat/Utils');
 const { Player } = require('../MainGame/Game');
 
 module.exports = (gamef, bot) => {
@@ -41,22 +41,15 @@ module.exports = (gamef, bot) => {
                         first_name: joinUser.first_name,
                         avatar: joinUser.profile_pic
                     }));
+
                     // notice new player to everyone in room
-                    const start = async () => {
-                        let playerListView = gamef.getRoomPlayerView(roomID);
-                        await asyncForEach(gamef.getRoom(roomID).players, async (m) => {
-                            if (m) {
-                                await bot.say(m.joinID, {
-                                    cards: playerListView
-                                });
-                                //await bot.sendGenericTemplate(m.joinID, playerListView)
-                                await bot.say(m.joinID, `${joinUser.first_name} đã tham gia phòng!`);
-                            }
-                        })
-                        convo.end();
-                        console.log(`$ ROOM ${(roomID + 1)} > JOIN > ${joinID}`);
-                    }
-                    start();
+                    let playerListView = gamef.getRoomPlayerView(roomID);
+                    roomChatAll(bot, gamef.getRoom(userRoom).players, 0, [{
+                        cards: playerListView
+                    }, `${joinUser.first_name} đã tham gia phòng!`]);
+
+                    convo.end();
+                    console.log(`$ ROOM ${(roomID + 1)} > JOIN > ${joinUser.first_name} > ${joinID}`);
                 }
             });
         };
