@@ -444,9 +444,9 @@ class Game {
         let roomListView = [];
         this.room.forEach(r => {
             if (!r.ingame) {
-                roomListView.push(r.id + 1);
+                roomListView.push((r.id + 1).toString());
             } else { // đang chơi
-                roomListView.push('🎮'+(r.id + 1));
+                roomListView.push('🎮'+(r.id + 1).toString());
             }
         });
         return roomListView;
