@@ -17,19 +17,12 @@ module.exports = (gamef, bot) => {
                 text: 'Lựa chọn phòng',
                 quickReplies: roomListView,
             }, (payload, convo) => {
-                if (!payload.message) {
-                    let roomIDTxt = payload.message.text.match(/[0-9]+/g);
-                    if (!roomIDTxt || isNaN(parseInt(roomIDTxt[0]))) {
-                        convo.say(`\`\`\`\nVui lòng nhập 1 phòng hợp lệ!\n\`\`\``);
-                        convo.end();
-                        return;
-                    }
-                } else {
-                    convo.say(`\`\`\`\nBạn đang lựa chọn phòng. Vui lòng không ấn menu khác!\n\`\`\``);
+                let roomIDTxt = payload.message?payload.message.text.match(/[0-9]+/g):[];
+                if (!(payload.message) || !roomIDTxt || isNaN(parseInt(roomIDTxt[0]))) {
+                    convo.say(`\`\`\`\nVui lòng nhập 1 phòng hợp lệ!\n\`\`\``);
                     convo.end();
                     return;
                 }
-
                 let roomID = parseInt(roomIDTxt[0]) - 1;
 
                 if (gamef.getRoom(roomID).ingame) {
