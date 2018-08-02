@@ -44,6 +44,7 @@ class Room {
         this.chatON = true;
         this.wolfsCount = 0;
         this.villagersCount = 0;
+        this.roleDoneCount = 0;
         this.roleDone = [];
         this.voteList = [];
         this.alivePlayer = [];
@@ -88,6 +89,7 @@ class Room {
         this.chatON = true;
         this.wolfsCount = 0;
         this.villagersCount = 0;
+        this.roleDoneCount = 0;
         this.roleDone = [];
         this.voteList = [];
 
@@ -493,7 +495,7 @@ class Game {
         this.setRole(roomID, 2, 1); // 1 BẢO VỆ +3
         if (len < 6) { // 4,5
             this.setRole(roomID, -1, 1);  // 1 SÓI -6
-            //this.setRole(roomID, 6, 1); // 1 GIÀ LÀNG +0
+            this.setRole(roomID, 6, 1); // 1 GIÀ LÀNG +0
             roleListTxt += ", 1 SÓI, 1 GIÀ LÀNG, " + (len - 3) + ` DÂN (CÂN BẰNG: ${7 + 3 - 6 + (len - 3)})`;
         } else if (len < 8) { // 6,7
             let villagersRemain = (len - 2), balance = 7 + 3;
