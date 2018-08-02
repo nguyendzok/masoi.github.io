@@ -26,6 +26,15 @@ module.exports = async (gamef, bot, userRoom, witchSaved) => {
             gamef.getRoom(userRoom).newLog(`🔪Thợ săn chết đã ghim ${gamef.roleTxt[gamef.getRoom(userRoom).getRoleByID(fireID)]} *${deathFireTxt}*`);
             console.log(`$ ROOM ${userRoom + 1} > ${deathFireTxt} DIED!`);
         }
+        if (gamef.getRoom(userRoom).cupidsID.indexOf(gamef.getRoom(userRoom).players[deathID].joiniD) != -1) { //người chết là cặp đôi
+            dieCount++;
+            let die1Index = gamef.getRoom(userRoom).cupidsID.indexOf(gamef.getRoom(userRoom).players[deathID].joiniD); // index trong mảng cupidsID
+            let die2JoinID = gamef.getRoom(userRoom).cupidsID[die1Index == 1 ? 0 : 1];
+            let die2User = gamef.getRoom(userRoom).getPlayer(die2JoinID);
+            chatAllTxt += `🔪 *${die2User.first_name}* đã CHẾT!`;
+            gamef.getRoom(userRoom).newLog(`🔪Tình yêu đã giết chết ${gamef.roleTxt[gamef.getRoom(userRoom).getRoleByID(die2User.id)]} *${die2User.first_name}*`);
+            console.log(`$ ROOM ${userRoom + 1} > ${die2User.first_name} DIED!`);
+        }
     }
     // PHÙ THỦY giết
     if (gamef.getRoom(userRoom).witchKillID != undefined) {
