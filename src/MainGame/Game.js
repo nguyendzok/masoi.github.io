@@ -209,13 +209,19 @@ class Room {
                 this.wolfsCount++;
                 this.villagersCount--;
                 return false;
-            } else if (this.players[this.deathID].role === 6 && this.isNight) { //là Già làng
-                this.oldManLive--;
-                if (this.oldManLive > 0) { // còn 1 mạng
-                    return false;
-                } else { // hết mạng :v
+            } else if (this.players[this.deathID].role === 6) { //là Già làng
+                if (this.isNight) {
+                    this.oldManLive--;
+                    if (this.oldManLive > 0) { // còn 1 mạng
+                        return false;
+                    } else { // hết mạng :v
+                        this.killAction(this.deathID);
+                        console.log(`$ ROOM ${this.id + 1} > OLD MAN ${this.deathID} DIED !!!`);
+                        return true;
+                    }
+                } else {
+                    this.oldManLive = 0;
                     this.killAction(this.deathID);
-                    console.log(`$ ROOM ${this.id + 1} > OLD MAN DIED > ${this.deathID} !!!`);
                     return true;
                 }
             } else {
@@ -449,7 +455,7 @@ class Game {
             if (!r.ingame) {
                 roomListView.push((r.id + 1).toString());
             } else { // đang chơi
-                roomListView.push('🎮'+(r.id + 1).toString());
+                roomListView.push('🎮' + (r.id + 1).toString());
             }
         });
         return roomListView;
