@@ -7,7 +7,7 @@ class Player {
         this.last_name = p.last_name;
         this.avatar = p.avatar;
         this.ready = false;
-        this.role = 0; // -1: SÓI / 0: DÂN / 1: tiên tri / 2: bảo vệ
+        this.role = 4; // -1: SÓI / 4: DÂN / 1: tiên tri / 2: bảo vệ
     }
     getReady() {
         this.ready = true;
@@ -108,7 +108,7 @@ class Room {
 
         this.players.forEach((p, index, arr) => {
             arr[index].ready = false;
-            arr[index].role = 0; //DÂN
+            arr[index].role = 4; //DÂN
             this.playersTxt.push(`${p.id}: ${p.first_name}`);
             this.alivePlayer[p.joinID] = true;
         });
@@ -292,7 +292,7 @@ class Room {
         if (!this.roleDone[joinID] && this.players[voteID] && this.alivePlayer[this.players[voteID].joinID]) {
             this.roleDoneBy(joinID);
             if (this.oldManID != undefined && this.oldManLive <= 0) { // có GIÀ LÀNG đã chết
-                trueCallback(0); // già làng chết: soi ra DÂN
+                trueCallback(4); // già làng chết: soi ra DÂN
             } else {
                 trueCallback(this.getRoleByID(voteID));
             }
@@ -305,12 +305,13 @@ class Room {
     cupid(joinID, voteID1, voteID2) {
         if (!this.roleDone[joinID] && this.players[voteID1] && this.players[voteID2]) {
             this.roleDoneBy(joinID);
-            this.getPlayer(joinID).setRole(0); // thần tình yêu về làm DÂN
+            this.getPlayer(joinID).setRole(4); // thần tình yêu về làm DÂN
             this.cupidsID = [this.players[voteID1].joinID, this.players[voteID2].joinID];
             this.cupidsTxt = [voteID1 + ': ' + this.players[voteID1].first_name, voteID2 + ': ' + this.players[voteID2].first_name];
-            if (this.players[voteID1].role * this.players[voteID1].role < 0) { //phe thứ 3
+            if (this.players[voteID1].role * this.players[voteID2].role < 0) { //phe thứ 3
                 this.cupidTeam = true;
             }
+            console.log(`cupid: ${this.players[voteID1].role} * ${this.players[voteID2].role} < 0 ???`)
             return true;
         } else {
             return false;
@@ -420,10 +421,10 @@ class Game {
         this.roleTxt[-2] = '🐺BÁN SÓI';
 
         // PHE DÂN
-        this.roleTxt[0] = '💩DÂN';
         this.roleTxt[1] = '🔍TIÊN TRI';
         this.roleTxt[2] = '🗿BẢO VỆ';
         this.roleTxt[3] = '🔫THỢ SĂN';
+        this.roleTxt[4] = '💩DÂN';
         this.roleTxt[5] = '🔮PHÙ THỦY';
         this.roleTxt[6] = '👴GIÀ LÀNG';
         this.roleTxt[7] = '👼THẦN TÌNH YÊU';
@@ -562,7 +563,7 @@ class Game {
         this.room[roomID].playersTxt = [];
         this.room[roomID].players.forEach(p => {
             this.room[roomID].playersRole[p.joinID] = p.role;
-            this.room[roomID].playersTxt.push(p.id + ': ' + p.first_name); .0
+            this.room[roomID].playersTxt.push(p.id + ': ' + p.first_name);
 
             if (p.role === -1) {
                 this.room[roomID].wolfsID.push(p.joinID);
@@ -581,7 +582,7 @@ class Game {
         while (count > 0) {
             do {
                 rand = Math.floor((Math.random() * this.room[roomID].players.length));
-            } while (this.room[roomID].players[rand].role != 0)
+            } while (this.room[roomID].players[rand].role != 4)
             this.room[roomID].logs.push(`${this.roleTxt[role]} > ${this.room[roomID].players[rand].first_name}`);
             this.room[roomID].players[rand].role = role;
             count--;
