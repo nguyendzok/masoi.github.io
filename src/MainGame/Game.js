@@ -283,6 +283,7 @@ class Room {
     }
     see(joinID, voteID, trueCallback, falseCallback) {
         if (!this.roleDone[joinID] && this.players[voteID] && this.alivePlayer[this.players[voteID].joinID]) {
+            this.roleDoneBy(joinID);
             if (this.oldManID != undefined && this.oldManLive <= 0) { // có GIÀ LÀNG đã chết
                 trueCallback(0); // già làng chết: soi ra DÂN
             } else {
