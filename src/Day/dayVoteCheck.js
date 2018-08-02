@@ -1,5 +1,6 @@
 const { roomChatAll } = require('../Chat/Utils');
 const roomRoleChat = require('../Night/roomRoleChat');
+const gameIsNotEndCheck = require('../MainGame/gameIsNotEndCheck');
 
 // module này thực hiện khi vote xong!
 module.exports = async (gamef, bot, userRoom) => {
@@ -19,7 +20,7 @@ module.exports = async (gamef, bot, userRoom) => {
   } else {
     await roomChatAll(bot, gamef.getRoom(userRoom).players, 0, `😇Không ai bị treo cổ do có số vote bằng nhau hoặc người bị treo đã tự sát! Mọi người đi ngủ`);
     gamef.getRoom(userRoom).newLog(`😇Không ai bị treo cổ do có số vote bằng nhau hoặc người bị treo đã tự sát!`);
-    gameIsNotEndCheck(userRoom, async () => {
+    gameIsNotEndCheck(gamef, bot, userRoom, async () => {
       // Đêm tiếp theo
       gamef.getRoom(userRoom).dayNightSwitch();
       roomChatAll(bot, gamef.getRoom(userRoom).players, 0, `🌛Đêm thứ ${gamef.getRoom(userRoom).day}🌛`);
