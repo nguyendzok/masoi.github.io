@@ -2,7 +2,6 @@ const { asyncForEach } = require('../Chat/Utils');
 
 module.exports = async (gamef, bot, userRoom) => {
     await asyncForEach(gamef.getRoom(userRoom).players, (p) => {
-        gamef.getRoom(userRoom).roleDoneBy(p.joinID);
         if (p && gamef.getRoom(userRoom).alivePlayer[p.joinID]) {
             console.log(`$ ROOM ${userRoom + 1} > ${gamef.roleTxt[p.role]} > ${p.first_name}`);
             let wolfList = gamef.getRoom(userRoom).wolfsTxt.join(' ; ');
