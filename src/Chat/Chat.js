@@ -25,7 +25,7 @@ module.exports = (gamef, bot) => {
                 if (gamef.getRoom(userRoom).cupidsID.indexOf(joinID) != -1) { // cặp đôi
                     if (chatTxt.match(/\/p.(\w+.?)+/g)) { //private chat
                         let newChatTxt = chatTxt.match(/(?<=\/p\s).*/g)
-                        roomWolfChatAll(bot, gamef.getRoom(userRoom).cupidsID, joinID, '*' + user.first_name + '*: ' + newChatTxt);
+                        return roomWolfChatAll(bot, gamef.getRoom(userRoom).cupidsID, joinID, '*' + user.first_name + '*: ' + newChatTxt);
                     }
                 }
                 if (gamef.getRoom(userRoom).isNight) { // ban đêm
@@ -128,7 +128,7 @@ module.exports = (gamef, bot) => {
                         } else {
                             chat.say('```\nBạn không thể trò chuyện trong đêm!\n```');
                         }
-                    } else if (userRole == 7) { // là THẦN TÌNH YÊU
+                    } else if (userRole == 7) { // là THẦN TÌNH YÊU cupid
                         if (chatTxt.match(/\/cupid.[0-9]+.[0-9]+/g)) {// ghép cặp
                             let voteID1 = parseInt(chatTxt.match(/[0-9]+/g)[0]);
                             let voteID2 = parseInt(chatTxt.match(/[0-9]+/g)[1]);
@@ -139,8 +139,12 @@ module.exports = (gamef, bot) => {
                                 gamef.getRoom(userRoom).newLog(`👼CUPID đã ghép cặp ${gamef.getRoom(userRoom).playersTxt[voteID1]} với ${gamef.getRoom(userRoom).playersTxt[voteID2]}!`)
                                 let user1 = gamef.getRoom(userRoom).players[voteID1];
                                 let user2 = gamef.getRoom(userRoom).players[voteID2];
-                                bot.say(user1.joinID, `\`\`\`\n👼Bạn đã bị ghép đôi với ${user2.first_name}\n\`\`\``);
-                                bot.say(user2.joinID, `\`\`\`\n👼Bạn đã bị ghép đôi với ${user1.first_name}\n\`\`\``);
+                                let thirdParty = ``;
+                                if (gamef.getRoom(userRoom).cupidTeam) {
+                                    thirdParty = `\n👼Bạn giờ thuộc phe thứ 3 CẶP ĐÔI`;
+                                }
+                                bot.say(user1.joinID, `\`\`\`\n👼Bạn đã bị ghép đôi với ${user2.first_name}\n/p <nội dung> để chat riêng${thirdParty}\n\`\`\``);
+                                bot.say(user2.joinID, `\`\`\`\n👼Bạn đã bị ghép đôi với ${user1.first_name}\n/p <nội dung> để chat riêng${thirdParty}\n\`\`\``);
                                 // kiểm tra đã hết đêm chưa?
                                 gamef.func(nightDoneCheck, bot, userRoom);
                             }
