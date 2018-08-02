@@ -128,7 +128,7 @@ module.exports = (gamef, bot) => {
                         } else {
                             chat.say('```\nBạn không thể trò chuyện trong đêm!\n```');
                         }
-                    } else if (userRole == 6) { // là THẦN TÌNH YÊU
+                    } else if (userRole == 7) { // là THẦN TÌNH YÊU
                         if (chatTxt.match(/\/cupid.[0-9]+.[0-9]+/g)) {// ghép cặp
                             let voteID1 = chatTxt.match(/[0-9]+/g)[0];
                             let voteID2 = chatTxt.match(/[0-9]+/g)[1];
