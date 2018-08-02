@@ -21,13 +21,13 @@ module.exports = (gamef, bot, userRoom) => {
                         dayNotify(gamef, bot, userRoom, false);
                         return;
                     } else {
-                        if (payload.message.text.match(/\/yes/g)) { //yes
+                        if (payload.message.text.match(/\/yes/g)) { // cứu
                             gamef.getRoom(userRoom).witchUseSave();
                             convo.say(`🔮Bạn đã cứu *${deathTxt}* thành công!`);
                             gamef.getRoom(userRoom).newLog(`🔮Phù thủy *${gamef.getRoom(userRoom).getPlayer(gamef.getRoom(userRoom).witchID).first_name}* đã cứu *${deathTxt}*!`);
                             convo.end();
                             dayNotify(gamef, bot, userRoom, true);
-                        } else { // no
+                        } else { // không cứu
                             convo.end();
                             dayNotify(gamef, bot, userRoom, false);
                         }
@@ -35,8 +35,8 @@ module.exports = (gamef, bot, userRoom) => {
                 });
             };
 
-            //Call phù thủy
-            if (deathID != -1 && gamef.getRoom(userRoom).players[deathID].role != 4 && gamef.getRoom(userRoom).witchID != undefined && gamef.getRoom(userRoom).witchSaveRemain) { //phù thủy còn quyền cứu, nạn nhân không phải bán sói
+            //Call phù thủy khi: có người chết, người chết ko phải bán sói, còn phù thủy, còn quyền cứu
+            if (deathID != -1 && gamef.getRoom(userRoom).players[deathID].role != -2 && gamef.getRoom(userRoom).witchID != undefined && gamef.getRoom(userRoom).witchSaveRemain) { //phù thủy còn quyền cứu, nạn nhân không phải bán sói
                 bot.conversation(gamef.getRoom(userRoom).witchID, (convo) => {
                     askForSave(convo);
                 });

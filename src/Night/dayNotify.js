@@ -39,7 +39,7 @@ module.exports = async (gamef, bot, userRoom, witchSaved) => {
         });
     }
     //là BÁN SÓI
-    if (deathID != -1 && gamef.getRoom(userRoom).players[deathID].role == 4) {
+    if (deathID != -1 && gamef.getRoom(userRoom).players[deathID].role == -2) {
         let halfWolfjoinID = gamef.getRoom(userRoom).players[deathID].joinID;
         let halfWolfTxt = gamef.getRoom(userRoom).players[deathID].first_name;
         await bot.say(halfWolfjoinID, `\`\`\`\nBạn đã bị sói cắn!\nTừ giờ bạn là 🐺SÓI!\n\`\`\``);
@@ -47,6 +47,16 @@ module.exports = async (gamef, bot, userRoom, witchSaved) => {
         gamef.getRoom(userRoom).newLog(`🐺BÁN SÓI *${halfWolfTxt}* bị cắn và trở thành 🐺SÓI`);
         console.log(`$ ROOM ${userRoom + 1} > HALF WOLF!`);
     }
+
+    //là GIÀ LÀNG
+    if (deathID != -1 && gamef.getRoom(userRoom).players[deathID].role == 6) {
+        let oldManjoinID = gamef.getRoom(userRoom).players[deathID].joinID;
+        let oldManTxt = gamef.getRoom(userRoom).players[deathID].first_name;
+        await bot.say(oldManjoinID, `\`\`\`\nBạn đã bị SÓI cắn!\nBạn chỉ còn 1 mạng!\nHãy bảo trọng =))\n\`\`\``);
+        gamef.getRoom(userRoom).newLog(`👴GIÀ LÀNG *${oldManTxt}* bị cắn lần 1!`);
+        console.log(`$ ROOM ${userRoom + 1} > OLD MAN FIRST BLOOD!`);
+    }
+
     if (dieCount == 0) {
         console.log(`$ ROOM ${userRoom + 1} > NOBODY DIED!`);
         gamef.getRoom(userRoom).newLog(`${deathID != -1 ? `🔪 *${deathTxt}* bị cắn nhưng không chết!\n` : `🎊Sói không thống nhất được số vote!\n`}🎊Đêm hôm đấy không ai chết cả!`);

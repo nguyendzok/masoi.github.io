@@ -6,7 +6,7 @@ async function asyncForEach(array, mapCallback, /*callback*/) {
     each.forEach(async (action, index) => {
         try {
             await action
-            console.log('##  ROOM ROLE CHAT : ', index);
+            // console.log('##  ROOM ROLE CHAT : ', index);
         } catch (e) {
             console.error('## ForEach ERR at Utils.js : ', e)
         }
