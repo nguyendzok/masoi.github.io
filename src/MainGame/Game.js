@@ -311,6 +311,9 @@ class Room {
             if (this.players[voteID1].role * this.players[voteID1].role < 0) { //phe thứ 3
                 this.cupidTeam = true;
             }
+            return true;
+        } else {
+            return false;
         }
     }
     newLog(log) {

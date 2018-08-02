@@ -130,8 +130,8 @@ module.exports = (gamef, bot) => {
                         }
                     } else if (userRole == 7) { // là THẦN TÌNH YÊU
                         if (chatTxt.match(/\/cupid.[0-9]+.[0-9]+/g)) {// ghép cặp
-                            let voteID1 = chatTxt.match(/[0-9]+/g)[0];
-                            let voteID2 = chatTxt.match(/[0-9]+/g)[1];
+                            let voteID1 = parseInt(chatTxt.match(/[0-9]+/g)[0]);
+                            let voteID2 = parseInt(chatTxt.match(/[0-9]+/g)[1]);
                             if (!gamef.getRoom(userRoom).cupid(joinID, voteID1, voteID2)) {
                                 chat.say(`\`\`\`\nBạn không thể ghép 2 người chơi không tồn tại!\n\`\`\``);
                             } else {
