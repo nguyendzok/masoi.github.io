@@ -136,7 +136,7 @@ module.exports = (gamef, bot) => {
                                 chat.say(`\`\`\`\nBạn không thể ghép 2 người chơi không tồn tại!\n\`\`\``);
                             } else {
                                 await chat.say(`👼Bạn đã ghép cặp ${gamef.getRoom(userRoom).playersTxt[voteID1]} với ${gamef.getRoom(userRoom).playersTxt[voteID2]}!\nBạn đã hoàn thành nhiệm vụ!`);
-                                gamef.getRoom(userRoom).newLog(`👼CUPID ${gamef.getRoom(userRoom).getPlayer(gamef.getRoom(userRoom).witchID).first_name} đã ghép cặp ${gamef.getRoom(userRoom).playersTxt[voteID1]} với ${gamef.getRoom(userRoom).playersTxt[voteID2]}!`)
+                                gamef.getRoom(userRoom).newLog(`👼CUPID đã ghép cặp ${gamef.getRoom(userRoom).playersTxt[voteID1]} với ${gamef.getRoom(userRoom).playersTxt[voteID2]}!`)
                                 let user1 = gamef.getRoom(userRoom).players[voteID1];
                                 let user2 = gamef.getRoom(userRoom).players[voteID2];
                                 bot.say(user1.joinID, `\`\`\`\n👼Bạn đã bị ghép đôi với ${user2.first_name}\n\`\`\``);
