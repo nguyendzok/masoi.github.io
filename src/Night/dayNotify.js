@@ -11,7 +11,7 @@ module.exports = async (gamef, bot, userRoom, witchSaved) => {
     }
     let dieCount = 0;
 
-    let chatAllTxt = `🌞Trời sáng rồi mọi người dậy đi\n`;
+    let chatAllTxt = `\`\`\`\n🌞Trời sáng rồi mọi người dậy đi\n`;
 
     // SÓI CẮN
     if (!witchSaved && gamef.getRoom(userRoom).kill()) {
@@ -78,6 +78,7 @@ module.exports = async (gamef, bot, userRoom, witchSaved) => {
         gamef.getRoom(userRoom).newLog(`${deathID != -1 ? `🔪 *${deathTxt}* bị cắn nhưng không chết!\n` : `🎊Sói không thống nhất được số vote!\n`}🎊Đêm hôm đấy không ai chết cả!`);
         chatAllTxt += `🎊Đêm hôm qua không ai chết cả!`;
     }
+    chatAllTxt += `\n\`\`\``;
     await roomChatAll(bot, gamef.getRoom(userRoom).players, 0, chatAllTxt);
 
 
