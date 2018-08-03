@@ -1,5 +1,5 @@
 const { asyncForEach, roomChatAll } = require('../Chat/Utils');
-//const nightDoneCheck = require('../Night/nightDoneCheck');
+const nightDoneCheck = require('../Night/nightDoneCheck');
 
 module.exports = async (gamef, bot, userRoom) => {
 
