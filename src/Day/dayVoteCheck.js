@@ -1,5 +1,5 @@
 const { roomChatAll } = require('../Chat/Utils');
-const roomRoleChat = require('../Night/roomRoleChat');
+const nightRoleChat = require('../Night/roomRoleChat');
 const gameIsNotEndCheck = require('../MainGame/gameIsNotEndCheck');
 const yesNoVoteCheck = require('../Day/yesNoVoteCheck');
 
@@ -37,7 +37,7 @@ module.exports = (gamef, bot, userRoom) => {
         gamef.getRoom(userRoom).dayNightSwitch();
         roomChatAll(bot, gamef.getRoom(userRoom).players, 0, `🌛Đêm thứ ${gamef.getRoom(userRoom).day}🌛`);
         gamef.getRoom(userRoom).newLog(`🌛Đêm thứ ${gamef.getRoom(userRoom).day}🌛++++++++++`);
-        gamef.func(roomRoleChat, bot, userRoom);
+        gamef.func(nightRoleChat, bot, userRoom);
       });
     }
   });
