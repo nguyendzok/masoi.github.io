@@ -1,5 +1,6 @@
 const { roomChatAll } = require('../Chat/Utils');
 const gameIsNotEndCheck = require('../MainGame/gameIsNotEndCheck');
+const dayVoteCheck = require('../Day/dayVoteCheck');
 
 module.exports = async (gamef, bot, userRoom, witchSaved) => {
     let deathID = gamef.getRoom(userRoom).deathID;
@@ -91,9 +92,19 @@ module.exports = async (gamef, bot, userRoom, witchSaved) => {
             console.log(`$ ROOM ${userRoom + 1} > 1 MINUTE REMAINING`);
             let time = new Date(Date.now() + 1 * 60 * 1000);
             gamef.getRoom(userRoom).addSchedule(time, () => {
-                roomChatAll(bot, gamef.getRoom(userRoom).players, 0, `⏰Đã hết thời gian, mọi người vote một người để treo cổ!\n/vote <id> để treo cổ 1 người\n${playersInRoomTxt}`);
+                roomChatAll(bot, gamef.getRoom(userRoom).players, 0, `⏰Đã hết thời gian, mọi người có 1 PHÚT để vote một người để treo cổ!\n/vote <id> để treo cổ 1 người\n${playersInRoomTxt}`);
                 gamef.getRoom(userRoom).chatOFF();
                 console.log(`$ ROOM ${userRoom + 1} > END OF DISCUSSION!`);
+                // tự động vote:
+                gamef.getRoom(userRoom).players.forEach((p, index, players) => {
+                    let time = new Date(Date.now() + 60 * 1000);
+                    players[index].addSchedule(time, () => {
+                        roomChatAll(bot, gamef.getRoom(userRoom).players, 0, `😈${p.first_name} đã không kịp bỏ phiếu!`);
+                        gamef.getRoom(userRoom).vote(p.joinID, -1);
+                        // kiểm tra đã VOTE XONG chưa?
+                        gamef.func(dayVoteCheck, bot, userRoom);
+                    });
+                });
             });
         });
     });

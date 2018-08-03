@@ -154,15 +154,15 @@ module.exports = (gamef, bot) => {
                     }
                 } else {// ban NGÀY, mọi người thảo luận
                     if (!chatTxt.match(/\/vote.-?[0-9]+/g)) {
-                        if (!chatTxt.match(/\/yes/g) && !chatTxt.match(/\/no/g)) {
+                        if (!chatTxt.match(/\/treo/g) && !chatTxt.match(/\/tha/g)) {
                             if (gamef.getRoom(userRoom).chatON || (gamef.getRoom(userRoom).deathID != -1 && gamef.getRoom(userRoom).deathID == gamef.getRoom(userRoom).getPlayer(joinID).id)) { //check xem còn bật chat không?
                                 roomChatAll(bot, gamef.getRoom(userRoom).players, joinID, '*' + user.first_name + '*: ' + chatTxt);
                             } else {
-                                chat.say('```\nBạn không thể trò chuyện\n```');
+                                chat.say('```\nCú pháp vote sai! Bạn không thể trò chuyện\n```');
                             }
                         } else {  //VOTE YES?NO
                             if (gamef.getRoom(userRoom).deathID != -1) {
-                                if (chatTxt.match(/\/yes/g)) { //vote treo cổ
+                                if (chatTxt.match(/\/treo/g)) { //vote treo cổ
                                     gamef.getRoom(userRoom).killOrSaveVote(joinID, true);
                                     await chat.say(`👎Bạn đã vote treo! (${gamef.getRoom(userRoom).saveOrKill})`);
                                     roomChatAll(bot, gamef.getRoom(userRoom).players, joinID, `👎${user.first_name} đã vote treo! (${gamef.getRoom(userRoom).saveOrKill})`);
@@ -190,9 +190,7 @@ module.exports = (gamef, bot) => {
                             chat.say('```\nBạn không thể vote 2 lần hoặc vote người chơi đã chết!\n```');
                         }
                         // kiểm tra đã VOTE XONG chưa?
-                        gamef.getRoom(userRoom).roleIsDone((isDone) => {
-                            gamef.func(dayVoteCheck, bot, userRoom);
-                        });
+                        gamef.func(dayVoteCheck, bot, userRoom);
 
                     }
                 }

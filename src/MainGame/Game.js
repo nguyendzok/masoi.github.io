@@ -8,6 +8,7 @@ class Player {
         this.avatar = p.avatar;
         this.ready = false;
         this.role = 4; // -1: SÓI / 4: DÂN / 1: tiên tri / 2: bảo vệ
+        this.timerSchedule = null; // đếm giờ
     }
     getReady() {
         this.ready = true;
@@ -17,6 +18,14 @@ class Player {
     }
     setRole(role) {
         this.role = role;
+    }
+    addSchedule(time, callback) {
+        this.timerSchedule = schedule.scheduleJob(time, callback);
+    }
+    cancelSchedule() {
+        if (this.timerSchedule) {
+            this.timerSchedule.cancel();
+        }
     }
 }
 class Room {
@@ -168,6 +177,7 @@ class Room {
     roleDoneBy(joinID) {
         this.roleDone[joinID] = true;
         this.roleDoneCount++;
+        this.getPlayer(joinID).cancelSchedule();
     }
     oneReady() {
         this.readyCount++;
@@ -312,6 +322,22 @@ class Room {
             return false;
         }
     }
+    autoRole(joinID, role) {
+        if (this.isNight) {
+            if (role == -1) { // SÓI
+                this.vote(joinID, -1);
+            } else if (role == 2) { // bảo vệ
+                this.saveID = -1;
+            } else if (role == 3) { // thợ săn
+                this.fireID = -1;
+            } else if (role == 7) { // CUPID
+                // không ghép đôi!
+            }
+        } else {
+            this.vote(joinID, -1);
+        }
+        this.roleDoneBy(joinID);
+    }
     newLog(log) {
         this.logs.push(log);
     }
@@ -425,9 +451,6 @@ class Game {
         this.roleTxt[5] = '🔮PHÙ THỦY';
         this.roleTxt[6] = '👴GIÀ LÀNG';
         this.roleTxt[7] = '👼THẦN TÌNH YÊU';
-
-        // PHE CẶP ĐÔI
-        this.roleTxt[20] = '👼CẶP ĐÔI PHE 3';
     }
     getUserRoom(joinID) {
         return this.userRoom[joinID];
