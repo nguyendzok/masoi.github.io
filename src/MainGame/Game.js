@@ -331,7 +331,7 @@ class Room {
             } else if (role == 3) { // thợ săn
                 this.fireID = -1;
             } else if (role == 7) { // CUPID
-                // không ghép đôi!
+                this.getPlayer(joinID).setRole(4);
             }
         } else {
             this.vote(joinID, -1);

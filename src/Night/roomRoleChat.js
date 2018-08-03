@@ -40,7 +40,7 @@ module.exports = async (gamef, bot, userRoom) => {
                 });
             });
         }
-    })
+    });
 
     await asyncForEach(gamef.getRoom(userRoom).players, (p) => {
         if (p && gamef.getRoom(userRoom).alivePlayer[p.joinID]) {

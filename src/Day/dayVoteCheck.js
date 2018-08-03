@@ -32,7 +32,7 @@ module.exports = (gamef, bot, userRoom) => {
     } else {
       await roomChatAll(bot, gamef.getRoom(userRoom).players, 0, `😇Không ai bị treo cổ do có số vote bằng nhau hoặc người bị treo đã tự sát! Mọi người đi ngủ`);
       gamef.getRoom(userRoom).newLog(`😇Không ai bị treo cổ do có số vote bằng nhau hoặc người bị treo đã tự sát!`);
-      gameIsNotEndCheck(gamef, bot, userRoom, async () => {
+      gameIsNotEndCheck(gamef, bot, userRoom, () => {
         // Đêm tiếp theo
         gamef.getRoom(userRoom).dayNightSwitch();
         roomChatAll(bot, gamef.getRoom(userRoom).players, 0, `🌛Đêm thứ ${gamef.getRoom(userRoom).day}🌛`);
