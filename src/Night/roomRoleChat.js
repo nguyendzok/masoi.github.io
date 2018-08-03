@@ -9,7 +9,7 @@ module.exports = async (gamef, bot, userRoom) => {
         if (p.role == -2 || p.role == 4 || p.role == 6) {
             return;
         }
-        if (p.role == 1) { // SÓI có 1 phút 30 giây
+        if (p.role == -1) { // SÓI có 1 phút 30 giây
             let time = new Date(Date.now() + 60 * 1000);
             players[index].addSchedule(time, () => {
                 roomChatAll(bot, gamef.getRoom(userRoom).players, 0, `\`\`\`\n⏰Trời sắp sáng rồi! Còn 30 giây...\n\`\`\``);
