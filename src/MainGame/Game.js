@@ -209,35 +209,29 @@ class Room {
                 this.wolfsCount++;
                 this.villagersCount--;
                 return false;
-            } else if (this.players[this.deathID].role === 6) { //là Già làng
+            }
+            if (this.players[this.deathID].role === 6) { //là Già làng
                 if (this.isNight) {
                     this.oldManLive--;
                     if (this.oldManLive > 0) { // còn 1 mạng
                         return false;
-                    } else { // hết mạng :v
-                        this.killAction(this.deathID);
-                        console.log(`$ ROOM ${this.id + 1} > OLD MAN ${this.deathID} DIED !!!`);
-                        return true;
                     }
                 } else {
                     this.oldManLive = 0;
-                    this.killAction(this.deathID);
-                    return true;
                 }
-            } else {
-                this.killAction(this.deathID);
-                if (this.players[this.deathID].role === 3) { //là thợ săn
-                    this.killAction(this.fireID);
-                }
-                if (this.cupidsID.indexOf(this.players[this.deathID].joinID) != -1) { //là 1 người trong cặp đôi
-                    this.cupidsID.forEach((joinID) => {
-                        this.killAction(this.getPlayer(joinID).id);
-                    });
-                    this.cupidTeam = false;
-                }
-                return true;
             }
-        } else {
+            this.killAction(this.deathID);
+            if (this.players[this.deathID].role === 3) { //là thợ săn
+                this.killAction(this.fireID);
+            }
+            if (this.cupidsID.indexOf(this.players[this.deathID].joinID) != -1) { //là 1 người trong cặp đôi
+                this.cupidsID.forEach((joinID) => {
+                    this.killAction(this.getPlayer(joinID).id);
+                });
+                this.cupidTeam = false;
+            }
+            return true;
+        } else { // bảo vệ thành công hoặc sói không cắn ai
             return false;
         }
     }
@@ -345,7 +339,7 @@ class Room {
     }
     gameIsEnd(callback) {
         console.log("$ ROOM " + (this.id + 1) + " > GAME CHECK: " + this.wolfsCount + ' SÓI/' + this.villagersCount + ' DÂN');
-        if (this.cupidTeam && this.wolfsCount+this.villagersCount == 2){
+        if (this.cupidTeam && this.wolfsCount + this.villagersCount == 2) {
             callback(3);
         } else if (this.wolfsCount >= this.villagersCount) {
             //SÓI THẮNG
@@ -508,7 +502,7 @@ class Game {
         let roleListTxt = "🎲1 TIÊN TRI, 1 BẢO VỆ";
         this.setRole(roomID, 1, 1); // 1 TIÊN TRI +7
         // this.setRole(roomID, 2, 1); // 1 BẢO VỆ +3
-        this.setRole(roomID, 7,1); // THẦN TÌNH YÊU -3
+        this.setRole(roomID, 7, 1); // THẦN TÌNH YÊU -3
         if (len < 6) { // 4,5
             let villagersRemain = (len - 3), balance = 7 + 3 - 6 + (len - 3);
             roleListTxt += `, 1 SÓI`;

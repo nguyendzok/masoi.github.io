@@ -21,7 +21,7 @@ module.exports = async (gamef, bot, userRoom) => {
                 let die2JoinID = gamef.getRoom(userRoom).cupidsID[die1Index == 1 ? 0 : 1];
                 let die2User = gamef.getRoom(userRoom).getPlayer(die2JoinID);
                 chatAllTxt += `\n👻 *${die2User.first_name}* đã CHẾT!`;
-                gamef.getRoom(userRoom).newLog(`👻Tình yêu đã giết chết ${gamef.roleTxt[gamef.getRoom(userRoom).getRoleByID(die2User.id)]} *${die2User.first_name}*`);
+                gamef.getRoom(userRoom).newLog(`👻Tình yêu đã giết chết ${gamef.roleTxt[gamef.getRoom(userRoom).getRoleByID(die2User.id)]} *${die2User.id}: ${die2User.first_name}*`);
                 console.log(`$ ROOM ${userRoom + 1} > ${die2User.first_name} DIED!`);
             }
             chatAllTxt+='\nMọi người đi ngủ!';
