@@ -14,8 +14,8 @@ module.exports = (gamef, bot) => {
 
         const askRoom = (convo) => {
             convo.ask({
-                text: 'Lựa chọn phòng',
-                quickReplies: roomListView,
+                text: 'Cảm ơn bạn đã tham gia Ma sói Game!',
+                quickReplies: ['endGame'],
             }, (payload, convo) => {
                 let roomIDTxt = payload.message?payload.message.text.match(/[0-9]+/g):[];
                 if (!(payload.message) || !roomIDTxt || isNaN(parseInt(roomIDTxt[0]))) {
