@@ -188,8 +188,8 @@ class Room {
     roleDoneBy(joinID, autoDone = false) {
         this.roleDone[joinID] = true;
         this.roleDoneCount++;
+        let player = this.getPlayer(joinID);
         if (!autoDone) { // người làm
-            let player = this.getPlayer(joinID);
             player.cancelSchedule();
             player.backToGame();
         } else {
