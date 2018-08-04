@@ -4,6 +4,12 @@ module.exports = async function (gamef, bot, userRoom) {
 
     // đếm giờ ban đêm
     gamef.getRoom(userRoom).players.forEach((p, index, players) => {
+        if (p.afkCount <= 0) {
+            gamef.getRoom(userRoom).killAction(p.id);
+            roomChatAll(bot, gamef.getRoom(userRoom).players, 0, `\`\`\`\n *${p.first_name}* đã bị kick do AFK quá lâu (uy tín < 0)\n\`\`\``);
+            return;
+        }
+
         if (p && gamef.getRoom(userRoom).alivePlayer[p.joinID]) {
             if (p.role == -2 || p.role == 4 || p.role == 6) { //BÁN SÓI / DÂN / GIÀ LÀNG
                 return;
@@ -58,7 +64,7 @@ module.exports = async function (gamef, bot, userRoom) {
                 isCupidTxt += `💞ID CẶP ĐÔI:\n${gamef.getRoom(userRoom).cupidsTxt.join(' ; ')}\n\n`;
             }
 
-            isCupidTxt += `Uy tín của bạn là: ${(3 - p.afkCount) * 10}/60\n\n`
+            isCupidTxt += `Uy tín của bạn là: ${(6 - p.afkCount) * 10}/60\n\n`
 
             if (p.role == -1) {//SÓI
                 return bot.say(p.joinID, [{

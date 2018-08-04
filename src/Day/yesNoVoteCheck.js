@@ -10,9 +10,9 @@ module.exports = async (gamef, bot, userRoom) => {
         let deathRoleTxt = gamef.roleTxt[deathRole];
         let deathTxt = gamef.getRoom(userRoom).playersTxt[deathID];
         let dieCount = 0;
-        let chatAllTxt = `👻Đã treo cổ ${deathTxt}!`;
+        let chatAllTxt = `\`\`\`\n👻 *${deathTxt}* đã bị treo cổ theo số đông!`;
         if (gamef.getRoom(userRoom).saveOrKill < 0) {
-            gamef.getRoom(userRoom).newLog(`👻Mọi người đã treo cổ ${deathRoleTxt} *${deathTxt}* với ${(gamef.getRoom(userRoom).aliveCount() + gamef.getRoom(userRoom).saveOrKill) / 2} tha/${(gamef.getRoom(userRoom).aliveCount() - gamef.getRoom(userRoom).saveOrKill) / 2} treo`);
+            gamef.getRoom(userRoom).newLog(`👻Mọi người đã treo cổ ${deathRoleTxt} *${deathTxt}* với tha - treo = ${gamef.getRoom(userRoom).saveOrKill}`);
             gamef.getRoom(userRoom).kill();
             dieCount++;
             if (gamef.getRoom(userRoom).cupidsID.indexOf(gamef.getRoom(userRoom).players[deathID].joinID) != -1) { //người chết là cặp đôi
@@ -24,12 +24,12 @@ module.exports = async (gamef, bot, userRoom) => {
                 gamef.getRoom(userRoom).newLog(`👻Tình yêu đã giết chết ${gamef.roleTxt[gamef.getRoom(userRoom).getRoleByID(die2User.id)]} *${die2User.id}: ${die2User.first_name}*`);
                 console.log(`$ ROOM ${userRoom + 1} > ${die2User.first_name} DIED!`);
             }
-            chatAllTxt+='\nMọi người đi ngủ!';
+            chatAllTxt+='\nMọi người đi ngủ!\n```';
             await roomChatAll(bot, gamef.getRoom(userRoom).players, 0, chatAllTxt);
 
         } else {
             await roomChatAll(bot, gamef.getRoom(userRoom).players, 0, `😇Đã tha chết cho ${deathTxt}! Mọi người đi ngủ`);
-            gamef.getRoom(userRoom).newLog(`😇Mọi người tha chết cho ${deathRoleTxt} *${deathTxt}* với ${(gamef.getRoom(userRoom).aliveCount() + gamef.getRoom(userRoom).saveOrKill) / 2} tha/${(gamef.getRoom(userRoom).aliveCount() - gamef.getRoom(userRoom).saveOrKill) / 2} treo`);
+            gamef.getRoom(userRoom).newLog(`😇Mọi người tha chết cho ${deathRoleTxt} *${deathTxt}* với tha - treo = ${gamef.getRoom(userRoom).saveOrKill}`);
         }
         gameIsNotEndCheck(gamef, bot, userRoom, () => {
             // Đêm tiếp theo
