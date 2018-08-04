@@ -31,7 +31,7 @@ class Player {
         }
     }
     afk() {
-        this.afkCount++;
+        this.afkCount+=2;
     }
     backToGame() {
         if (this.afkCount > 0) {

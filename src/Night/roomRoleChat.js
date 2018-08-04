@@ -16,7 +16,7 @@ module.exports = async function (gamef, bot, userRoom) {
                     console.log(`$ ROOM ${userRoom + 1} > TIMER > WOLF > 30 SECONDS REMAINING`);
                     players[index].addSchedule(time, () => {
                         console.log(`$ ROOM ${userRoom + 1} > AUTO ROLE > WOLF`);
-                        bot.say(p.joinID, `\`\`\`\n⏰Bạn đã ngủ quên mà không cắn ai! (-10 uy tín)\n\`\`\``);
+                        bot.say(p.joinID, `\`\`\`\n⏰Bạn đã ngủ quên mà không cắn ai! (-20 uy tín)\n\`\`\``);
                         gamef.getRoom(userRoom).autoRole(p.joinID, p.role);
                         gamef.func(nightDoneCheck, bot, userRoom);
                     });
@@ -33,7 +33,7 @@ module.exports = async function (gamef, bot, userRoom) {
                     console.log(`$ ROOM ${userRoom + 1} > TIMER > 15 SECONDS REMAINING`);
                     let time = new Date(Date.now() + 15 * 1000);
                     players[index].addSchedule(time, () => {
-                        bot.say(p.joinID, `⏰Hết giờ! Bạn đã mất quyền năng! (-10 uy tín)`);
+                        bot.say(p.joinID, `⏰Hết giờ! Bạn đã mất quyền năng! (-20 uy tín)`);
                         gamef.getRoom(userRoom).autoRole(p.joinID, p.role);
                         console.log(`$ ROOM ${userRoom + 1} > AUTO ROLE > ${p.first_name} > ${p.role}`);
                         gamef.func(nightDoneCheck, bot, userRoom);
@@ -58,7 +58,7 @@ module.exports = async function (gamef, bot, userRoom) {
                 isCupidTxt += `💞ID CẶP ĐÔI:\n${gamef.getRoom(userRoom).cupidsTxt.join(' ; ')}\n\n`;
             }
 
-            isCupidTxt += `Uy tín của bạn là: ${(3 - p.afkCount) * 10}/30\n\n`
+            isCupidTxt += `Uy tín của bạn là: ${(3 - p.afkCount) * 10}/60\n\n`
 
             if (p.role == -1) {//SÓI
                 return bot.say(p.joinID, [{

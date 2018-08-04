@@ -21,10 +21,10 @@ module.exports = (gamef, bot, userRoom) => {
         console.log(`$ ROOM ${userRoom + 1} > END OF TRĂN TRỐI :))`);
         // timer để vote treo cổ
         gamef.getRoom(userRoom).players.forEach((p, index, players) => {
-          if (p && gamef.getRoom(userRoom).alivePlayer[p.joinID]) {
+          if (p && gamef.getRoom(userRoom).alivePlayer[p.joinID] && !gamef.getRoom(userRoom).roleDone[p.joinID]) {
             let time = new Date(Date.now() + 60 * 1000);
             players[index].addSchedule(time, () => {
-              roomChatAll(bot, gamef.getRoom(userRoom).players, 0, `👍👎${user.first_name} đã không kịp vote (${gamef.getRoom(userRoom).saveOrKill})`);
+              roomChatAll(bot, gamef.getRoom(userRoom).players, 0, `👍👎${user.first_name} đã không kịp vote (-20 uy tín)`);
               gamef.getRoom(userRoom).roleDoneBy(p.joinID, true);
               gamef.func(yesNoVoteCheck, bot, userRoom);
             });
