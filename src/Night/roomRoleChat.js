@@ -15,7 +15,7 @@ module.exports = async function (gamef, bot, userRoom) {
                 let time = new Date(Date.now() + 30 * 1000);
                 players[index].addSchedule(time, () => {
                     console.log(`$ ROOM ${userRoom + 1} > WOLFS > AUTO MORNING!`);
-                    bot.say(p.joinID, `\`\`\`\n⏰Bạn đã ngủ quên, trời sáng mất rồi!\n\`\`\``);
+                    bot.say(p.joinID, `\`\`\`\n⏰Bạn đã ngủ quên nên không cắn ai!\n\`\`\``);
                     gamef.getRoom(userRoom).autoRole(p.joinID, p.role);
                     gamef.func(nightDoneCheck, bot, userRoom);
                 });
