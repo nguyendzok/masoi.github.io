@@ -13,8 +13,13 @@ module.exports = (gamef, bot) => {
             if (!gamef.getRoom(userRoom).ingame) {
                 gamef.getRoom(userRoom).deletePlayer(joinID);
                 gamef.setUserRoom(joinID, undefined);
+                
                 chat.say(`Bạn đã rời phòng chơi ${userRoom + 1}!`);
-                roomChatAll(bot, gamef.getRoom(userRoom).players, joinID, `${user.first_name} đã rời phòng chơi ${userRoom + 1}!`);
+                // notice new player to everyone in room
+                let playerListView = gamef.getRoomPlayerView(roomID);
+                roomChatAll(bot, gamef.getRoom(roomID).players, 0, [{
+                    cards: playerListView
+                }, `${user.first_name} đã rời phòng chơi!`]);
             } else {
                 gamef.getRoom(userRoom).killAction(user.id);
                 leaveRole = user.role;

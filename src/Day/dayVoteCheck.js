@@ -1,10 +1,10 @@
 const { roomChatAll } = require('../Chat/Utils');
-const nightRoleChat = require('../Night/roomRoleChat');
+const roomRoleChat = require('../Night/roomRoleChat');
 const gameIsNotEndCheck = require('../MainGame/gameIsNotEndCheck');
 const yesNoVoteCheck = require('../Day/yesNoVoteCheck');
 
 // module này thực hiện khi vote xong!
-module.exports = (gamef, bot, userRoom) => {
+exports = (gamef, bot, userRoom) => {
   gamef.getRoom(userRoom).roleIsDone(async (isDone) => {
     gamef.getRoom(userRoom).findOutDeathID();
     gamef.getRoom(userRoom).cancelSchedule();
@@ -37,7 +37,7 @@ module.exports = (gamef, bot, userRoom) => {
         gamef.getRoom(userRoom).dayNightSwitch();
         roomChatAll(bot, gamef.getRoom(userRoom).players, 0, `🌛Đêm thứ ${gamef.getRoom(userRoom).day}🌛`);
         gamef.getRoom(userRoom).newLog(`🌛Đêm thứ ${gamef.getRoom(userRoom).day}🌛++++++++++`);
-        gamef.func(nightRoleChat, bot, userRoom);
+        gamef.func(roomRoleChat, bot, userRoom);
       });
     }
   });
