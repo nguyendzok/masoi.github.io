@@ -14,7 +14,7 @@ module.exports = (gamef, bot) => {
 
         const askRoom = (convo) => {
             convo.ask({
-                text: 'Cảm ơn bạn đã tham gia Ma sói Game!\nGame hiện đã ngừng phát triển\nMọi lỗi phát sinh khi chơi sẽ không được fix :v\nBạn đồng ý chơi với chấp nhận bug\nLựa chọn phòng:',
+                text: 'Cảm ơn bạn đã tham gia Ma sói Game!\nGame hiện đã ngừng phát triển\nMọi lỗi phát sinh khi chơi vui lòng liên hệ admin\nBạn đồng ý chơi thử nghiệm và có thể gặp lỗi\nLựa chọn phòng:',
                 quickReplies: roomListView,
             }, (payload, convo) => {
                 let roomIDTxt = payload.message?payload.message.text.match(/[0-9]+/g):[];

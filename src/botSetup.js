@@ -20,10 +20,21 @@ module.exports = (bot) => {
             ]
         },
         {
-            type: 'nested', title: 'Tiện ích khi chơi...',
+            type: 'nested', title: 'Tiện ích...',
             call_to_actions: [
-                { type: 'postback', title: 'Xem DS người chơi /info', payload: 'VIEW_PLAYER_IN_ROOM' },
-                { type: 'postback', title: 'Đổi tên /rename', payload: 'USER_RENAME' },
+                {
+                    type: 'nested', title: 'Tiện ích người chơi...',
+                    call_to_actions: [
+                        { type: 'postback', title: 'Đổi tên /rename', payload: 'USER_RENAME' },
+                    ]
+                },
+                {
+                    type: 'nested', title: 'Tiện ích phòng chơi...',
+                    call_to_actions: [
+                        { type: 'postback', title: 'Xem DS người chơi /info', payload: 'VIEW_PLAYER_IN_ROOM' },
+                        { type: 'postback', title: 'Thêm phòng chơi /new', payload: 'NEW_ROOM' },
+                    ]
+                },
                 { type: 'postback', title: 'ADMIN COMMAND /admin', payload: 'ADMIN_COMMAND' },
             ]
         },

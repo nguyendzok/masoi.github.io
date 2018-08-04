@@ -211,6 +211,8 @@ class Room {
     killAction(deathID) {
         if (this.roleDone[this.players[deathID].joinID]) { //người tự sát đã thực hiện ROLE
             this.roleDoneCount--;
+        } else {
+            this.players[deathID].cancelSchedule();
         }
         if (this.players[deathID].role == 5) { //người chết là phù thủy
             this.witchID = undefined;
@@ -219,7 +221,7 @@ class Room {
         }
         if (this.alivePlayer[this.players[deathID].joinID]) {
             this.alivePlayer[this.players[deathID].joinID] = false;
-            this.playersTxt[deathID] = '💀CHẾT:' + this.playersTxt[deathID].substr(2, this.playersTxt[deathID].length - 2) + '💀';
+            this.playersTxt[deathID] = '💀:' + this.playersTxt[deathID].substr(2, this.playersTxt[deathID].length - 2);
             if (this.players[deathID].role === -1) {
                 this.wolfsCount--;
             } else {
@@ -421,7 +423,6 @@ class Room {
         }
         if (voteID == -1 && !this.roleDone[joinID]) {
             this.roleDoneBy(joinID, autoVote);
-            this.getPlayer(joinID).backToGame();
             console.log('>>> VOTE NULL -1!')
             return true;
         }
@@ -433,7 +434,6 @@ class Room {
             }
             console.log('>>> VOTE PASSED!')
             this.roleDoneBy(joinID, autoVote);
-            this.getPlayer(joinID).backToGame();
             return true;
         } else {
             console.log('>>> VOTE FAILED (roleAlreadyDONE)!')
@@ -493,6 +493,10 @@ class Game {
         for (let i = 0; i < 5; i++) {
             this.room.push(new Room(i));
         }
+    }
+    newRoom(){
+        this.room.push(new Room(i));
+        return this.room.length;
     }
     getRoom(id) {
         return this.room[id];
