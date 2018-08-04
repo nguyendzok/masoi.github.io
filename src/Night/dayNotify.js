@@ -100,10 +100,12 @@ module.exports = async (gamef, bot, userRoom, witchSaved) => {
                 gamef.getRoom(userRoom).players.forEach((p, index, players) => {
                     let time = new Date(Date.now() + 60 * 1000);
                     players[index].addSchedule(time, () => {
-                        roomChatAll(bot, gamef.getRoom(userRoom).players, 0, `😈${p.first_name} đã không kịp bỏ phiếu!`);
-                        gamef.getRoom(userRoom).autoRole(p.joinID, p.role);
-                        // kiểm tra đã VOTE XONG chưa?
-                        gamef.func(dayVoteCheck, bot, userRoom);
+                        if (p && gamef.getRoom(userRoom).alivePlayer[p.joinID]) {
+                            roomChatAll(bot, gamef.getRoom(userRoom).players, 0, `😈${p.first_name} đã không kịp bỏ phiếu!`);
+                            gamef.getRoom(userRoom).autoRole(p.joinID, p.role);
+                            // kiểm tra đã VOTE XONG chưa?
+                            gamef.func(dayVoteCheck, bot, userRoom);
+                        }
                     });
                 });
             });
