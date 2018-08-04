@@ -9,6 +9,7 @@ class Player {
         this.ready = false;
         this.role = 4; // -1: SÓI / 4: DÂN / 1: tiên tri / 2: bảo vệ
         this.timerSchedule = null; // đếm giờ
+        this.afkCount = 0;
     }
     getReady() {
         this.ready = true;
@@ -25,6 +26,14 @@ class Player {
     cancelSchedule() {
         if (this.timerSchedule) {
             this.timerSchedule.cancel();
+        }
+    }
+    afk() {
+        this.afkCount++;
+    }
+    backToGame(){
+        if (this.afkCount > 0) {
+            this.afkCount--;
         }
     }
 }
@@ -249,6 +258,7 @@ class Room {
         if (killID != -1 && this.players[killID]) {
             this.witchKillRemain = false;
             this.witchKillID = killID;
+            this.getPlayer(joinID).backToGame();
             return true;
         } else {
             return false;
@@ -275,6 +285,7 @@ class Room {
                 this.saveID = voteID;
             }
             this.roleDoneBy(joinID);
+            this.getPlayer(joinID).backToGame();
             return true;
         } else {
             return false;
@@ -283,6 +294,7 @@ class Room {
     fire(joinID, voteID) {
         if (voteID == -1 && !this.roleDone[joinID]) { //bắn lên trời
             this.roleDoneBy(joinID);
+            this.getPlayer(joinID).backToGame();
             return true;
         }
         if (!this.roleDone[joinID] && this.fireID != voteID && this.players[voteID] && this.alivePlayer[this.players[voteID].joinID]) {
@@ -296,6 +308,7 @@ class Room {
     see(joinID, voteID, trueCallback, falseCallback) {
         if (!this.roleDone[joinID] && this.players[voteID] && this.alivePlayer[this.players[voteID].joinID]) {
             this.roleDoneBy(joinID);
+            this.getPlayer(joinID).backToGame();
             if (this.oldManID != undefined && this.oldManLive <= 0) { // có GIÀ LÀNG đã chết
                 trueCallback(4); // già làng chết: soi ra DÂN
             } else {
@@ -326,6 +339,7 @@ class Room {
         if (this.isNight) {
             if (role == -1) { // SÓI
                 this.vote(joinID, -1);
+                this.getPlayer(joinID).afk();
             } else if (role == 2) { // bảo vệ
                 this.saveID = -1;
             } else if (role == 3) { // thợ săn
@@ -335,8 +349,10 @@ class Room {
             }
         } else {
             this.vote(joinID, -1);
+            this.getPlayer(joinID).afk();
         }
         this.roleDoneBy(joinID);
+        this.getPlayer(joinID).afk();
     }
     newLog(log) {
         this.logs.push(log);
@@ -396,8 +412,12 @@ class Room {
         this.resetRoleDone();
     }
     vote(joinID, voteID) {
+        if (!this.isMorning) {
+            return false;
+        }
         if (voteID == -1) {
             this.roleDoneBy(joinID);
+            this.getPlayer(joinID).backToGame();
             return true;
         }
         if (!this.roleDone[joinID] && this.players[voteID] && this.alivePlayer[this.players[voteID].joinID]) {
@@ -407,6 +427,7 @@ class Room {
                 this.voteList[voteID] = 1;
             }
             this.roleDoneBy(joinID);
+            this.getPlayer(joinID).backToGame();
             return true;
         } else {
             return false;
@@ -414,6 +435,7 @@ class Room {
     }
     witchUseSave() {
         this.witchSaveRemain = false;
+        this.getPlayer(joinID).backToGame();
     }
     chatOFF() {
         this.chatON = false;

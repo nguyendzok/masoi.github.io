@@ -24,7 +24,7 @@ module.exports = (gamef, bot, userRoom) => {
           let time = new Date(Date.now() + 60 * 1000);
           players[index].addSchedule(time, () => {
             roomChatAll(bot, gamef.getRoom(userRoom).players, 0, `👍👎${user.first_name} đã không kịp vote (${gamef.getRoom(userRoom).saveOrKill})`);
-            gamef.getRoom(userRoom).roleDoneBy(joinID);
+            gamef.getRoom(userRoom).roleDoneBy(p.joinID);
             gamef.func(yesNoVoteCheck, bot, userRoom);
           });
         });
