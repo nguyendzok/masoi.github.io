@@ -84,10 +84,10 @@ module.exports = async (gamef, bot, userRoom, witchSaved) => {
 
     gameIsNotEndCheck(gamef, bot, userRoom, () => {
         let playersInRoomTxt = gamef.getRoom(userRoom).playersTxt.join(' ; ');
-        roomChatAll(bot, gamef.getRoom(userRoom).players, 0, `⏰Mọi người có 6 phút thảo luận!`);
+        roomChatAll(bot, gamef.getRoom(userRoom).players, 0, `⏰Mọi người có 1 phút thảo luận!`);
         gamef.getRoom(userRoom).dayNightSwitch();
 
-        let time = new Date(Date.now() + 5 * 60 * 1000);
+        let time = new Date(Date.now() + 1 * 60 * 1000);
         gamef.getRoom(userRoom).addSchedule(time, () => {
             roomChatAll(bot, gamef.getRoom(userRoom).players, 0, `⏰CÒN 1 PHÚT THẢO LUẬN\nCác bạn nên cân nhắc kĩ, tránh lan man, nhanh chóng tìm ra kẻ đáng nghi nhất!`);
             console.log(`$ ROOM ${userRoom + 1} > 1 MINUTE REMAINING`);

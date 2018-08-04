@@ -340,18 +340,20 @@ class Room {
             if (role == -1) { // SÓI
                 this.vote(joinID, -1);
                 this.getPlayer(joinID).afk();
-            } else if (role == 2) { // bảo vệ
+                return;
+            }
+            if (role == 2) { // bảo vệ
                 this.saveID = -1;
             } else if (role == 3) { // thợ săn
                 this.fireID = -1;
             } else if (role == 7) { // CUPID
                 this.getPlayer(joinID).setRole(4);
             }
+            this.roleDoneBy(joinID);
         } else {
             this.vote(joinID, -1);
             this.getPlayer(joinID).afk();
         }
-        this.roleDoneBy(joinID);
         this.getPlayer(joinID).afk();
     }
     newLog(log) {

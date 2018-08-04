@@ -16,8 +16,8 @@ module.exports = (gamef, bot) => {
                 
                 chat.say(`Bạn đã rời phòng chơi ${userRoom + 1}!`);
                 // notice new player to everyone in room
-                let playerListView = gamef.getRoomPlayerView(roomID);
-                roomChatAll(bot, gamef.getRoom(roomID).players, 0, [{
+                let playerListView = gamef.getRoomPlayerView(userRoom);
+                roomChatAll(bot, gamef.getRoom(userRoom).players, 0, [{
                     cards: playerListView
                 }, `${user.first_name} đã rời phòng chơi!`]);
             } else {
