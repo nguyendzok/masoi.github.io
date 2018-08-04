@@ -4,7 +4,7 @@ module.exports = async function (gamef, bot, userRoom) {
 
     // đếm giờ ban đêm
     gamef.getRoom(userRoom).players.forEach((p, index, players) => {
-        if (p.afkCount <= 0) {
+        if (p.afkCount >= 6) {
             gamef.getRoom(userRoom).killAction(p.id);
             roomChatAll(bot, gamef.getRoom(userRoom).players, 0, `\`\`\`\n *${p.first_name}* đã bị kick do AFK quá lâu (uy tín < 0)\n\`\`\``);
             return;
