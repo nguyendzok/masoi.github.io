@@ -551,11 +551,12 @@ class Game {
             let villagersRemain = (len - 3), balance = 7 + 3 - 6 + (len - 3);
             roleListTxt += `, 1 SÓI`;
             this.setRole(roomID, -1, 1);  // 1 SÓI -6
-            if (this.trueFalseRandom()) {
-                this.setRole(roomID, 6, 1); // 1 GIÀ LÀNG +0
-                roleListTxt += `, 1 GIÀ LÀNG`;
-                villagersRemain--; balance--;
-            }
+            this.setRole(roomID, 5, 1); // 1 PHÙ THỦY +4
+            // if (this.trueFalseRandom()) {
+            //     this.setRole(roomID, 6, 1); // 1 GIÀ LÀNG +0
+            //     roleListTxt += `, 1 GIÀ LÀNG`;
+            //     villagersRemain--; balance--;
+            // }
             roleListTxt += `, ${villagersRemain} DÂN (CÂN BẰNG: ${balance})`;
         } else if (len < 8) { // 6,7
             let villagersRemain = (len - 2), balance = 7 + 3;
