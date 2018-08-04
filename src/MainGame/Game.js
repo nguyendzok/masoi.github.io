@@ -26,13 +26,14 @@ class Player {
     cancelSchedule() {
         console.log(">>>>>  player timer cancel");
         if (this.timerSchedule) {
+            console.log(">>>>>  player timer cancel: DONE");
             this.timerSchedule.cancel();
         }
     }
     afk() {
         this.afkCount++;
     }
-    backToGame(){
+    backToGame() {
         if (this.afkCount > 0) {
             this.afkCount--;
         }
@@ -184,22 +185,28 @@ class Room {
     getRoleByID(id) {
         return this.players[id].role;
     }
-    roleDoneBy(joinID) {
+    roleDoneBy(joinID, autoDone = false) {
         this.roleDone[joinID] = true;
         this.roleDoneCount++;
-        this.getPlayer(joinID).cancelSchedule();
+        if (!autoDone) { // người làm
+            let player = this.getPlayer(joinID);
+            player.cancelSchedule();
+            player.backToGame();
+        } else {
+            player.afk();
+        }
     }
     oneReady() {
         this.readyCount++;
     }
-    killOrSaveVote(joinID, voteKill) {
+    killOrSaveVote(joinID, voteKill, autoVote = false) {
         if (!this.roleDone[joinID]) {
             if (voteKill) {
                 this.saveOrKill--;
             } else {
                 this.saveOrKill++;
             }
-            this.roleDoneBy(joinID);
+            this.roleDoneBy(joinID, autoVote);
             return true;
         }
     }
@@ -286,7 +293,6 @@ class Room {
                 this.saveID = voteID;
             }
             this.roleDoneBy(joinID);
-            this.getPlayer(joinID).backToGame();
             return true;
         } else {
             return false;
@@ -295,7 +301,6 @@ class Room {
     fire(joinID, voteID) {
         if (voteID == -1 && !this.roleDone[joinID]) { //bắn lên trời
             this.roleDoneBy(joinID);
-            this.getPlayer(joinID).backToGame();
             return true;
         }
         if (!this.roleDone[joinID] && this.fireID != voteID && this.players[voteID] && this.alivePlayer[this.players[voteID].joinID]) {
@@ -309,7 +314,6 @@ class Room {
     see(joinID, voteID, trueCallback, falseCallback) {
         if (!this.roleDone[joinID] && this.players[voteID] && this.alivePlayer[this.players[voteID].joinID]) {
             this.roleDoneBy(joinID);
-            this.getPlayer(joinID).backToGame();
             if (this.oldManID != undefined && this.oldManLive <= 0) { // có GIÀ LÀNG đã chết
                 trueCallback(4); // già làng chết: soi ra DÂN
             } else {
@@ -338,25 +342,23 @@ class Room {
     }
     autoRole(joinID, role) {
         let user = this.getPlayer(joinID);
-        if (this.isNight) {
-            if (role == -1) { // SÓI
-                this.vote(joinID, -1);
-                user.afk();
-                return;
-            }
-            if (role == 2) { // bảo vệ
-                this.saveID = -1;
-            } else if (role == 3) { // thợ săn
-                this.fireID = -1;
-            } else if (role == 7) { // CUPID
-                user.setRole(4);
-            }
-            this.roleDoneBy(joinID);
-        } else {
-            this.vote(joinID, -1);
-            user.afk();
+        if (!this.isNight) { // BAN NGÀY : vote treo cổ
+            this.vote(joinID, -1, true);
+            return;
         }
-        user.afk();
+        // BAN ĐÊM: 
+        if (role == -1) { // SÓI
+            this.vote(joinID, -1, true);
+            return;
+        }
+        if (role == 2) { // bảo vệ
+            this.saveID = -1;
+        } else if (role == 3) { // thợ săn
+            this.fireID = -1;
+        } else if (role == 7) { // CUPID
+            user.setRole(4);
+        }
+        this.roleDoneBy(joinID, true);
     }
     newLog(log) {
         this.logs.push(log);
@@ -401,7 +403,6 @@ class Room {
         console.log(`$ ROOM ${this.id + 1} > DAY <=> NIGHT SWITCH`);
         if (!this.isNight) { // DAY => NIGHT
             this.day++;
-        } else { // NIGHT => DAY
             this.isMorning = true;
         }
         this.isNight = !this.isNight;
@@ -415,13 +416,13 @@ class Room {
         this.isMorning = false;
         this.resetRoleDone();
     }
-    vote(joinID, voteID) {
+    vote(joinID, voteID, autoVote = false) {
         if (!this.isMorning) {
             console.log('>>> VOTE FAILED (NOT MORN)!')
             return false;
         }
-        if (voteID == -1&& !this.roleDone[joinID]) {
-            this.roleDoneBy(joinID);
+        if (voteID == -1 && !this.roleDone[joinID]) {
+            this.roleDoneBy(joinID, autoVote);
             this.getPlayer(joinID).backToGame();
             console.log('>>> VOTE NULL -1!')
             return true;
@@ -433,7 +434,7 @@ class Room {
                 this.voteList[voteID] = 1;
             }
             console.log('>>> VOTE PASSED!')
-            this.roleDoneBy(joinID);
+            this.roleDoneBy(joinID, autoVote);
             this.getPlayer(joinID).backToGame();
             return true;
         } else {
