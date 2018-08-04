@@ -1,6 +1,6 @@
 const { roomChatAll } = require('../Chat/Utils');
 
-module.exports = (gamef, bot, userRoom, callback) => {
+exports = (gamef, bot, userRoom, callback) => {
   gamef.getRoom(userRoom).gameIsEnd(async (winner) => {
     if (winner === 0) {
       callback();

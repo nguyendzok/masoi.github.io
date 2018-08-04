@@ -1,6 +1,6 @@
 const { roomChatAll, roomWolfChatAll } = require('../Chat/Utils');
 
-module.exports = (gamef, bot) => {
+exports = (gamef, bot) => {
     bot.on('attachment', (payload, chat) => {
         let joinID = payload.sender.id;
         const userRoom = gamef.getUserRoom(joinID);
