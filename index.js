@@ -21,6 +21,7 @@ const attachmentChat = require('./src/Chat/AttachmentChat');
 const joinRoom = require('./src/Room/Join');
 const readyRoom = require('./src/Room/Ready');
 const leaveRoom = require('./src/Room/Leave');
+const newRoom = require('./src/Room/New');
 const chatAndVote = require('./src/Chat/Chat');
 const adminCMD = require('./src/Menu/Admin');
 
@@ -48,6 +49,8 @@ gamef.module(joinRoom, bot);
 gamef.module(readyRoom, bot);
 // leave room
 gamef.module(leaveRoom, bot);
+// new room
+gamef.module(newRoom, bot);
 // chat and vote
 gamef.module(chatAndVote, bot);
 
