@@ -24,6 +24,7 @@ class Player {
         this.timerSchedule = schedule.scheduleJob(time, callback);
     }
     cancelSchedule() {
+        console.log(">>>>>  player timer cancel");
         if (this.timerSchedule) {
             this.timerSchedule.cancel();
         }
