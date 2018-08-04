@@ -495,7 +495,7 @@ class Game {
         }
     }
     newRoom(){
-        this.room.push(new Room(i));
+        this.room.push(new Room(this.room.length-1));
         return this.room.length;
     }
     getRoom(id) {
