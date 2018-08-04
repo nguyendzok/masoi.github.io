@@ -415,11 +415,13 @@ class Room {
     }
     vote(joinID, voteID) {
         if (!this.isMorning) {
+            console.log('>>> VOTE FAILED!')
             return false;
         }
-        if (voteID == -1) {
+        if (voteID == -1&& !this.roleDone[joinID]) {
             this.roleDoneBy(joinID);
             this.getPlayer(joinID).backToGame();
+            console.log('>>> VOTE NULL -1!')
             return true;
         }
         if (!this.roleDone[joinID] && this.players[voteID] && this.alivePlayer[this.players[voteID].joinID]) {
@@ -428,6 +430,7 @@ class Room {
             } else {
                 this.voteList[voteID] = 1;
             }
+            console.log('>>> VOTE PASSED!')
             this.roleDoneBy(joinID);
             this.getPlayer(joinID).backToGame();
             return true;
