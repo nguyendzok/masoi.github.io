@@ -1,7 +1,6 @@
 const { asyncForEach, roomChatAll } = require('../Chat/Utils');
-const nightDoneCheck = require('../Night/nightDoneCheck');
 
-exports = async function (gamef, bot, userRoom) {
+module.exports = async function (gamef, bot, userRoom) {
 
     // đếm giờ ban đêm
     gamef.getRoom(userRoom).players.forEach((p, index, players) => {
@@ -117,3 +116,4 @@ exports = async function (gamef, bot, userRoom) {
         }
     })
 }
+const nightDoneCheck = require('../Night/nightDoneCheck');

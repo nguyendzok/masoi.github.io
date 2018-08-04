@@ -4,7 +4,7 @@ const gameIsNotEndCheck = require('../MainGame/gameIsNotEndCheck');
 const yesNoVoteCheck = require('../Day/yesNoVoteCheck');
 
 // module này thực hiện khi vote xong!
-exports = (gamef, bot, userRoom) => {
+module.exports = (gamef, bot, userRoom) => {
   gamef.getRoom(userRoom).roleIsDone(async (isDone) => {
     gamef.getRoom(userRoom).findOutDeathID();
     gamef.getRoom(userRoom).cancelSchedule();

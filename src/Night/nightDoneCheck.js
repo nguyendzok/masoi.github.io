@@ -1,6 +1,6 @@
 const dayNotify = require('../Night/dayNotify');
 
-exports = (gamef, bot, userRoom) => {
+module.exports = (gamef, bot, userRoom) => {
     gamef.getRoom(userRoom).roleIsDone((isDone) => {
         if (isDone) {
             gamef.getRoom(userRoom).findOutDeathID();

@@ -2,7 +2,7 @@ const { roomChatAll } = require('../Chat/Utils');
 const roomRoleChat = require('../Night/roomRoleChat');
 const gameIsNotEndCheck = require('../MainGame/gameIsNotEndCheck');
 
-exports = async (gamef, bot, userRoom) => {
+module.exports = async (gamef, bot, userRoom) => {
     gamef.getRoom(userRoom).roleIsDone(async () => {
         gamef.getRoom(userRoom).cancelSchedule();
         let deathID = gamef.getRoom(userRoom).deathID;

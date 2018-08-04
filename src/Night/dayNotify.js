@@ -2,7 +2,7 @@ const { roomChatAll } = require('../Chat/Utils');
 const gameIsNotEndCheck = require('../MainGame/gameIsNotEndCheck');
 const dayVoteCheck = require('../Day/dayVoteCheck');
 
-exports = async (gamef, bot, userRoom, witchSaved) => {
+module.exports = async (gamef, bot, userRoom, witchSaved) => {
     let deathID = gamef.getRoom(userRoom).deathID;
     let deathTxt, deathRole;
     if (deathID != -1) {

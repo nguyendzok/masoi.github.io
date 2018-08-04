@@ -3,7 +3,7 @@ const nightDoneCheck = require('../Night/nightDoneCheck');
 const dayVoteCheck = require('../Day/dayVoteCheck');
 const yesNoVoteCheck = require('../Day/yesNoVoteCheck');
 
-exports = (gamef, bot) => {
+module.exports = (gamef, bot) => {
     // listen for ROOM CHAT and VOTE
     bot.on('message', (payload, chat, data) => {
         if (data.captured) { return; }
