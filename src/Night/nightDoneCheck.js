@@ -15,6 +15,7 @@ module.exports = (gamef, bot, userRoom) => {
                     text: `🔪Đêm hôm qua: *${deathTxt}* đã CHẾT!\nBạn có 30 giây để cứu?\n/yes hay /no ?`,
                     quickReplies: ['/yes', '/no'],
                 }, (payload, convo) => {
+                    gamef.getRoom(userRoom).cancelSchedule();
                     if (!payload.message || !(payload.message.text.match(/\/yes/g) || payload.message.text.match(/\/no/g))) {
                         convo.say(`\`\`\`\nKhông hợp lệ!\nBạn đã không cứu!\n\`\`\``);
                         convo.end();
@@ -40,8 +41,8 @@ module.exports = (gamef, bot, userRoom) => {
                 bot.conversation(gamef.getRoom(userRoom).witchID, (convo) => {
                     let time = new Date(Date.now() + 30 * 1000);
                     gamef.getRoom(userRoom).addSchedule(time, () => {
-                        console.log(`$ ROOM ${userRoom + 1} > WITCH > AUTO MORNING!`);
-                        convo.say(`\`\`\`\n⏰Bạn đã ngủ quên, trời sáng mất rồi!\n\`\`\``);
+                        console.log(`$ ROOM ${userRoom + 1} > AUTO ROLE > WITCH`);
+                        convo.say(`\`\`\`\n⏰Bạn đã ngủ quên, trời sáng mất rồi! (-10 uy tín)\n\`\`\``);
                         convo.end();
                         dayNotify(gamef, bot, userRoom, false);
                     });

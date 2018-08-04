@@ -4,40 +4,42 @@ module.exports = async function (gamef, bot, userRoom) {
 
     // đếm giờ ban đêm
     gamef.getRoom(userRoom).players.forEach((p, index, players) => {
-        if (p.role == -2 || p.role == 4 || p.role == 6) {
-            return;
-        }
-        if (p.role == -1) { // SÓI có 1 phút 30 giây
-            let time = new Date(Date.now() + 60 * 1000);
-            players[index].addSchedule(time, () => {
-                roomChatAll(bot, gamef.getRoom(userRoom).players, 0, `\`\`\`\n⏰Trời sắp sáng rồi! Còn 30 giây...\n\`\`\``);
-                console.log(`$ ROOM ${userRoom + 1} > WOLFS > 30 SECONDS REMAINING`);
-                let time = new Date(Date.now() + 30 * 1000);
-                players[index].addSchedule(time, () => {
-                    console.log(`$ ROOM ${userRoom + 1} > WOLFS > AUTO MORNING!`);
-                    bot.say(p.joinID, `\`\`\`\n⏰Bạn đã ngủ quên nên không cắn ai!\n\`\`\``);
-                    gamef.getRoom(userRoom).autoRole(p.joinID, p.role);
-                    gamef.func(nightDoneCheck, bot, userRoom);
-                });
-            });
-        } else {
-            let time;
-            if (p.role == 7) { // CUPID có 30 giây
-                time = new Date(Date.now() + 15 * 1000);
-            } else { // còn lại: Tiên tri, bảo vệ, thợ săn, phù thủy có 60 giây
-                time = new Date(Date.now() + 45 * 1000);
+        if (p && gamef.getRoom(userRoom).alivePlayer[p.joinID]) {
+            if (p.role == -2 || p.role == 4 || p.role == 6) { //BÁN SÓI / DÂN / GIÀ LÀNG
+                return;
             }
-            players[index].addSchedule(time, () => {
-                bot.say(p.joinID, `\`\`\`\n⏰Bạn còn 15 giây để thực hiện...\n\`\`\``);
-                console.log(`$ ROOM ${userRoom + 1} > ${p.first_name} > 15 SECONDS REMAINING`);
-                let time = new Date(Date.now() + 15 * 1000);
+            if (p.role == -1) { // SÓI có 1 phút 30 giây
+                let time = new Date(Date.now() + 60 * 1000);
                 players[index].addSchedule(time, () => {
-                    bot.say(p.joinID, `⏰Đã hết thời gian! Bạn đã mất quyền năng đêm nay!`);
-                    gamef.getRoom(userRoom).autoRole(p.joinID, p.role);
-                    console.log(`$ ROOM ${userRoom + 1} > ${p.first_name} > AUTO ROLE ${p.role}`);
-                    gamef.func(nightDoneCheck, bot, userRoom);
+                    let time = new Date(Date.now() + 30 * 1000);
+                    roomChatAll(bot, gamef.getRoom(userRoom).players, 0, `\`\`\`\n⏰Trời sắp sáng rồi! Còn 30 giây...\n\`\`\``);
+                    console.log(`$ ROOM ${userRoom + 1} > TIMER > WOLF > 30 SECONDS REMAINING`);
+                    players[index].addSchedule(time, () => {
+                        console.log(`$ ROOM ${userRoom + 1} > AUTO ROLE > WOLF`);
+                        bot.say(p.joinID, `\`\`\`\n⏰Bạn đã ngủ quên mà không cắn ai! (-10 uy tín)\n\`\`\``);
+                        gamef.getRoom(userRoom).autoRole(p.joinID, p.role);
+                        gamef.func(nightDoneCheck, bot, userRoom);
+                    });
                 });
-            });
+            } else {
+                let time;
+                if (p.role == 7) { // CUPID có 30 giây
+                    time = new Date(Date.now() + 15 * 1000);
+                } else { // còn lại: Tiên tri, bảo vệ, thợ săn, phù thủy có 60 giây
+                    time = new Date(Date.now() + 45 * 1000);
+                }
+                players[index].addSchedule(time, () => {
+                    bot.say(p.joinID, `\`\`\`\n⏰Bạn còn 15 giây để thực hiện...\n\`\`\``);
+                    console.log(`$ ROOM ${userRoom + 1} > TIMER > 15 SECONDS REMAINING`);
+                    let time = new Date(Date.now() + 15 * 1000);
+                    players[index].addSchedule(time, () => {
+                        bot.say(p.joinID, `⏰Hết giờ! Bạn đã mất quyền năng! (-10 uy tín)`);
+                        gamef.getRoom(userRoom).autoRole(p.joinID, p.role);
+                        console.log(`$ ROOM ${userRoom + 1} > AUTO ROLE > ${p.first_name} > ${p.role}`);
+                        gamef.func(nightDoneCheck, bot, userRoom);
+                    });
+                });
+            }
         }
     });
 
@@ -56,7 +58,7 @@ module.exports = async function (gamef, bot, userRoom) {
                 isCupidTxt += `💞ID CẶP ĐÔI:\n${gamef.getRoom(userRoom).cupidsTxt.join(' ; ')}\n\n`;
             }
 
-            isCupidTxt+= `Uy tín của bạn là: ${(3-p.afkCount)*10}/30\n\n`
+            isCupidTxt += `Uy tín của bạn là: ${(3 - p.afkCount) * 10}/30\n\n`
 
             if (p.role == -1) {//SÓI
                 return bot.say(p.joinID, [{
