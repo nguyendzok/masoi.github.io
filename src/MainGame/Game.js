@@ -29,7 +29,7 @@ class Player {
         }
     }
     afk() {
-        this.afkCount+=2;
+        this.afkCount += 2;
     }
     backToGame() {
         if (this.afkCount > 0) {
@@ -209,17 +209,20 @@ class Room {
         }
     }
     killAction(deathID) {
+        if (deathID == -1) {
+            return;
+        }
         if (this.roleDone[this.players[deathID].joinID]) { //người tự sát đã thực hiện ROLE
             this.roleDoneCount--;
-        } else {
+        } else if (this.players[deathID]) {
             this.players[deathID].cancelSchedule();
         }
-        if (this.players[deathID].role == 5) { //người chết là phù thủy
+        if (this.players[deathID] && this.players[deathID].role == 5) { //người chết là phù thủy
             this.witchID = undefined;
             this.witchKillRemain = false;
             this.witchSaveRemain = false;
         }
-        if (this.alivePlayer[this.players[deathID].joinID]) {
+        if (this.players[deathID] && this.alivePlayer[this.players[deathID].joinID]) {
             this.alivePlayer[this.players[deathID].joinID] = false;
             this.playersTxt[deathID] = '💀:' + this.playersTxt[deathID].substr(2, this.playersTxt[deathID].length - 2);
             if (this.players[deathID].role === -1) {
@@ -227,6 +230,17 @@ class Room {
             } else {
                 this.villagersCount--;
             }
+        }
+    }
+    cupidKill(deathID) {
+        if (this.cupidsID.indexOf(this.players[deathID].joinID) != -1) { //là 1 người trong cặp đôi
+            this.cupidsID.forEach((joinID) => {
+                let playerID = this.getPlayer(joinID).id;
+                if (deathID != playerID) {
+                    this.killAction(playerID);
+                }
+            });
+            this.cupidTeam = false;
         }
     }
     kill() {
@@ -248,14 +262,10 @@ class Room {
                 }
             }
             this.killAction(this.deathID);
+            cupidKill(this.deathID);
             if (this.players[this.deathID].role === 3) { //là thợ săn
                 this.killAction(this.fireID);
-            }
-            if (this.cupidsID.indexOf(this.players[this.deathID].joinID) != -1) { //là 1 người trong cặp đôi
-                this.cupidsID.forEach((joinID) => {
-                    this.killAction(this.getPlayer(joinID).id);
-                });
-                this.cupidTeam = false;
+                cupidKill(this.fireID);
             }
             return true;
         } else { // bảo vệ thành công hoặc sói không cắn ai
@@ -275,6 +285,7 @@ class Room {
     witchKillAction(callback) {
         if (this.witchKillID != undefined && this.players[this.witchKillID]) {
             this.killAction(this.witchKillID);
+            this.cupidKill(this.witchKillID);
             let killID = this.witchKillID;
             this.witchKillID = undefined;
             callback(killID);
@@ -494,7 +505,7 @@ class Game {
             this.room.push(new Room(i));
         }
     }
-    newRoom(){
+    newRoom() {
         this.room.push(new Room(this.room.length));
         return this.room.length;
     }
@@ -523,12 +534,9 @@ class Game {
         // create message
         this.room[roomID].players.forEach(m => {
             playerListView.unshift({
-                title: "Người chơi " + (m.id + 1) + ": " + m.last_name + " " + m.first_name,
+                title: "Người chơi " + (m.id + 1) + ": " + m.first_name,
                 image_url: m.avatar,
-                subtitle: `ID người chơi: ${m.id}\n${m.ready ? 'Đã sẵn sàng' : 'Chưa sẵn sàng'}`,
-                // buttons: [
-                //   { type: 'postback', title: m.ready ? 'Đã sẵn sàng' : 'Chưa sẵn sàng', payload: 'button' }
-                // ]
+                subtitle: `Họ và tên: ${m.last_name + " " + m.first_name}\nuserID: ${m.id}\n${m.ready ? 'Đã sẵn sàng' : 'Chưa sẵn sàng'}`,
             });
         });
         return playerListView;
@@ -562,7 +570,7 @@ class Game {
             let villagersRemain = (len - 3), balance = 7 + 3 - 6 + (len - 3);
             roleListTxt += `, 1 SÓI`;
             this.setRole(roomID, -1, 1);  // 1 SÓI -6
-            this.setRole(roomID, 5, 1); // 1 PHÙ THỦY +4
+            this.setRole(roomID, 7, 1); // THẦN TÌNH YÊU -3
             // if (this.trueFalseRandom()) {
             //     this.setRole(roomID, 6, 1); // 1 GIÀ LÀNG +0
             //     roleListTxt += `, 1 GIÀ LÀNG`;

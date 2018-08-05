@@ -158,7 +158,7 @@ module.exports = (gamef, bot) => {
                             if (gamef.getRoom(userRoom).chatON || (gamef.getRoom(userRoom).deathID != -1 && gamef.getRoom(userRoom).deathID == gamef.getRoom(userRoom).getPlayer(joinID).id)) { //check xem còn bật chat không?
                                 roomChatAll(bot, gamef.getRoom(userRoom).players, joinID, '*' + user.first_name + '*: ' + chatTxt);
                             } else {
-                                chat.say('```\nCú pháp vote sai! Bạn không thể trò chuyện\n```');
+                                chat.say('```\nĐã hết thời gian thảo luận!\n```');
                             }
                         } else {  //VOTE YES?NO
                             if (gamef.getRoom(userRoom).deathID != -1) {

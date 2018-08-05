@@ -7,6 +7,7 @@ module.exports = async function (gamef, bot, userRoom) {
         if (p.afkCount >= 6) {
             gamef.getRoom(userRoom).killAction(p.id);
             roomChatAll(bot, gamef.getRoom(userRoom).players, 0, `\`\`\`\n *${p.first_name}* đã bị kick do AFK quá lâu (uy tín < 0)\n\`\`\``);
+            gamef.getRoom(userRoom).newLog(`*${p.first_name}* đã bị kick do AFK quá lâu (uy tín < 0)`);
             return;
         }
 
@@ -22,7 +23,7 @@ module.exports = async function (gamef, bot, userRoom) {
                     console.log(`$ ROOM ${userRoom + 1} > TIMER > WOLF > 30 SECONDS REMAINING`);
                     players[index].addSchedule(time, () => {
                         console.log(`$ ROOM ${userRoom + 1} > AUTO ROLE > WOLF`);
-                        bot.say(p.joinID, `\`\`\`\n⏰Bạn đã ngủ quên mà không cắn ai! (-20 uy tín)\n\`\`\``);
+                        bot.say(p.joinID, `⏰Bạn đã ngủ quên mà không cắn ai! (-20 uy tín)`);
                         gamef.getRoom(userRoom).autoRole(p.joinID, p.role);
                         gamef.func(nightDoneCheck, bot, userRoom);
                     });
@@ -35,7 +36,7 @@ module.exports = async function (gamef, bot, userRoom) {
                     time = new Date(Date.now() + 45 * 1000);
                 }
                 players[index].addSchedule(time, () => {
-                    bot.say(p.joinID, `\`\`\`\n⏰Bạn còn 15 giây để thực hiện...\n\`\`\``);
+                    bot.say(p.joinID, `⏰Bạn còn 15 giây để thực hiện...`);
                     console.log(`$ ROOM ${userRoom + 1} > TIMER > 15 SECONDS REMAINING`);
                     let time = new Date(Date.now() + 15 * 1000);
                     players[index].addSchedule(time, () => {

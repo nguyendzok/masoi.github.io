@@ -42,7 +42,7 @@ module.exports = (gamef, bot, userRoom) => {
                     let time = new Date(Date.now() + 30 * 1000);
                     gamef.getRoom(userRoom).addSchedule(time, () => {
                         console.log(`$ ROOM ${userRoom + 1} > AUTO ROLE > WITCH`);
-                        convo.say(`\`\`\`\n⏰Bạn đã ngủ quên, trời sáng mất rồi!\nBạn không còn cơ hội cứu nữa!\n\`\`\``);
+                        convo.say(`⏰Bạn đã ngủ quên, trời sáng mất rồi!\nBạn không còn cơ hội cứu nữa!`);
                         convo.end();
                         dayNotify(gamef, bot, userRoom, false);
                     });
