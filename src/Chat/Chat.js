@@ -135,8 +135,8 @@ module.exports = (gamef, bot) => {
                             if (!gamef.getRoom(userRoom).cupid(joinID, voteID1, voteID2)) {
                                 chat.say(`\`\`\`\nBạn không thể ghép 2 người chơi không tồn tại!\n\`\`\``);
                             } else {
-                                await chat.say(`👼Bạn đã ghép cặp ${gamef.getRoom(userRoom).playersTxt[voteID1]} với ${gamef.getRoom(userRoom).playersTxt[voteID2]}!\nBạn đã hoàn thành nhiệm vụ!`);
-                                gamef.getRoom(userRoom).newLog(`👼CUPID đã ghép cặp ${gamef.getRoom(userRoom).playersTxt[voteID1]} với ${gamef.getRoom(userRoom).playersTxt[voteID2]}!`)
+                                await chat.say(`👼Bạn đã ghép cặp ${gamef.getRoom(userRoom).playersTxt[voteID1]} với ${gamef.getRoom(userRoom).playersTxt[voteID2]}!\nBạn đã hoàn thành nhiệm vụ và trở thành DÂN!`);
+                                gamef.getRoom(userRoom).newLog(`👼CUPID đã ghép cặp *${gamef.getRoom(userRoom).playersTxt[voteID1]}* với *${gamef.getRoom(userRoom).playersTxt[voteID2]}* !`)
                                 let user1 = gamef.getRoom(userRoom).players[voteID1];
                                 let user2 = gamef.getRoom(userRoom).players[voteID2];
                                 let thirdParty = ``;
@@ -180,11 +180,11 @@ module.exports = (gamef, bot) => {
                         if (gamef.getRoom(userRoom).vote(joinID, voteID)) {
                             if (voteID == -1) {
                                 await chat.say(`Bạn đã từ chối bỏ phiếu!`);
-                                roomChatAll(bot, gamef.getRoom(userRoom).players, joinID, `${user.first_name} đã từ chối bỏ phiếu`);
+                                roomChatAll(bot, gamef.getRoom(userRoom).players, joinID, `✊${user.first_name} đã từ chối bỏ phiếu`);
                             } else {
                                 let voteKill = gamef.getRoom(userRoom).playersTxt[voteID];
-                                await chat.say(`😈Bạn đã vote treo cổ ${voteKill} (${gamef.getRoom(userRoom).voteList[voteID]} phiếu)`);
-                                roomChatAll(bot, gamef.getRoom(userRoom).players, joinID, `😈${user.first_name} đã vote treo cổ ${voteKill} (${gamef.getRoom(userRoom).voteList[voteID]} phiếu)`);
+                                await chat.say(`✊Bạn đã vote treo cổ ${voteKill} (${gamef.getRoom(userRoom).voteList[voteID]} phiếu)`);
+                                roomChatAll(bot, gamef.getRoom(userRoom).players, joinID, `✊${user.first_name} đã vote treo cổ ${voteKill} (${gamef.getRoom(userRoom).voteList[voteID]} phiếu)`);
                             }
                         } else {
                             chat.say('```\nBạn không thể vote 2 lần hoặc vote người chơi đã chết!\n```');
