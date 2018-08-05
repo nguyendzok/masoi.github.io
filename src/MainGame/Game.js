@@ -262,10 +262,10 @@ class Room {
                 }
             }
             this.killAction(this.deathID);
-            cupidKill(this.deathID);
+            this.cupidKill(this.deathID);
             if (this.players[this.deathID].role === 3) { //là thợ săn
                 this.killAction(this.fireID);
-                cupidKill(this.fireID);
+                this.cupidKill(this.fireID);
             }
             return true;
         } else { // bảo vệ thành công hoặc sói không cắn ai
@@ -501,7 +501,7 @@ class Game {
     resetAllRoom() {
         this.room = [];
         this.userRoom = [];
-        for (let i = 0; i < 5; i++) {
+        for (let i = 0; i < 3; i++) {
             this.room.push(new Room(i));
         }
     }
