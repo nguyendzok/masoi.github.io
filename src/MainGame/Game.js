@@ -474,7 +474,7 @@ class Game {
         this.room = [];
         this.userRoom = [];
         this.roleTxt = [];
-        this.MIN_PLAYER = 4;
+        this.MIN_PLAYER = 3;
         this.resetAllRoom();
         this.setRoleTxt();
     }
@@ -570,7 +570,6 @@ class Game {
             let villagersRemain = (len - 3), balance = 7 + 3 - 6 + (len - 3);
             roleListTxt += `, 1 SÓI`;
             this.setRole(roomID, -1, 1);  // 1 SÓI -6
-            this.setRole(roomID, 7, 1); // THẦN TÌNH YÊU -3
             // if (this.trueFalseRandom()) {
             //     this.setRole(roomID, 6, 1); // 1 GIÀ LÀNG +0
             //     roleListTxt += `, 1 GIÀ LÀNG`;

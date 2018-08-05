@@ -30,8 +30,8 @@ module.exports = async function (gamef, bot, userRoom) {
                 });
             } else {
                 let time;
-                if (p.role == 7) { // CUPID có 30 giây
-                    time = new Date(Date.now() + 15 * 1000);
+                if (p.role == 7) { // CUPID có 45 giây
+                    time = new Date(Date.now() + 30 * 1000);
                 } else { // còn lại: Tiên tri, bảo vệ, thợ săn, phù thủy có 60 giây
                     time = new Date(Date.now() + 45 * 1000);
                 }
@@ -124,7 +124,7 @@ module.exports = async function (gamef, bot, userRoom) {
                 }, isCupidTxt + `💩Bạn là DÂN! Ngủ tiếp đi :))\n👨‍👩‍👦‍👦ID CẢ LÀNG:\n${playersList}`]);
             }
         } else {
-            return bot.say(p.joinID, "Đêm nay bạn đã chết =))");
+            return bot.say(p.joinID, "👻Đêm nay bạn đã chết =))");
         }
     })
 }
