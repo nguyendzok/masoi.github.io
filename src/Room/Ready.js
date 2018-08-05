@@ -23,7 +23,7 @@ module.exports = (gamef, bot) => {
                             let roleListTxt = gamef.roleRandom(userRoom);
                             gamef.getRoom(userRoom).dayNightSwitch();
                             await roomChatAll(bot, gamef.getRoom(userRoom).players, 0, `Tất cả mọi người đã sẵn sàng! Game sẽ bắt đầu...\n${roleListTxt}\n🌛Đêm thứ ${gamef.getRoom(userRoom).day}🌛`);
-                            gamef.getRoom(userRoom).newLog(`🌛Đêm thứ ${gamef.getRoom(userRoom).day}🌛++++++++++`);
+                            gamef.getRoom(userRoom).newLog(`\n🌛Đêm thứ ${gamef.getRoom(userRoom).day}🌛\n`);
                             gamef.func(roomRoleChat, bot, userRoom);
                         }
                     });

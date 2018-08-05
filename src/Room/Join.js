@@ -14,12 +14,12 @@ module.exports = (gamef, bot) => {
 
         const askRoom = (convo) => {
             convo.ask({
-                text: 'Cảm ơn bạn đã tham gia Ma sói Game!\nGame hiện đã ngừng phát triển\nMọi lỗi phát sinh khi chơi vui lòng liên hệ admin\nBạn đồng ý chơi thử nghiệm và có thể gặp lỗi\nLựa chọn phòng:',
+                text: 'Cảm ơn bạn đã tham gia chơi thử nghiệm Quản trò Ma sói Bot!\nBot vẫn hiện đang phát triển\nMọi lỗi phát sinh vui lòng comment trên fanpage để được fix sớm nhất có thể!\n\nVui lòng lựa chọn phòng:',
                 quickReplies: roomListView,
             }, (payload, convo) => {
                 let roomIDTxt = payload.message?payload.message.text.match(/[0-9]+/g):[];
                 if (!(payload.message) || !roomIDTxt || isNaN(parseInt(roomIDTxt[0]))) {
-                    convo.say(`\`\`\`\nVui lòng nhập 1 phòng hợp lệ!\n\`\`\``);
+                    convo.say(`\`\`\`\nPhòng bạn vừa nhập không hợp lệ!\n\`\`\``);
                     convo.end();
                     return;
                 }
