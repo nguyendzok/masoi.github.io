@@ -14,8 +14,8 @@ module.exports = (gamef, bot) => {
 
         if (userRoom == undefined) {
             chat.say({
-                text: `\`\`\`\nBạn chưa tham gia phòng chơi nào!\n\`\`\``,
-                quickReplies: ['help', 'trợ giúp']
+                text: `\`\`\`\nBạn chưa tham gia phòng chơi nào!\nChọn /join để tham gia 1 phòng chơi\nNếu chưa hiểu cách chơi, chọn /help\n\`\`\``,
+                quickReplies: ['/join', '/help']
             });
             return;
         }
