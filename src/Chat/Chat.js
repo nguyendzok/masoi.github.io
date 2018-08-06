@@ -141,10 +141,10 @@ module.exports = (gamef, bot) => {
                                 let user2 = gamef.getRoom(userRoom).players[voteID2];
                                 let thirdParty = ``;
                                 if (gamef.getRoom(userRoom).cupidTeam) {
-                                    thirdParty = `\n👼Bạn giờ thuộc phe thứ 3 CẶP ĐÔI`;
+                                    thirdParty = `👼Bạn giờ thuộc phe thứ 3 CẶP ĐÔI`;
                                 }
-                                bot.say(user1.joinID, `\`\`\`\n👼Bạn đã bị ghép đôi với ${user2.first_name}\n/p <nội dung> để chat riêng${thirdParty}\n\`\`\``);
-                                bot.say(user2.joinID, `\`\`\`\n👼Bạn đã bị ghép đôi với ${user1.first_name}\n/p <nội dung> để chat riêng${thirdParty}\n\`\`\``);
+                                bot.say(user1.joinID, `\`\`\`\n${thirdParty}\n👼Bạn đã bị ghép đôi với ${user2.first_name}\n/p <nội dung> để chat riêng\n\`\`\``);
+                                bot.say(user2.joinID, `\`\`\`\n${thirdParty}\n👼Bạn đã bị ghép đôi với ${user1.first_name}\n/p <nội dung> để chat riêng\n\`\`\``);
                                 // kiểm tra đã hết đêm chưa?
                                 gamef.func(nightDoneCheck, bot, userRoom);
                             }
@@ -179,7 +179,7 @@ module.exports = (gamef, bot) => {
                         let voteID = chatTxt.match(/-?[0-9]+/g)[0];
                         if (gamef.getRoom(userRoom).vote(joinID, voteID)) {
                             if (voteID == -1) {
-                                await chat.say(`Bạn đã từ chối bỏ phiếu!`);
+                                await chat.say(`✊Bạn đã từ chối bỏ phiếu!`);
                                 roomChatAll(bot, gamef.getRoom(userRoom).players, joinID, `✊${user.first_name} đã từ chối bỏ phiếu`);
                             } else {
                                 let voteKill = gamef.getRoom(userRoom).playersTxt[voteID];
