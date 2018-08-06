@@ -11,6 +11,7 @@ module.exports = (gamef, bot) => {
         }
         let joinUser;
         let roomListView = gamef.getRoomListView();
+        let page = 0;
 
         const askRoom = (convo) => {
             convo.ask({
@@ -18,6 +19,12 @@ module.exports = (gamef, bot) => {
                 quickReplies: roomListView,
             }, (payload, convo) => {
                 let roomIDTxt = payload.message?payload.message.text.match(/[0-9]+/g):[];
+                if (payload.message && payload.message.text.match(/\<?\>?/g)) {
+                    page+=3;
+                    roomListView = gamef.getRoomListView(page);
+                    askRoom(convo);
+                    return;
+                }
                 if (!(payload.message) || !roomIDTxt || isNaN(parseInt(roomIDTxt[0]))) {
                     convo.say(`\`\`\`\nPhòng bạn vừa nhập không hợp lệ!\n\`\`\``);
                     convo.end();

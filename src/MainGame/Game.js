@@ -518,15 +518,22 @@ class Game {
         });
     }
     // get view
-    getRoomListView() {
-        let roomListView = [];
-        this.room.forEach(r => {
+    getRoomListView(start = 0) {
+        let roomListView = [], len = this.room.length;
+        if (start > 0) {
+            roomListView.push('<');
+        }
+        for (let i = start; (i < start + 3 && i < len); i++) {
+            let r = this.room[i];
             if (!r.ingame) {
                 roomListView.push((r.id + 1).toString());
             } else { // đang chơi
                 roomListView.push('🎮' + (r.id + 1).toString());
             }
-        });
+        }
+        if (start + 3 < len) {
+            roomListView.push('>');
+        }
         return roomListView;
     }
     getRoomPlayerView(roomID) {
