@@ -222,6 +222,9 @@ class Room {
             this.witchKillRemain = false;
             this.witchSaveRemain = false;
         }
+        if (this.players[deathID] && this.players[deathID].role == 2) { //người chết là bảo vệ
+            this.saveID = -1;
+        }
         if (this.players[deathID] && this.alivePlayer[this.players[deathID].joinID]) {
             this.alivePlayer[this.players[deathID].joinID] = false;
             this.playersTxt[deathID] = '💀:' + this.playersTxt[deathID].substr(2, this.playersTxt[deathID].length - 2);
