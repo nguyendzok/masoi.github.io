@@ -14,7 +14,7 @@ module.exports = (bot) => {
                 `VD: /vote 1 để bỏ phiếu CẮN (nếu là sói ban đêm) hoặc TREO CỔ (ban ngày) người chơi số 1\n` +
                 `Cặp đôi có thể chat riêng: VD: /p xin chào để chào người bạn cặp đôi với mình\n` + 
                 `Nếu quên <id> người chơi, vào menu: *🔧Tiện ích... > 🚪Tiện ích phòng chơi... > 👥Xem DS người chơi* \n` +
-                `Nếu trong phòng có 2 người chơi cùng tên, hãy đổi tên của mình: *🔧Tiện ích... > 👼Tiện ích người chơi... > 🃏Đổi tên /rename* \n` +
+                `Nếu trong phòng có 2 người chơi cùng tên, hãy đổi tên của mình: *🔧Tiện ích... > 👼Tiện ích người chơi... > 🃏Đổi tên* \n` +
                 `Nếu đã hết phòng chơi trống, hãy tạo 1 cái: *🔧Tiện ích... > 🚪Tiện ích phòng chơi... > ➕Thêm phòng chơi*`
             );
         })
