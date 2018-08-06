@@ -501,7 +501,7 @@ class Game {
     resetAllRoom() {
         this.room = [];
         this.userRoom = [];
-        for (let i = 0; i < 3; i++) {
+        for (let i = 0; i < 12; i++) {
             this.room.push(new Room(i));
         }
     }
