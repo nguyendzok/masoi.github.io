@@ -524,7 +524,7 @@ class Game {
         if (start > 0) {
             roomListView.push('<');
         }
-        for (let i = start; (i < start + MAX_PER_PAGE && i < len); i++) {
+        for (let i = start; (i < start + this.MAX_PER_PAGE && i < len); i++) {
             let r = this.room[i];
             if (!r.ingame) {
                 roomListView.push((r.id + 1).toString());
@@ -532,7 +532,7 @@ class Game {
                 roomListView.push('🎮' + (r.id + 1).toString());
             }
         }
-        if (start + MAX_PER_PAGE < len) {
+        if (start + this.MAX_PER_PAGE < len) {
             roomListView.push('>');
         }
         return roomListView;
