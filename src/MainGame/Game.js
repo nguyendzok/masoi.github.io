@@ -279,7 +279,6 @@ class Room {
         if (killID != -1 && this.players[killID]) {
             this.witchKillRemain = false;
             this.witchKillID = killID;
-            this.getPlayer(joinID).backToGame();
             return true;
         } else {
             return false;
@@ -456,7 +455,6 @@ class Room {
     }
     witchUseSave() {
         this.witchSaveRemain = false;
-        this.getPlayer(joinID).backToGame();
     }
     chatOFF() {
         this.chatON = false;
@@ -593,7 +591,7 @@ class Game {
                 roleListTxt += ", 2 SÓI, 1 PHÙ THỦY";
                 this.setRole(roomID, -1, 2);  // 2 SÓI -6*2
                 this.setRole(roomID, 5, 1); // 1 PHÙ THỦY +4
-                villagersRemain -= 2;
+                villagersRemain -= 3;
                 balance += -6 * 2 + 4 + villagersRemain;
             } else {
                 roleListTxt += ", 1 SÓI, 1 BÁN SÓI";
@@ -602,7 +600,7 @@ class Game {
                 villagersRemain -= 2;
                 balance += -6 - 3 + villagersRemain;
             }
-            roleListTxt += villagersRemain + ` DÂN (CÂN BẰNG: ${balance})`;
+            roleListTxt += ', ' + villagersRemain + ` DÂN (CÂN BẰNG: ${balance})`;
         } else if (len < 10) { // 8,9
             let villagersRemain = (len - 7), balance = 7 + 3 - 6 * 2 + 3 - 3 + 4 + (len - 7);
             this.setRole(roomID, -1, 2);  // 2 SÓI -6*2
