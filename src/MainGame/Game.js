@@ -475,6 +475,7 @@ class Game {
         this.userRoom = [];
         this.roleTxt = [];
         this.MIN_PLAYER = 4;
+        this.MAX_PER_PAGE = 4;
         this.resetAllRoom();
         this.setRoleTxt();
     }
@@ -523,7 +524,7 @@ class Game {
         if (start > 0) {
             roomListView.push('<');
         }
-        for (let i = start; (i < start + 3 && i < len); i++) {
+        for (let i = start; (i < start + MAX_PER_PAGE && i < len); i++) {
             let r = this.room[i];
             if (!r.ingame) {
                 roomListView.push((r.id + 1).toString());
@@ -531,7 +532,7 @@ class Game {
                 roomListView.push('🎮' + (r.id + 1).toString());
             }
         }
-        if (start + 3 < len) {
+        if (start + MAX_PER_PAGE < len) {
             roomListView.push('>');
         }
         return roomListView;

@@ -10,16 +10,17 @@ module.exports = (gamef, bot) => {
             return;
         }
         let joinUser;
-        let roomListView = gamef.getRoomListView();
         let page = 0;
+        let roomListView = gamef.getRoomListView(page);
+        let enableGreetingTxt = true;
 
         const askRoom = (convo) => {
             convo.ask({
-                text: 'Cảm ơn bạn đã tham gia chơi thử nghiệm Quản trò Ma sói Bot!\nBot vẫn hiện đang phát triển\nMọi lỗi phát sinh vui lòng comment trên fanpage để được fix sớm nhất có thể!\n\nVui lòng lựa chọn phòng:',
+                text: enableGreetingTxt?'Cảm ơn bạn đã tham gia chơi thử nghiệm Quản trò Ma sói Bot!\nBot vẫn hiện đang phát triển\nMọi lỗi phát sinh vui lòng comment trên fanpage để được fix sớm nhất có thể!\n\nVui lòng lựa chọn phòng:':'',
                 quickReplies: roomListView,
-            }, (payload, convo) => {
-                let roomIDTxt = payload.message ? payload.message.text.match(/[0-9]+/g) : [];
+            }, (payload, convo) => {  
                 if (payload.message && payload.message.text.match(/\<|\>/g)) {
+                    enableGreetingTxt = false;
                     if (payload.message.text.match(/\>/g)) { //next page
                         page += 3;
                     } else { // prev page
@@ -29,7 +30,8 @@ module.exports = (gamef, bot) => {
                     askRoom(convo);
                     return;
                 }
-                if (!(payload.message) || !roomIDTxt || isNaN(parseInt(roomIDTxt[0]))) {
+                let roomIDTxt = payload.message ? payload.message.text.match(/[0-9]+/g) : [];
+                if (!(payload.message) || !roomIDTxt || isNaN(parseInt(roomIDTxt[0])) || !gamef.room[parseInt(roomIDTxt[0]) - 1]) {
                     convo.say(`\`\`\`\nPhòng bạn vừa nhập không hợp lệ!\n\`\`\``);
                     convo.end();
                     return;
