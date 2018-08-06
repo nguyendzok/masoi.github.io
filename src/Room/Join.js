@@ -18,9 +18,13 @@ module.exports = (gamef, bot) => {
                 text: 'Cảm ơn bạn đã tham gia chơi thử nghiệm Quản trò Ma sói Bot!\nBot vẫn hiện đang phát triển\nMọi lỗi phát sinh vui lòng comment trên fanpage để được fix sớm nhất có thể!\n\nVui lòng lựa chọn phòng:',
                 quickReplies: roomListView,
             }, (payload, convo) => {
-                let roomIDTxt = payload.message?payload.message.text.match(/[0-9]+/g):[];
-                if (payload.message && payload.message.text.match(/\<?\>?/g)) {
-                    page+=3;
+                let roomIDTxt = payload.message ? payload.message.text.match(/[0-9]+/g) : [];
+                if (payload.message && payload.message.text.match(/\<|\>/g)) {
+                    if (payload.message.text.match(/\>/g)) { //next page
+                        page += 3;
+                    } else { // prev page
+                        page -= 3;
+                    }
                     roomListView = gamef.getRoomListView(page);
                     askRoom(convo);
                     return;
