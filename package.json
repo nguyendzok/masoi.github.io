@@ -1,14 +1,14 @@
 {
-  "name": "messenger",
+  "name": "masoi-fb-bot",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "forward": "lt --port 3000 --subdomain noahsmessengerbot",
+    "forward": "lt --port 3000 --subdomain masoibot",
     "start": "node index.js"
   },
-  "author": "Noah Vaillancourt",
+  "author": "Phạm Ngọc Duy",
   "license": "ISC",
   "dependencies": {
     "async": "^2.6.1",

@@ -21,7 +21,7 @@ module.exports = async (gamef, bot, userRoom, witchSaved) => {
         chatAllTxt += `👻 *${deathTxt}* đã CHẾT!`;
         gamef.getRoom(userRoom).newLog(`👻 *${deathTxt}* là ${deathRole} đã bị SÓI cắn!`);
         console.log(`$ ROOM ${userRoom + 1} > ${deathTxt} DIED!`);
-        if (gamef.getRoom(userRoom).players[deathID].role === 3) { //người chết là thợ săn
+        if (gamef.getRoom(userRoom).players[deathID].role === 3 && dieArr.indexOf(gamef.getRoom(userRoom).fireID) == -1) { //người chết là thợ săn
             let fireID = gamef.getRoom(userRoom).fireID;
             let deathFireTxt = gamef.getRoom(userRoom).playersTxt[fireID];
             dieCount++;
@@ -32,7 +32,7 @@ module.exports = async (gamef, bot, userRoom, witchSaved) => {
         }
     }
     // PHÙ THỦY giết
-    if (gamef.getRoom(userRoom).witchKillID != undefined) {
+    if (gamef.getRoom(userRoom).witchKillID != undefined && dieArr.indexOf(gamef.getRoom(userRoom).witchKillID) == -1) {
         let killID = gamef.getRoom(userRoom).witchKillID;
         let deathByMagicTxt = gamef.getRoom(userRoom).playersTxt[killID];
         gamef.getRoom(userRoom).witchKillAction(async (witchKillID) => {

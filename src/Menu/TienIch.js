@@ -9,7 +9,8 @@ module.exports = (gamef, bot) => {
                 let playersInRoomTxt = gamef.getRoom(userRoom).playersTxt.join(' ; ');
                 chat.say(`👨‍👩‍👦‍👦Danh sách dân và sói làng ${userRoom + 1}: \n${playersInRoomTxt}`);
             } else {
-                chat.say('```\nTrò chơi chưa bắt đầu!\n```');
+                let roomView = gamef.getSimpleRoomPlayerView(userRoom);
+                chat.say(roomView.join(`\n`));
             }
         } else {
             chat.say('```\nBạn chưa tham gia phòng chơi nào!\n```');
