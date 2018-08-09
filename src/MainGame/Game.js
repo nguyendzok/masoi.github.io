@@ -28,8 +28,8 @@ class Player {
             this.timerSchedule.cancel();
         }
     }
-    afk() {
-        this.afkCount += 2;
+    afk(afkLever = 2) {
+        this.afkCount += afkLever;
     }
     backToGame() {
         if (this.afkCount > 0) {
@@ -191,7 +191,11 @@ class Room {
             player.cancelSchedule();
             player.backToGame();
         } else {
-            player.afk();
+            if (this.isNight) {
+                player.afk(4);
+            } else {
+                player.afk(1);
+            }
         }
     }
     oneReady() {
@@ -529,7 +533,7 @@ class Game {
             let r = this.room[i];
             if (!r.ingame) {
                 if (r.players.length > 0) {
-                    roomListView.push('💤' + (r.id + 1).toString());
+                    roomListView.push('🔵' + (r.id + 1).toString());
                 } else {
                     roomListView.push((r.id + 1).toString());
                 }

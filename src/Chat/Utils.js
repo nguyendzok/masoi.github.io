@@ -14,7 +14,7 @@ async function asyncForEach(array, mapCallback, /*callback*/) {
 }
 async function roomChatAll(bot, players, sendID, content) {
     let each = players.map(p => {
-        if (p.joinID != sendID) {
+        if (p && p.joinID != sendID) {
             return bot.say(p.joinID, content)
         }
     });
