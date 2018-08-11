@@ -184,7 +184,7 @@ class Room {
     }
     getPlayer(joinID) {
         return this.players.find((user) => {
-            return user.joinID == joinID;
+            return user?(user.joinID == joinID):false;
         });
     }
     getRole(joinID) {
@@ -530,7 +530,7 @@ class Game {
     }
     searchUserInRoom(userID, roomID) {
         return this.room[roomID].players.find((user) => {
-            return user.joinID == userID;
+            return user?(user.joinID == userID):false;
         });
     }
     // get view
