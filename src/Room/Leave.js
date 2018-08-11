@@ -14,7 +14,7 @@ module.exports = (gamef, bot) => {
             if (!gamef.getRoom(userRoom).ingame) {
                 gamef.getRoom(userRoom).deletePlayer(joinID);
                 gamef.setUserRoom(joinID, undefined);
-                
+
                 chat.say(`Bạn đã rời phòng chơi ${userRoom + 1}!`);
                 // notice new player to everyone in room
                 let playerListView = gamef.getRoomPlayerView(userRoom);
@@ -33,7 +33,8 @@ module.exports = (gamef, bot) => {
                         gamef.func(roomRoleChat, bot, userRoom);
                     }
                 });
-            } else {
+            } else if (gamef.getRoom(userRoom).alivePlayer[joinID]) {
+                user.cancelSchedule();
                 gamef.getRoom(userRoom).killAction(user.id);
                 leaveRole = user.role;
                 chat.say(`\`\`\`\nBạn đã tự sát!\n\`\`\``);
@@ -58,6 +59,12 @@ module.exports = (gamef, bot) => {
                         }
                     });
                 }
+            } else { // người chơi đã chết có quyền rời phòng chơi
+                gamef.getRoom(userRoom).justDeletePlayer(user.id);
+                gamef.setUserRoom(joinID, undefined);
+
+                chat.say(`\`\`\`\nBạn đã rời phòng chơi ${userRoom + 1}!\n\`\`\``);
+                roomChatAll(bot, gamef.getRoom(userRoom).players, joinID, `\`\`\`\n${user.first_name} đã rời phòng chơi!\n\`\`\``);
             }
             console.log(`$ ROOM ${userRoom + 1} > LEAVE > ${joinID} : ${user.first_name}`);
         } else {

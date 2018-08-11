@@ -33,7 +33,7 @@ class Player {
     }
     backToGame() {
         if (this.afkCount > 0) {
-            this.afkCount-=0.25;
+            this.afkCount -= 0.25;
         }
     }
 }
@@ -147,6 +147,9 @@ class Room {
         for (let i = playerID; i < len - 1; i++) {
             this.players[i].id--;
         }
+    }
+    justDeletePlayer(playerID) {
+        this.players.splice(playerID, 1);
     }
     deletePlayerByID(id) {
         let playerID = id;
