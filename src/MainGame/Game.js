@@ -149,7 +149,7 @@ class Room {
         }
     }
     justDeletePlayer(playerID) {
-        this.players.splice(playerID, 1);
+        this.players[playerID] = undefined;
     }
     deletePlayerByID(id) {
         let playerID = id;
