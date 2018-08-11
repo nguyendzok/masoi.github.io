@@ -1,4 +1,5 @@
 const { roomChatAll } = require('../Chat/Utils');
+const roomRoleChat = require('../Night/roomRoleChat');
 const nightDoneCheck = require('../Night/nightDoneCheck');
 const dayVoteCheck = require('../Day/dayVoteCheck');
 const yesNoVoteCheck = require('../Day/yesNoVoteCheck');
@@ -20,6 +21,18 @@ module.exports = (gamef, bot) => {
                 roomChatAll(bot, gamef.getRoom(userRoom).players, 0, [{
                     cards: playerListView
                 }, `${user.first_name} đã rời phòng chơi!`]);
+
+                gamef.gameIsReady(userRoom, async (gameReady) => {
+                    if (gameReady && !gamef.getRoom(userRoom).ingame) {
+                        console.log(`$ ROOM ${userRoom + 1} > GAME_START`);
+                        gamef.getRoom(userRoom).setInGame();
+                        let roleListTxt = gamef.roleRandom(userRoom);
+                        gamef.getRoom(userRoom).dayNightSwitch();
+                        await roomChatAll(bot, gamef.getRoom(userRoom).players, 0, `Tất cả mọi người đã sẵn sàng! Game sẽ bắt đầu...\n${roleListTxt}\n🌛Đêm thứ ${gamef.getRoom(userRoom).day}🌛`);
+                        gamef.getRoom(userRoom).newLog(`\n🌛Đêm thứ ${gamef.getRoom(userRoom).day}🌛\n`);
+                        gamef.func(roomRoleChat, bot, userRoom);
+                    }
+                });
             } else {
                 gamef.getRoom(userRoom).killAction(user.id);
                 leaveRole = user.role;

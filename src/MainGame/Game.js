@@ -33,7 +33,7 @@ class Player {
     }
     backToGame() {
         if (this.afkCount > 0) {
-            this.afkCount--;
+            this.afkCount-=0.25;
         }
     }
 }
@@ -127,6 +127,7 @@ class Room {
         this.players.forEach((p, index, arr) => {
             arr[index].ready = false;
             arr[index].role = 4; //DÂN
+            arr[index].afkCount = 0; // điểm afk / uy tín
             this.playersTxt.push(`${p.id}: ${p.first_name}`);
             this.alivePlayer[p.joinID] = true;
         });
