@@ -126,7 +126,7 @@ class Room {
 
         this.players.forEach((p, index, arr) => {
             if (!p) {
-                this.deletePlayerByID(p.id);
+                this.deletePlayerByID(index);
                 return;
             }
             arr[index].ready = false;
