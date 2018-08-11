@@ -21,7 +21,7 @@ module.exports = async (gamef, bot, userRoom, witchSaved) => {
         chatAllTxt += `👻 *${deathTxt}* đã CHẾT!`;
         gamef.getRoom(userRoom).newLog(`👻 *${deathTxt}* là ${deathRole} đã bị SÓI cắn!`);
         console.log(`$ ROOM ${userRoom + 1} > ${deathTxt} DIED!`);
-        if (gamef.getRoom(userRoom).players[deathID].role === 3 && dieArr.indexOf(gamef.getRoom(userRoom).fireID) == -1) { //người chết là thợ săn
+        if (gamef.getRoom(userRoom).players[deathID] && gamef.getRoom(userRoom).players[deathID].role === 3 && dieArr.indexOf(gamef.getRoom(userRoom).fireID) == -1) { //người chết là thợ săn
             let fireID = gamef.getRoom(userRoom).fireID;
             let deathFireTxt = gamef.getRoom(userRoom).playersTxt[fireID];
             dieCount++;
@@ -52,7 +52,7 @@ module.exports = async (gamef, bot, userRoom, witchSaved) => {
             cupidDieID = dieID;
         }
     });
-    if (cupidDieID != -1) {
+    if (cupidDieID != -1 && gamef.getRoom(userRoom).players[cupidDieID]) {
         dieCount++;
         let die1Index = gamef.getRoom(userRoom).cupidsID.indexOf(gamef.getRoom(userRoom).players[cupidDieID].joinID); // index trong mảng cupidsID
         let die2JoinID = gamef.getRoom(userRoom).cupidsID[die1Index == 1 ? 0 : 1];
@@ -63,7 +63,7 @@ module.exports = async (gamef, bot, userRoom, witchSaved) => {
     }
 
     //là BÁN SÓI
-    if (deathID != -1 && gamef.getRoom(userRoom).players[deathID].role == -2) {
+    if (deathID != -1 && gamef.getRoom(userRoom).players[deathID] && gamef.getRoom(userRoom).players[deathID].role == -2) {
         let halfWolfjoinID = gamef.getRoom(userRoom).players[deathID].joinID;
         let halfWolfTxt = gamef.getRoom(userRoom).players[deathID].first_name;
         await bot.say(halfWolfjoinID, `\`\`\`\nBạn đã bị sói cắn!\nTừ giờ bạn là 🐺SÓI!\n\`\`\``);
@@ -73,7 +73,7 @@ module.exports = async (gamef, bot, userRoom, witchSaved) => {
     }
 
     //là GIÀ LÀNG
-    if (deathID != -1 && gamef.getRoom(userRoom).players[deathID].role == 6) {
+    if (deathID != -1 && gamef.getRoom(userRoom).players[deathID] && gamef.getRoom(userRoom).players[deathID].role == 6) {
         let oldManjoinID = gamef.getRoom(userRoom).players[deathID].joinID;
         let oldManTxt = gamef.getRoom(userRoom).players[deathID].first_name;
         if (gamef.getRoom(userRoom).oldManLive > 0) {
