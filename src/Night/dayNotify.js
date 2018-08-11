@@ -5,7 +5,7 @@ const dayVoteCheck = require('../Day/dayVoteCheck');
 module.exports = async (gamef, bot, userRoom, witchSaved) => {
     let deathID = gamef.getRoom(userRoom).deathID;
     let deathTxt, deathRole;
-    if (deathID != -1) {
+    if (deathID != -1 && gamef.getRoom(userRoom).players[deathID]) {
         deathTxt = gamef.getRoom(userRoom).playersTxt[deathID];
         deathRole = gamef.roleTxt[gamef.getRoom(userRoom).getRoleByID(deathID)];
     }

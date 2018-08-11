@@ -125,6 +125,10 @@ class Room {
         this.saveOrKill = 0; // nếu vote cứu thì +1, vote treo cổ thì -1.  nhỏ hơn 0 thì treo
 
         this.players.forEach((p, index, arr) => {
+            if (!p) {
+                this.deletePlayerByID(p.id);
+                return;
+            }
             arr[index].ready = false;
             arr[index].role = 4; //DÂN
             arr[index].afkCount = 0; // điểm afk / uy tín
@@ -154,12 +158,14 @@ class Room {
     deletePlayerByID(id) {
         let playerID = id;
         let len = this.players.length;
-        if (this.players[id].ready) {
+        if (this.players[id] && this.players[id].ready) {
             this.readyCount--;
         }
         this.players.splice(playerID, 1);
         for (let i = playerID; i < len - 1; i++) {
-            this.players[i].id--;
+            if (this.players[i]) {
+                this.players[i].id--;
+            }
         }
     }
     addSchedule(time, callback) {
@@ -185,7 +191,7 @@ class Room {
         return this.playersRole[joinID];
     }
     getRoleByID(id) {
-        return this.players[id].role;
+        return this.players[id]?this.players[id].role:0;
     }
     roleDoneBy(joinID, autoDone = false) {
         this.roleDone[joinID] = true;
@@ -217,7 +223,7 @@ class Room {
         }
     }
     killAction(deathID) {
-        if (deathID == -1) {
+        if (deathID == -1 || !this.players[deathID]) {
             return;
         }
         if (this.roleDone[this.players[deathID].joinID]) { //người tự sát đã thực hiện ROLE
@@ -244,7 +250,7 @@ class Room {
         }
     }
     cupidKill(deathID) {
-        if (this.cupidsID.indexOf(this.players[deathID].joinID) != -1) { //là 1 người trong cặp đôi
+        if (this.players[deathID] && this.cupidsID.indexOf(this.players[deathID].joinID) != -1) { //là 1 người trong cặp đôi
             this.cupidsID.forEach((joinID) => {
                 let playerID = this.getPlayer(joinID).id;
                 if (deathID != playerID) {
