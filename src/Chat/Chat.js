@@ -70,7 +70,11 @@ module.exports = (gamef, bot) => {
                             // kiểm tra đã hết đêm chưa?
                             gamef.func(nightDoneCheck, bot, userRoom);
                         } else {
-                            chat.say('```\nCú pháp sai! Bạn không thể trò chuyện trong đêm!\n```');
+                            if (gamef.getRoom(userRoom).roleDone[joinID]) {
+                                chay.say('```\nBạn không thể trò chuyện trong đêm!\n```');
+                            } else {
+                                chat.say('```\nCú pháp sai! Vui lòng thử lại!\nVD: "/see 1" để soi người chơi số 1\n```');
+                            }
                         }
                     } else if (userRole == 2) { // là bảo vệ
                         if (chatTxt.match(/\/save.[0-9]+/g)) {//save
@@ -83,7 +87,11 @@ module.exports = (gamef, bot) => {
                                 gamef.func(nightDoneCheck, bot, userRoom);
                             }
                         } else {
-                            chat.say('```\nCú pháp sai! Bạn không thể trò chuyện trong đêm!\n```');
+                            if (gamef.getRoom(userRoom).roleDone[joinID]) {
+                                chay.say('```\nBạn không thể trò chuyện trong đêm!\n```');
+                            } else {
+                                chat.say('```\nCú pháp sai! Vui lòng thử lại!\nVD: "/save 1" để bảo vệ người chơi số 1\n```');
+                            }
                         }
                     } else if (userRole == 3) { // là thợ săn
                         if (chatTxt.match(/\/fire.-?[0-9]+/g)) {//fire
@@ -102,7 +110,11 @@ module.exports = (gamef, bot) => {
                                 gamef.func(nightDoneCheck, bot, userRoom);
                             }
                         } else {
-                            chat.say('```\nCú pháp sai! Bạn không thể trò chuyện trong đêm!\n```');
+                            if (gamef.getRoom(userRoom).roleDone[joinID]) {
+                                chay.say('```\nBạn không thể trò chuyện trong đêm!\n```');
+                            } else {
+                                chat.say('```\nCú pháp sai! Vui lòng thử lại!\nVD: "/fire 1" để ghim người chơi số 1\n"/fire -1" để bắn lên trời\n```');
+                            }
                         }
                     } else if (userRole == 5) { // là phù thủy
                         if (gamef.getRoom(userRoom).witchKillRemain) {
@@ -123,7 +135,11 @@ module.exports = (gamef, bot) => {
                                 // kiểm tra đã hết đêm chưa?
                                 gamef.func(nightDoneCheck, bot, userRoom);
                             } else {
-                                chat.say('```\nCú pháp sai! Bạn không thể trò chuyện trong đêm!\n```');
+                                if (gamef.getRoom(userRoom).roleDone[joinID]) {
+                                    chay.say('```\nBạn không thể trò chuyện trong đêm!\n```');
+                                } else {
+                                    chat.say('```\nCú pháp sai! Vui lòng thử lại!\nVD: "/kill 1" để giết người chơi số 1\n"/skip" để bỏ qua\n```');
+                                }
                             }
                         } else {
                             chat.say('```\nBạn không thể trò chuyện trong đêm!\n```');
@@ -149,7 +165,11 @@ module.exports = (gamef, bot) => {
                                 gamef.func(nightDoneCheck, bot, userRoom);
                             }
                         } else {
-                            chat.say('```\nCú pháp sai! Bạn không thể trò chuyện trong đêm!\n```');
+                            if (gamef.getRoom(userRoom).roleDone[joinID]) {
+                                chay.say('```\nBạn không thể trò chuyện trong đêm!\n```');
+                            } else {
+                                chat.say('```\nCú pháp sai! Vui lòng thử lại!\nVD: "/cupid 1 2" để ghép đôi người chơi số 1 với số 2\n```');
+                            }
                         }
                     }
                 } else {// ban NGÀY, mọi người thảo luận
@@ -158,7 +178,7 @@ module.exports = (gamef, bot) => {
                             if (gamef.getRoom(userRoom).chatON || (gamef.getRoom(userRoom).deathID != -1 && gamef.getRoom(userRoom).deathID == gamef.getRoom(userRoom).getPlayer(joinID).id)) { //check xem còn bật chat không?
                                 roomChatAll(bot, gamef.getRoom(userRoom).players, joinID, '*' + user.first_name + '*: ' + chatTxt);
                             } else {
-                                chat.say('```\nĐã hết thời gian thảo luận!\n```');
+                                chat.say('```\nĐã hết thời gian thảo luận!\nNếu chưa rõ cách chơi, chat "trợ giúp"\n```');
                             }
                         } else {  //VOTE YES?NO
                             if (gamef.getRoom(userRoom).deathID != -1) {

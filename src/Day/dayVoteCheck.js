@@ -17,7 +17,10 @@ module.exports = (gamef, bot, userRoom) => {
       let time = new Date(Date.now() + 1 * 60 * 1000);
       gamef.getRoom(userRoom).addSchedule(time, () => {
         // hết giờ, vote treo cổ nào!
-        roomChatAll(bot, gamef.getRoom(userRoom).players, 0, `⏰Hết giờ! Mọi người có 1 PHÚT để vote!\n👎TREO CỔ hay 👍THA?\n/treo hoặc /tha`);
+        roomChatAll(bot, gamef.getRoom(userRoom).players, 0, {
+          text: `⏰Hết giờ! Mọi người có 1 PHÚT để vote!\n👎TREO CỔ hay 👍THA?\n/treo hoặc /tha`,
+          quickReplies: ['/treo', '/tha']
+        });
         console.log(`$ ROOM ${userRoom + 1} > END OF TRĂN TRỐI :))`);
         // timer để vote treo cổ
         gamef.getRoom(userRoom).players.forEach((p, index, players) => {
