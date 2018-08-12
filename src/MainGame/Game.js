@@ -561,9 +561,9 @@ class Game {
         // create message
         this.room[roomID].players.forEach(m => {
             playerListView.unshift({
-                title: "Người chơi " + (m.id + 1) + ": " + m.first_name,
+                title: "" + (m.id + 1) + ": " + m.first_name,
                 image_url: m.avatar,
-                subtitle: `Họ và tên: ${m.last_name + " " + m.first_name}\nuserID: ${m.id}\n${m.ready ? 'Đã sẵn sàng' : 'Chưa sẵn sàng'}`,
+                subtitle: `Tên hiện thị: ${m.last_name + " " + m.first_name}\nuserID: ${m.id}\n${m.ready ? '🌟Đã sẵn sàng' : '💤Chưa sẵn sàng'}`,
             });
         });
         return playerListView;
@@ -572,7 +572,7 @@ class Game {
         let playerListView = [];
         // create message
         this.room[roomID].players.forEach(m => {
-            playerListView.push(`${m.id + 1}: ${m.first_name}(${m.ready ? 'OK' : '💤'})`);
+            playerListView.push(`${m.id + 1}: ${m.first_name}(${m.ready ? '🌟' : '💤'})`);
         });
         return playerListView;
     }
