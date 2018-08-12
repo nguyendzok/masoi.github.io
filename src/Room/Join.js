@@ -57,10 +57,16 @@ module.exports = (gamef, bot) => {
 
                     // notice new player to everyone in room
                     let playerListView = gamef.getRoomPlayerView(roomID);
+                    playerListView.unshift({
+                        title: `Phòng chơi ${roomID}:`,
+                        image_url: `https://scontent.fhan5-5.fna.fbcdn.net/v/t1.0-9/37812890_1872137736415276_2253761986674294784_n.png?_nc_cat=0&oh=c66c9db1a9e5d72edb88931cadeff204&oe=5C07D275`,
+                        subtitle: `Số người chơi: ${gamef.getRoom(roomID).players.length}`,
+                    });
                     roomChatAll(bot, gamef.getRoom(roomID).players, 0, [{
                         elements: playerListView,
                         buttons: [
-                            { type: 'postback', title: 'View More', payload: 'READY_ROOM' }
+                            { type: 'postback', title: '🌟Sẵn sàng!', payload: 'READY_ROOM' },
+                            { type: 'postback', title: '🌚Thoát', payload: 'LEAVE_ROOM' }
                         ]
                     }, `${joinUser.first_name} đã tham gia phòng!`]);
 
