@@ -543,7 +543,11 @@ class Game {
             let r = this.room[i];
             if (!r.ingame) {
                 if (r.players.length > 0) {
-                    roomListView.push('🔵' + (r.id + 1).toString());
+                    if (r.players.length >= 4) {
+                        roomListView.push('👥' + (r.id + 1).toString());
+                    } else {
+                        roomListView.push('👤' + (r.id + 1).toString());
+                    }
                 } else {
                     roomListView.push((r.id + 1).toString());
                 }
