@@ -574,7 +574,7 @@ class Game {
         // create message
         for (let i = start; (i < len && (i - start) < limit); i++) {
             let m = this.room[roomID].players[i];
-            playerListView.push(`${m.id + 1}: ${m.first_name}(${m.ready ? '🌟' : '💤'})`);
+            playerListView.push(`${m.id + 1}: ${m.first_name} (${m.last_name} ${m.first_name}) ${m.ready ? '🌟' : '💤'}`);
         }
         return playerListView;
     }
