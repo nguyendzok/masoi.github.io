@@ -16,9 +16,9 @@ module.exports = (gamef, bot) => {
 
         const askRoom = (convo) => {
             convo.ask({
-                text: enableGreetingTxt?'Cảm ơn bạn đã tham gia chơi thử nghiệm Quản trò Ma sói Bot!\nBot vẫn hiện đang phát triển\nMọi lỗi phát sinh vui lòng comment trên fanpage để được fix sớm nhất có thể!\n\nVui lòng lựa chọn phòng:':'Chọn phòng:',
+                text: enableGreetingTxt ? 'Cảm ơn bạn đã tham gia chơi thử nghiệm Quản trò Ma sói Bot!\nBot vẫn hiện đang phát triển\nMọi lỗi phát sinh vui lòng comment trên fanpage để được fix sớm nhất có thể!\n\nVui lòng lựa chọn phòng:' : 'Chọn phòng:',
                 quickReplies: roomListView,
-            }, (payload, convo) => {  
+            }, (payload, convo) => {
                 if (payload.message && payload.message.text.match(/\<|\>/g)) {
                     enableGreetingTxt = false;
                     if (payload.message.text.match(/\>/g)) { //next page
@@ -56,21 +56,25 @@ module.exports = (gamef, bot) => {
                     }));
 
                     // notice new player to everyone in room
-                    let playerListView = gamef.getRoomPlayerView(roomID);
+                    let playerListView = gamef.getRoomPlayerView(roomID, 0, 3);
                     playerListView.unshift({
-                        title: `Phòng ${roomID+1}`,
+                        title: `Phòng ${roomID + 1}`,
                         image_url: `https://scontent.fhan5-5.fna.fbcdn.net/v/t1.0-9/37812890_1872137736415276_2253761986674294784_n.png?_nc_cat=0&oh=c66c9db1a9e5d72edb88931cadeff204&oe=5C07D275`,
                         subtitle: `🌟${gamef.getRoom(roomID).readyCount}/👥${gamef.getRoom(roomID).players.length}`,
                         buttons: [
                             { type: 'postback', title: '🌚Thoát', payload: 'LEAVE_ROOM' }
                         ]
                     });
+                    let simplePlayerListView = undefined;
+                    if (gamef.getRoom(roomID).players.length > 3) {
+                        simplePlayerListView = gamef.getSimpleRoomPlayerView(roomID, 3).join('\n');
+                    }
                     roomChatAll(bot, gamef.getRoom(roomID).players, 0, [{
                         elements: playerListView,
                         buttons: [
                             { type: 'postback', title: '🌟Sẵn sàng!', payload: 'READY_ROOM' },
                         ]
-                    }, `${joinUser.first_name} đã tham gia phòng!`]);
+                    }, (simplePlayerListView ? `${simplePlayerListView}\n` : ``) + `${joinUser.first_name} đã tham gia phòng!`]);
 
                     convo.end();
                     console.log(`$ ROOM ${(roomID + 1)} > JOIN > ${joinUser.first_name} > ${joinID}`);

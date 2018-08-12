@@ -184,14 +184,14 @@ class Room {
     }
     getPlayer(joinID) {
         return this.players.find((user) => {
-            return user?(user.joinID == joinID):false;
+            return user ? (user.joinID == joinID) : false;
         });
     }
     getRole(joinID) {
         return this.playersRole[joinID];
     }
     getRoleByID(id) {
-        return this.players[id]?this.players[id].role:0;
+        return this.players[id] ? this.players[id].role : 0;
     }
     roleDoneBy(joinID, autoDone = false) {
         this.roleDone[joinID] = true;
@@ -530,7 +530,7 @@ class Game {
     }
     searchUserInRoom(userID, roomID) {
         return this.room[roomID].players.find((user) => {
-            return user?(user.joinID == userID):false;
+            return user ? (user.joinID == userID) : false;
         });
     }
     // get view
@@ -556,24 +556,26 @@ class Game {
         }
         return roomListView;
     }
-    getRoomPlayerView(roomID) {
-        let playerListView = [];
+    getRoomPlayerView(roomID, start = 0, limit = 20) {
+        let playerListView = [], len = this.room[roomID].players.length;
         // create message
-        this.room[roomID].players.forEach(m => {
-            playerListView.unshift({
+        for (let i = start; (i < len && (i - start) < limit); i++) {
+            let m = this.room[roomID].players[i];
+            playerListView.push({
                 title: "" + (m.id + 1) + ": " + m.first_name,
                 image_url: m.avatar,
                 subtitle: `Họ & Tên: ${m.last_name + " " + m.first_name}\nMã số: ${m.id}\n${m.ready ? '🌟Đã sẵn sàng' : '💤Chưa sẵn sàng'}`,
             });
-        });
+        }
         return playerListView;
     }
-    getSimpleRoomPlayerView(roomID) {
+    getSimpleRoomPlayerView(roomID, start = 0, limit = 20) {
         let playerListView = [];
         // create message
-        this.room[roomID].players.forEach(m => {
+        for (let i = start; (i < len && (i - start) < limit); i++) {
+            let m = this.room[roomID].players[i];
             playerListView.push(`${m.id + 1}: ${m.first_name}(${m.ready ? '🌟' : '💤'})`);
-        });
+        }
         return playerListView;
     }
     gameIsReady(roomID, callback) {

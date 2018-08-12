@@ -71,7 +71,7 @@ module.exports = (gamef, bot) => {
                             gamef.func(nightDoneCheck, bot, userRoom);
                         } else {
                             if (gamef.getRoom(userRoom).roleDone[joinID]) {
-                                chay.say('```\nBạn không thể trò chuyện trong đêm!\n```');
+                                chat.say('```\nBạn không thể trò chuyện trong đêm!\n```');
                             } else {
                                 chat.say('```\nCú pháp sai! Vui lòng thử lại!\nVD: "/see 1" để soi người chơi số 1\n```');
                             }
@@ -88,7 +88,7 @@ module.exports = (gamef, bot) => {
                             }
                         } else {
                             if (gamef.getRoom(userRoom).roleDone[joinID]) {
-                                chay.say('```\nBạn không thể trò chuyện trong đêm!\n```');
+                                chat.say('```\nBạn không thể trò chuyện trong đêm!\n```');
                             } else {
                                 chat.say('```\nCú pháp sai! Vui lòng thử lại!\nVD: "/save 1" để bảo vệ người chơi số 1\n```');
                             }
@@ -111,7 +111,7 @@ module.exports = (gamef, bot) => {
                             }
                         } else {
                             if (gamef.getRoom(userRoom).roleDone[joinID]) {
-                                chay.say('```\nBạn không thể trò chuyện trong đêm!\n```');
+                                chat.say('```\nBạn không thể trò chuyện trong đêm!\n```');
                             } else {
                                 chat.say('```\nCú pháp sai! Vui lòng thử lại!\nVD: "/fire 1" để ghim người chơi số 1\n"/fire -1" để bắn lên trời\n```');
                             }
@@ -136,7 +136,7 @@ module.exports = (gamef, bot) => {
                                 gamef.func(nightDoneCheck, bot, userRoom);
                             } else {
                                 if (gamef.getRoom(userRoom).roleDone[joinID]) {
-                                    chay.say('```\nBạn không thể trò chuyện trong đêm!\n```');
+                                    chat.say('```\nBạn không thể trò chuyện trong đêm!\n```');
                                 } else {
                                     chat.say('```\nCú pháp sai! Vui lòng thử lại!\nVD: "/kill 1" để giết người chơi số 1\n"/skip" để bỏ qua\n```');
                                 }
@@ -166,7 +166,7 @@ module.exports = (gamef, bot) => {
                             }
                         } else {
                             if (gamef.getRoom(userRoom).roleDone[joinID]) {
-                                chay.say('```\nBạn không thể trò chuyện trong đêm!\n```');
+                                chat.say('```\nBạn không thể trò chuyện trong đêm!\n```');
                             } else {
                                 chat.say('```\nCú pháp sai! Vui lòng thử lại!\nVD: "/cupid 1 2" để ghép đôi người chơi số 1 với số 2\n```');
                             }
