@@ -563,7 +563,7 @@ class Game {
             playerListView.unshift({
                 title: "" + (m.id + 1) + ": " + m.first_name,
                 image_url: m.avatar,
-                subtitle: `Tên hiện thị: ${m.last_name + " " + m.first_name}\nuserID: ${m.id}\n${m.ready ? '🌟Đã sẵn sàng' : '💤Chưa sẵn sàng'}`,
+                subtitle: `Họ & Tên: ${m.last_name + " " + m.first_name}\nMã số: ${m.id}\n${m.ready ? '🌟Đã sẵn sàng' : '💤Chưa sẵn sàng'}`,
             });
         });
         return playerListView;
