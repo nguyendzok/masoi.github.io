@@ -12,11 +12,11 @@ module.exports = (bot) => {
                 `VD: "/save 1" để bảo vệ người chơi số 1\n` +
                 `VD: "/cupid 0 1" để ghép đôi 2 bạn trẻ số 0 và số 1 :D\n` +
                 `VD: "/vote 1" để bỏ phiếu CẮN (nếu là sói ban đêm) hoặc TREO CỔ (ban ngày) người chơi số 1\n` +
-                `Cặp đôi có thể chat riêng: \n/p nội dung\nđể trò chuyện người bạn cặp đôi với mình\n` + 
+                `Cặp đôi có thể chat riêng: \n/p nội dung\nđể trò chuyện người bạn cặp đôi với mình\n` +
                 `Nếu quên <id> người chơi, vào menu: \n*🔧Tiện ích > 🚪...phòng chơi > 👥Xem DS* \n` +
                 `Nếu trong phòng có 2 người chơi cùng tên, hãy đổi tên của mình: \n*🔧Tiện ích> 👼...người chơi > 🃏Đổi tên* \n` +
                 `Nếu đã hết phòng chơi trống, hãy tạo 1 cái: \n*🔧Tiện ích > 🚪...phòng chơi > ➕Thêm*`
-            );
+                , { typing: true });
         })
     };
     // listen HELP button
