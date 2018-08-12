@@ -570,7 +570,7 @@ class Game {
         return playerListView;
     }
     getSimpleRoomPlayerView(roomID, start = 0, limit = 20) {
-        let playerListView = [];
+        let playerListView = [], len = this.room[roomID].players.length;
         // create message
         for (let i = start; (i < len && (i - start) < limit); i++) {
             let m = this.room[roomID].players[i];
