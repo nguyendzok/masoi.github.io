@@ -16,7 +16,7 @@ module.exports = (bot) => {
                 `Nếu quên <id> người chơi, vào menu: \n*🔧Tiện ích > 🚪...phòng chơi > 👥Xem DS* \n` +
                 `Nếu trong phòng có 2 người chơi cùng tên, hãy đổi tên của mình: \n*🔧Tiện ích> 👼...người chơi > 🃏Đổi tên* \n` +
                 `Nếu đã hết phòng chơi trống, hãy tạo 1 cái: \n*🔧Tiện ích > 🚪...phòng chơi > ➕Thêm*`
-                , { typing: true });
+                , { typing: 2000 });
         })
     };
     // listen HELP button
