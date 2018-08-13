@@ -1,10 +1,6 @@
-const { sendImageCard } = require('../Chat/Utils');
-
 module.exports = (bot) => {
     const helpCallback = (payload, chat) => {
-        const joinID = payload.sender.id;
         chat.getUserProfile().then((user) => {
-            sendImageCard(bot, joinID, 'https://www.facebook.com/masoigame/photos/a.1889279918034391.1073741828.1859688364326880/1889278331367883');
             chat.say(`Xin chào ${user.last_name + ' ' + user.first_name}! \n` +
                 `Để bắt đầu, bạn hãy mở MENU (nút 3 dấu gạch ngang) bên dưới.\n` +
                 `Chọn menu: \n*🎮Chơi > 🌝Tham gia* \n` +
@@ -20,7 +16,7 @@ module.exports = (bot) => {
                 `Nếu quên <id> người chơi, vào menu: \n*🔧Tiện ích > 🚪...phòng chơi > 👥Xem DS* \n` +
                 `Nếu trong phòng có 2 người chơi cùng tên, hãy đổi tên của mình: \n*🔧Tiện ích> 👼...người chơi > 🃏Đổi tên* \n` +
                 `Nếu đã hết phòng chơi trống, hãy tạo 1 cái: \n*🔧Tiện ích > 🚪...phòng chơi > ➕Thêm*`
-                , { typing: 2000 });
+                , { typing: 500 });
         })
     };
     // listen HELP button

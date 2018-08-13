@@ -68,20 +68,20 @@ module.exports = async function (gamef, bot, userRoom) {
             isCupidTxt += `Uy tín của bạn là: ${(6 - p.afkCount) * 10}/60\n\n`
 
             if (p.role == -1) {//SÓI
-                return bot.say(p.joinID, [{
-                    attachment: 'image',
-                    url: 'http://hstatic.net/936/1000019936/10/2015/7-28/masoi.jpg'
-                }, isCupidTxt + `🐺Sói ơi dậy đi! Đêm nay sói muốn cắn ai?\n"/vote <số ID>" để cắn ai đó\nVD: "/vote 1" để cắn ${gamef.getRoom(userRoom).players[1].first_name}\n👨‍👩‍👦‍👦ID CẢ LÀNG:\n${playersList}\n🐺ID TEAM SÓI:\n${wolfList}\n💩ID TEAM DÂN:\n${villagersList}`]);
+                return sendImageCard(bot, p.joinID, 'https://www.facebook.com/masoigame/photos/pcb.1889279921367724/1889278418034541', 'SÓI')
+                    .then(() => {
+                        bot.say(p.joinID, isCupidTxt + `🐺Sói ơi dậy đi! Đêm nay sói muốn cắn ai?\n"/vote <số ID>" để cắn ai đó\nVD: "/vote 1" để cắn ${gamef.getRoom(userRoom).players[1].first_name}\n👨‍👩‍👦‍👦ID CẢ LÀNG:\n${playersList}\n🐺ID TEAM SÓI:\n${wolfList}\n💩ID TEAM DÂN:\n${villagersList}`);
+                    });
             } else if (p.role == 1) { // tiên tri
-                return bot.say(p.joinID, [{
-                    attachment: 'image',
-                    url: 'http://hstatic.net/936/1000019936/10/2015/11-18/tien-tri.jpg'
-                }, isCupidTxt + `🔍Tiên tri dậy đi! Tiên tri muốn kiểm tra ai?\n"/see <số ID>" để kiểm tra\n${playersList}`]);
+                return sendImageCard(bot, p.joinID, 'https://www.facebook.com/masoigame/photos/pcb.1889279921367724/1889278528034530', 'Tiên tri')
+                    .then(() => {
+                        bot.say(p.joinID, isCupidTxt + `🔍Tiên tri dậy đi! Tiên tri muốn kiểm tra ai?\n"/see <số ID>" để kiểm tra\n${playersList}`);
+                    });
             } else if (p.role == 2) { // Bảo vệ
-                return bot.say(p.joinID, [{
-                    attachment: 'image',
-                    url: 'http://hstatic.net/936/1000019936/10/2015/7-28/baove.jpg'
-                }, isCupidTxt + `🗿Bảo vệ dậy đi! Đêm nay bạn muốn bảo vệ ai?\n"/save <số ID>" để bảo vệ\n${playersList}`]);
+                return sendImageCard(bot, p.joinID, 'https://www.facebook.com/masoigame/photos/pcb.1889279921367724/1889278331367883', 'Bảo vệ')
+                    .then(() => {
+                        bot.say(p.joinID, isCupidTxt + `🗿Bảo vệ dậy đi! Đêm nay bạn muốn bảo vệ ai?\n"/save <số ID>" để bảo vệ\n${playersList}`);
+                    });
             } else if (p.role == 3) { // Thợ săn
                 return bot.say(p.joinID, [{
                     attachment: 'image',

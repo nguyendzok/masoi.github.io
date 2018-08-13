@@ -43,7 +43,7 @@ async function roomWolfChatAll(bot, wolfsID, sendID, content) {
     })
 }
 
-function sendImageCard(bot, joinID, imageURL) {
+function sendImageCard(bot, joinID, imageURL, buttonTxt = "Ma sói card") {
     return bot.sendMessage(joinID, {
         attachment: {
             type: "template",
@@ -52,7 +52,14 @@ function sendImageCard(bot, joinID, imageURL) {
                 elements: [
                     {
                         media_type: "image",
-                        url: imageURL
+                        url: imageURL,
+                        buttons: [
+                            {
+                               type: "web_url",
+                               url: "https://www.facebook.com/masoigame/posts/1889279921367724",
+                               title: buttonTxt,
+                            }
+                         ]
                     }
                 ]
             }
