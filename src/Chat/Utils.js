@@ -43,10 +43,28 @@ async function roomWolfChatAll(bot, wolfsID, sendID, content) {
     })
 }
 
+function sendImageCard(bot, joinID, imageURL) {
+    return bot.sendMessage(joinID, {
+        attachment: {
+            type: "template",
+            payload: {
+                template_type: "media",
+                elements: [
+                    {
+                        media_type: "image",
+                        url: imageURL
+                    }
+                ]
+            }
+        }
+    });
+}
+
 module.exports = {
     asyncForEach: asyncForEach,
     roomChatAll: roomChatAll,
     roomWolfChatAll: roomWolfChatAll,
+    sendImageCard: sendImageCard,
 }
 
 // async function roomChatAll(bot, players, sendID, content) {

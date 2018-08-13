@@ -1,6 +1,9 @@
+const { sendImageCard } = require('../Chat/Utils');
+
 module.exports = (bot) => {
     const helpCallback = (payload, chat) => {
         chat.getUserProfile().then((user) => {
+            sendImageCard(bot, p.joinID, 'http://hstatic.net/936/1000019936/10/2015/7-28/masoi.jpg');
             chat.say(`Xin chào ${user.last_name + ' ' + user.first_name}! \n` +
                 `Để bắt đầu, bạn hãy mở MENU (nút 3 dấu gạch ngang) bên dưới.\n` +
                 `Chọn menu: \n*🎮Chơi > 🌝Tham gia* \n` +

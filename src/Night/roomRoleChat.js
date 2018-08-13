@@ -1,4 +1,4 @@
-const { asyncForEach, roomChatAll } = require('../Chat/Utils');
+const { asyncForEach, roomChatAll, sendImageCard } = require('../Chat/Utils');
 
 module.exports = async function (gamef, bot, userRoom) {
 
