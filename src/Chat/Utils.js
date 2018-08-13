@@ -56,7 +56,7 @@ function sendImageCard(bot, joinID, imageURL, buttonTxt = "Ma sói card") {
                         buttons: [
                             {
                                type: "web_url",
-                               url: "https://www.facebook.com/masoigame/posts/1889279921367724",
+                               url: imageURL,
                                title: buttonTxt,
                             }
                          ]
