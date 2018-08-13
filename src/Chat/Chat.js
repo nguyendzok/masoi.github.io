@@ -25,6 +25,7 @@ module.exports = (gamef, bot) => {
                 if (gamef.getRoom(userRoom).cupidsID.indexOf(joinID) != -1) { // cặp đôi
                     if (chatTxt.match(/\/p.(\w+.?)+/g)) { //private chat
                         let newChatTxt = chatTxt.match(/(?<=\/p\s).*/g)
+                        bot.sendAction(joinID, 'mark_seen');
                         return roomWolfChatAll(bot, gamef.getRoom(userRoom).cupidsID, joinID, '*' + user.first_name + '*: ' + newChatTxt);
                     }
                 }
@@ -34,6 +35,7 @@ module.exports = (gamef, bot) => {
                         if (!chatTxt.match(/\/vote.-?[0-9]+/g)) {//chat
                             if (gamef.getRoom(userRoom).chatON) {
                                 roomWolfChatAll(bot, gamef.getRoom(userRoom).wolfsID, joinID, '*' + user.first_name + '*: ' + chatTxt);
+                                bot.sendAction(joinID, 'mark_seen');
                             }
                         } else {// SÓI VOTE
                             let voteID = chatTxt.match(/-?[0-9]+/g)[0];

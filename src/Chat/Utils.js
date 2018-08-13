@@ -15,9 +15,7 @@ async function asyncForEach(array, mapCallback, /*callback*/) {
 async function roomChatAll(bot, players, sendID, content) {
     let each = players.map(p => {
         if (p && p.joinID != sendID) {
-            return bot.say(p.joinID, content, { onDelivery: (payload, chat, data) => {
-                sendID!=0?bot.sendAction(sendID, 'mark_seen'):null;
-            }})
+            return bot.say(p.joinID, content)
         }
     });
     each.forEach(async (sendAction, index) => {
