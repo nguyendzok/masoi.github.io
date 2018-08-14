@@ -653,11 +653,10 @@ class Game {
                 villagersRemain -= 3;
                 balance += -6 * 2 + 4 + villagersRemain;
             } else {
-                roleListTxt += ", 1 SÓI, 1 BÁN SÓI";
-                this.setRole(roomID, -1, 1);  // 1 SÓI NGUYỀN -12
-                this.setRole(roomID, -2, 1); // 1 BÁN SÓI -3
-                villagersRemain -= 2;
-                balance += -12 - 3 + villagersRemain;
+                roleListTxt += ", 1 SÓI NGUYỀN";
+                this.setRole(roomID, -3, 1);  // 1 SÓI NGUYỀN -12
+                villagersRemain -= 1;
+                balance += -12 + villagersRemain;
             }
             roleListTxt += ', ' + villagersRemain + ` DÂN (CÂN BẰNG: ${balance})`;
         } else if (len < 10) { // 8,9
