@@ -362,6 +362,7 @@ class Room {
         if (!this.roleDone[joinID] && this.players[voteID1] && this.players[voteID2]) {
             this.roleDoneBy(joinID);
             this.getPlayer(joinID).setRole(4); // thần tình yêu về làm DÂN
+            this.playersRole[joinID] = 4;
             this.cupidsID = [this.players[voteID1].joinID, this.players[voteID2].joinID];
             this.cupidsTxt = [voteID1 + ': ' + this.players[voteID1].first_name, voteID2 + ': ' + this.players[voteID2].first_name];
             if (this.players[voteID1].role * this.players[voteID2].role < 0) { //phe thứ 3
@@ -487,6 +488,7 @@ class Room {
             return false;
         }
         this.players[this.nguyenID].setRole(-1);
+        this.playersRole[this.players[this.nguyenID].joinID] = -1;
         if (this.players[this.nguyenID].role > 0) {
             this.wolfsCount++;
             this.villagersCount--;
