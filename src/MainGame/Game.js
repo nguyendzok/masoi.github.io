@@ -74,6 +74,7 @@ class Room {
         this.witchKillID = undefined;
 
         this.soiNguyen = false;
+        this.nguyenID = undefined;
 
         //Già làng
         this.oldManID = undefined;
@@ -119,6 +120,7 @@ class Room {
         this.witchKillID = undefined;
 
         this.soiNguyen = false;
+        this.nguyenID = undefined;
 
         this.oldManID = undefined;
         this.oldManLive = 2;
@@ -246,7 +248,7 @@ class Room {
         if (this.players[deathID] && this.alivePlayer[this.players[deathID].joinID]) {
             this.alivePlayer[this.players[deathID].joinID] = false;
             this.playersTxt[deathID] = '💀:' + this.playersTxt[deathID].substr(2, this.playersTxt[deathID].length - 2);
-            if (this.players[deathID].role === -1) {
+            if (this.players[deathID].role === -1 || this.players[deathID].role === -3) {
                 this.wolfsCount--;
             } else {
                 this.villagersCount--;
@@ -474,12 +476,15 @@ class Room {
     nguyen(joinID, nguyenID) {
         if (this.soiNguyen && this.players[nguyenID] && this.alivePlayer[this.players[nguyenID].joinID]) {
             this.soiNguyen = false;
-            this.players[nguyenID].setRole(-1);
-            this.roleDoneBy(joinID);
+            this.nguyenID = nguyenID;
             return true;
         } else {
             return false;
         }
+    }
+    nguyenAction(){
+        this.players[this.nguyenID].setRole(-1);
+        this.nguyenID = undefined;
     }
     witchUseSave() {
         this.witchSaveRemain = false;
@@ -682,7 +687,7 @@ class Game {
             this.room[roomID].playersRole[p.joinID] = p.role;
             this.room[roomID].playersTxt.push(p.id + ': ' + p.first_name);
 
-            if (p.role === -1) {
+            if (p.role === -1 || p.role === -3) {
                 this.room[roomID].wolfsID.push(p.joinID);
                 this.room[roomID].wolfsTxt.push(p.id + ': ' + p.first_name);
                 this.room[roomID].wolfsCount++;

@@ -14,6 +14,9 @@ module.exports = async (gamef, bot, userRoom, witchSaved) => {
 
     let chatAllTxt = `\`\`\`\n🌞Trời sáng rồi mọi người dậy đi\n`;
 
+    // SÓI NGUYỀN:
+    gamef.getRoom(userRoom).nguyenAction();
+
     // SÓI CẮN
     if (!witchSaved && gamef.getRoom(userRoom).kill()) {
         dieCount++;

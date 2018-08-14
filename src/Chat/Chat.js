@@ -45,7 +45,7 @@ module.exports = (gamef, bot) => {
                                         let nguyenName = gamef.getRoom(userRoom).playersTxt[nguyenID];
                                         let nguyenJoinID = gamef.getRoom(userRoom).players[nguyenID].joinID;
                                         chat.say(`🐺Bạn đã nguyền ${nguyenName}`);
-                                        bot.say(nguyenJoinID, '```\n🐺Bạn đã bị nguyền, từ nay bạn là 🐺SÓI\n```');
+                                        bot.say(nguyenJoinID, '```\n🐺Bạn đã bị nguyền, từ đêm sau bạn là 🐺SÓI\n```');
                                     } else {
                                         chat.say('```\nBạn không thể nguyền người chơi đã chết!\n```');
                                     }
