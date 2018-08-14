@@ -482,8 +482,15 @@ class Room {
             return false;
         }
     }
-    nguyenAction(){
+    nguyenAction() {
+        if (!this.nguyenID) {
+            return false;
+        }
         this.players[this.nguyenID].setRole(-1);
+        if (this.players[this.nguyenID].role > 0) {
+            this.wolfsCount++;
+            this.villagersCount--;
+        }
         this.nguyenID = undefined;
     }
     witchUseSave() {
