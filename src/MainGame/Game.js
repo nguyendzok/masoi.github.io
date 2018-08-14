@@ -73,6 +73,8 @@ class Room {
         this.witchKillRemain = true;
         this.witchKillID = undefined;
 
+        this.soiNguyen = false;
+
         //Già làng
         this.oldManID = undefined;
         this.oldManLive = 2;
@@ -115,6 +117,8 @@ class Room {
         this.witchSaveRemain = true;
         this.witchKillRemain = true;
         this.witchKillID = undefined;
+
+        this.soiNguyen = false;
 
         this.oldManID = undefined;
         this.oldManLive = 2;
@@ -467,6 +471,16 @@ class Room {
             return false;
         }
     }
+    nguyen(joinID, nguyenID) {
+        if (this.soiNguyen && this.players[nguyenID] && this.alivePlayer[this.players[nguyenID].joinID]) {
+            this.soiNguyen = false;
+            this.players[nguyenID].setRole(-1);
+            this.roleDoneBy(joinID);
+            return true;
+        } else {
+            return false;
+        }
+    }
     witchUseSave() {
         this.witchSaveRemain = false;
     }
@@ -498,6 +512,7 @@ class Game {
         // PHE SÓI
         this.roleTxt[-1] = '🐺SÓI';
         this.roleTxt[-2] = '🐺BÁN SÓI';
+        this.roleTxt[-3] = '🐺SÓI NGUYỀN';
 
         // PHE DÂN
         this.roleTxt[1] = '🔍TIÊN TRI';
@@ -610,7 +625,7 @@ class Game {
         if (len < 6) { // 4,5
             let villagersRemain = (len - 3), balance = 7 + 3 - 6 + (len - 3);
             roleListTxt += `, 1 SÓI`;
-            this.setRole(roomID, -1, 1);  // 1 SÓI -6
+            this.setRole(roomID, -3, 1);  // 1 SÓI -6
             // if (this.trueFalseRandom()) {
             //     this.setRole(roomID, 6, 1); // 1 GIÀ LÀNG +0
             //     roleListTxt += `, 1 GIÀ LÀNG`;
@@ -627,10 +642,10 @@ class Game {
                 balance += -6 * 2 + 4 + villagersRemain;
             } else {
                 roleListTxt += ", 1 SÓI, 1 BÁN SÓI";
-                this.setRole(roomID, -1, 1);  // 1 SÓI -6
+                this.setRole(roomID, -1, 1);  // 1 SÓI NGUYỀN -12
                 this.setRole(roomID, -2, 1); // 1 BÁN SÓI -3
                 villagersRemain -= 2;
-                balance += -6 - 3 + villagersRemain;
+                balance += -12 - 3 + villagersRemain;
             }
             roleListTxt += ', ' + villagersRemain + ` DÂN (CÂN BẰNG: ${balance})`;
         } else if (len < 10) { // 8,9
@@ -692,6 +707,8 @@ class Game {
                 this.room[roomID].witchID = this.room[roomID].players[rand].joinID;
             } else if (role == 6) { // Già làng
                 this.room[roomID].oldManID = this.room[roomID].players[rand].joinID;
+            } else if (role == -3) { // sói nguyền
+                this.room[roomID].soiNguyen = true;
             }
         }
     }

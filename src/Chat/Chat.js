@@ -31,11 +31,27 @@ module.exports = (gamef, bot) => {
                 }
                 if (gamef.getRoom(userRoom).isNight) { // ban đêm
                     let userRole = gamef.getRoom(userRoom).getRole(joinID);
-                    if (userRole == -1) {// là SÓI
-                        if (!chatTxt.match(/\/vote.-?[0-9]+/g)) {//chat
-                            if (gamef.getRoom(userRoom).chatON) {
-                                roomWolfChatAll(bot, gamef.getRoom(userRoom).wolfsID, joinID, '*' + user.first_name + '*: ' + chatTxt);
-                                bot.sendAction(joinID, 'mark_seen');
+                    if (userRole == -1 || userRole == -3) {// là SÓI / SÓI NGUYỀN
+                        if (!chatTxt.match(/\/vote.-?[0-9]+/g)) {
+                            if (userRole == -1 || !chatTxt.match(/\/nguyen.-?[0-9]+/g)) {//chat
+                                if (gamef.getRoom(userRoom).chatON) {
+                                    roomWolfChatAll(bot, gamef.getRoom(userRoom).wolfsID, joinID, '*' + user.first_name + '*: ' + chatTxt);
+                                    bot.sendAction(joinID, 'mark_seen');
+                                }
+                            } else { //SÓI NGUYỀN
+                                let nguyenID = chatTxt.match(/-?[0-9]+/g)[0];
+                                if (gamef.getRoom(userRoom).soiNguyen) {
+                                    if (gamef.getRoom(userRoom).nguyen(joinID, nguyenID)) {
+                                        let nguyenName = gamef.getRoom(userRoom).playersTxt[nguyenID];
+                                        let nguyenJoinID = gamef.getRoom(userRoom).players[nguyenID].joinID;
+                                        chat.say(`🐺Bạn đã nguyền ${nguyenName}`);
+                                        bot.say(nguyenJoinID, '```\n🐺Bạn đã bị nguyền, từ nay bạn là 🐺SÓI\n```');
+                                    } else {
+                                        chat.say('```\nBạn không thể nguyền người chơi đã chết!\n```');
+                                    }
+                                } else {
+                                    chat.say('```\nBạn đã hết quyền nguyền!\n```');
+                                }
                             }
                         } else {// SÓI VOTE
                             let voteID = chatTxt.match(/-?[0-9]+/g)[0];
