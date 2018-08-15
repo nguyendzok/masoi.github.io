@@ -68,7 +68,7 @@ module.exports = async function (gamef, bot, userRoom) {
             isCupidTxt += `Uy tín của bạn là: ${(6 - p.afkCount) * 10}/60\n\n`;
 
             if (gamef.getRoom(userRoom).nguyenID == p.joinID) {
-                isCupidTxt += `🐺Bạn đã bị nguyền và theo phe SÓI!\n/p <nội dung> để chat với phe sói\n`;
+                isCupidTxt += `🐺Bạn đã bị nguyền và theo phe SÓI!\n/p <nội dung> để chat với phe sói\n🐺ID TEAM SÓI:\n${wolfList}\n\n`;
             }
 
             if (p.role == -1) {//SÓI

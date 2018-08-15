@@ -55,7 +55,9 @@ module.exports = (gamef, bot) => {
                                         let nguyenName = gamef.getRoom(userRoom).playersTxt[nguyenID];
                                         let nguyenJoinID = gamef.getRoom(userRoom).players[nguyenID].joinID;
                                         chat.say(`🐺Bạn đã nguyền ${nguyenName}`);
-                                        bot.say(nguyenJoinID, '```\n🐺Bạn đã bị nguyền, bạn sẽ theo phe 🐺SÓI\n```');
+                                        roomWolfChatAll(bot, gamef.getRoom(userRoom).wolfsID, joinID, `\`\`\`\n🐺${nguyenName} đã bị nguyền và theo phe sói!\n\`\`\``);
+                                        let wolfsListTxt = gamef.getRoom(userRoom).wolfsTxt.join(' ; ');
+                                        bot.say(nguyenJoinID, '```\n🐺Bạn đã bị nguyền, bạn sẽ theo phe 🐺SÓI\nDanh sách phe sói:\n'+wolfsListTxt+'\n```');
                                     } else {
                                         chat.say('```\nBạn không thể nguyền người chơi đã chết!\n```');
                                     }

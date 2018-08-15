@@ -478,6 +478,7 @@ class Room {
         if (this.soiNguyen && this.players[nguyenID] && this.alivePlayer[this.players[nguyenID].joinID]) {
             this.soiNguyen = false;
             this.nguyenID = this.players[nguyenID].joinID;
+            this.wolfsID.push(this.nguyenID);
             return true;
         } else {
             return false;
@@ -487,7 +488,6 @@ class Room {
         if (!this.nguyenID) {
             return false;
         }
-        this.wolfsID.push(this.nguyenID);
         // nguyenID is joinID, code below is wrong!
         // this.players[this.nguyenID].setRole(-1);
         // this.playersRole[this.players[this.nguyenID].joinID] = -1;
