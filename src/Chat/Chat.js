@@ -57,7 +57,8 @@ module.exports = (gamef, bot) => {
                                         chat.say(`🐺Bạn đã nguyền ${nguyenName}`);
                                         roomWolfChatAll(bot, gamef.getRoom(userRoom).wolfsID, joinID, `\`\`\`\n🐺${nguyenName} đã bị nguyền và theo phe sói!\n\`\`\``);
                                         let wolfsListTxt = gamef.getRoom(userRoom).wolfsTxt.join(' ; ');
-                                        bot.say(nguyenJoinID, '```\n🐺Bạn đã bị nguyền, bạn sẽ theo phe 🐺SÓI\nDanh sách phe sói:\n'+wolfsListTxt+'\n```');
+                                        bot.say(nguyenJoinID, '```\n🐺Bạn đã bị nguyền, bạn sẽ theo phe 🐺SÓI\nDanh sách phe sói:\n' + wolfsListTxt + '\n```');
+                                        gamef.getRoom(userRoom).newLog(`🐺${nguyenName} đã bị nguyền và theo phe sói!`);
                                     } else {
                                         chat.say('```\nBạn không thể nguyền người chơi đã chết!\n```');
                                     }
@@ -88,7 +89,7 @@ module.exports = (gamef, bot) => {
                         if (chatTxt.match(/\/see.[0-9]+/g)) {//see
                             let voteID = chatTxt.match(/[0-9]+/g)[0];
                             gamef.getRoom(userRoom).see(joinID, voteID, async (role) => {
-                                await chat.say(`${voteID} là ${(role == -1 || role == -3) ? '🐺SÓI' : role == 1 ? '🔍TIÊN TRI, Bạn đùa tớ à :v' : '💩PHE DÂN'}`);
+                                await chat.say(`${voteID} là ${(role == -1 || role == -3 || role == 8) ? '🐺SÓI' : role == 1 ? '🔍TIÊN TRI, Bạn đùa tớ à :v' : '💩PHE DÂN'}`);
                                 if (gamef.getRoom(userRoom).oldManID != undefined && gamef.getRoom(userRoom).oldManLive <= 0) { // già làng chết
                                     gamef.getRoom(userRoom).newLog(`🔍${user.first_name} soi *${gamef.getRoom(userRoom).playersTxt[voteID]}* ra 💩AUTO DÂN`);
                                 } else {

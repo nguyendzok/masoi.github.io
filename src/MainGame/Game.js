@@ -538,6 +538,7 @@ class Game {
         this.roleTxt[5] = '🔮PHÙ THỦY';
         this.roleTxt[6] = '👴GIÀ LÀNG';
         this.roleTxt[7] = '👼THẦN TÌNH YÊU';
+        this.roleTxt[8] = '😸NGƯỜI HÓA SÓI';
     }
     getUserRoom(joinID) {
         return this.userRoom[joinID];
@@ -639,9 +640,10 @@ class Game {
         this.setRole(roomID, 1, 1); // 1 TIÊN TRI +7
         this.setRole(roomID, 2, 1); // 1 BẢO VỆ +3
         if (len < 6) { // 4,5
-            let villagersRemain = (len - 3), balance = 7 + 3 - 6 + (len - 3);
-            roleListTxt += `, 1 SÓI`;
-            this.setRole(roomID, -3, 1);  // 1 SÓI -6
+            let villagersRemain = (len - 4), balance = 7 + 3 - 6 -1 + (len - 4);
+            roleListTxt += `, 1 SÓI, 1 NGƯỜI HÓA SÓI`;
+            this.setRole(roomID, -1, 1);  // 1 SÓI -6
+            this.setRole(roomID, 8, 1);  // 1 NGƯỜI HÓA SÓI -1
             // if (this.trueFalseRandom()) {
             //     this.setRole(roomID, 6, 1); // 1 GIÀ LÀNG +0
             //     roleListTxt += `, 1 GIÀ LÀNG`;
