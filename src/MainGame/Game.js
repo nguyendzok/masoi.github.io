@@ -487,13 +487,13 @@ class Room {
         if (!this.nguyenID) {
             return false;
         }
-        this.players[this.nguyenID].setRole(-1);
-        this.playersRole[this.players[this.nguyenID].joinID] = -1;
-        if (this.players[this.nguyenID].role > 0) {
-            this.wolfsCount++;
-            this.villagersCount--;
-        }
-        this.nguyenID = undefined;
+        // this.players[this.nguyenID].setRole(-1);
+        // this.playersRole[this.players[this.nguyenID].joinID] = -1;
+        // if (this.players[this.nguyenID].role > 0) {
+        //     this.wolfsCount++;
+        //     this.villagersCount--;
+        // }
+        // this.nguyenID = undefined;
     }
     witchUseSave() {
         this.witchSaveRemain = false;

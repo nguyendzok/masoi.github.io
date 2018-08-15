@@ -45,7 +45,7 @@ module.exports = (gamef, bot) => {
                                         let nguyenName = gamef.getRoom(userRoom).playersTxt[nguyenID];
                                         let nguyenJoinID = gamef.getRoom(userRoom).players[nguyenID].joinID;
                                         chat.say(`🐺Bạn đã nguyền ${nguyenName}`);
-                                        bot.say(nguyenJoinID, '```\n🐺Bạn đã bị nguyền, từ đêm sau bạn là 🐺SÓI\n```');
+                                        bot.say(nguyenJoinID, '```\n🐺Bạn đã bị nguyền, bạn sẽ theo phe 🐺SÓI\n```');
                                     } else {
                                         chat.say('```\nBạn không thể nguyền người chơi đã chết!\n```');
                                     }
@@ -195,6 +195,7 @@ module.exports = (gamef, bot) => {
                         if (!chatTxt.match(/\/treo/g) && !chatTxt.match(/\/tha/g)) {
                             if (gamef.getRoom(userRoom).chatON || (gamef.getRoom(userRoom).deathID != -1 && gamef.getRoom(userRoom).deathID == gamef.getRoom(userRoom).getPlayer(joinID).id)) { //check xem còn bật chat không?
                                 roomChatAll(bot, gamef.getRoom(userRoom).players, joinID, '*' + user.first_name + '*: ' + chatTxt);
+                                bot.sendAction(joinID, 'mark_seen');
                             } else {
                                 chat.say('```\nĐã hết thời gian thảo luận!\nNếu chưa rõ cách chơi, chat "trợ giúp"\n```');
                             }
