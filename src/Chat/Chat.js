@@ -31,6 +31,16 @@ module.exports = (gamef, bot) => {
                 }
                 if (gamef.getRoom(userRoom).isNight) { // ban đêm
                     let userRole = gamef.getRoom(userRoom).getRole(joinID);
+
+                    //KẺ PHẢN BỘI
+                    if (gamef.getRoom(userRoom).nguyenID == joinID) {
+                        if (chatTxt.match(/\/p.(\w+.?)+/g)) { //private chat
+                            let newChatTxt = chatTxt.match(/(?<=\/p\s).*/g)
+                            bot.sendAction(joinID, 'mark_seen');
+                            return roomWolfChatAll(bot, gamef.getRoom(userRoom).wolfsID, joinID, '*' + user.first_name + '* (kẻ phản bội): ' + newChatTxt);
+                        }
+                    }
+
                     if (userRole == -1 || userRole == -3) {// là SÓI / SÓI NGUYỀN
                         if (!chatTxt.match(/\/vote.-?[0-9]+/g)) {
                             if (userRole == -1 || !chatTxt.match(/\/nguyen.-?[0-9]+/g)) {//chat
