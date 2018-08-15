@@ -134,7 +134,7 @@ module.exports = async function (gamef, bot, userRoom) {
                     });
             } else if (p.role == 8) { // NGƯỜI HÓA SÓI
                 gamef.getRoom(userRoom).roleDoneBy(p.joinID);
-                return sendImageCard(bot, p.joinID, 'https://www.facebook.com/masoigame/photos/pcb.1889279921367724/1889278298034553', 'Người hóa sói')
+                return sendImageCard(bot, p.joinID, 'https://www.facebook.com/masoigame/photos/pcb.1889279921367724/1891874781108238', 'Người hóa sói')
                     .then(() => {
                         bot.say(p.joinID, isCupidTxt + `😸Yên tâm, bạn là DÂN tuy nhiên tiên tri thì không nghĩ vậy :v`);
                     });
