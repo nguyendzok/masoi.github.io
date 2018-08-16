@@ -526,7 +526,7 @@ class Game {
         this.room = [];
         this.userRoom = [];
         this.roleTxt = [];
-        this.MIN_PLAYER = 3;
+        this.MIN_PLAYER = 4;
         this.MAX_PER_PAGE = 4;
         this.resetAllRoom();
         this.setRoleTxt();
