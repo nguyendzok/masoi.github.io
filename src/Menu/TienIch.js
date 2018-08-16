@@ -6,8 +6,9 @@ module.exports = (gamef, bot) => {
         let userRoom = gamef.getUserRoom(joinID);
         if (userRoom != undefined) {
             if (gamef.getRoom(userRoom).ingame) {
-                let playersInRoomTxt = gamef.getRoom(userRoom).playersTxt.join(' ; ');
-                chat.say(`👨‍👩‍👦‍👦Danh sách dân và sói làng ${userRoom + 1}: \n${playersInRoomTxt}`);
+                let playersInRoomTxt = gamef.getRoom(userRoom).playersTxt.join('\n');
+                let roleListTxt = gamef.getRoom(userRoom).roleListTxt;
+                chat.say(`👨‍👩‍👦‍👦${userRoom + 1}:\n${playersInRoomTxt}\nSET-UP: ${roleListTxt}`);
             } else {
                 let roomView = gamef.getSimpleRoomPlayerView(userRoom);
                 chat.say(roomView.join(`\n`));

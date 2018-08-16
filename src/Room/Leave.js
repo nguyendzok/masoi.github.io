@@ -17,10 +17,13 @@ module.exports = (gamef, bot) => {
 
                 chat.say(`Bạn đã rời phòng chơi ${userRoom + 1}!`);
                 // notice new player to everyone in room
-                let playerListView = gamef.getRoomPlayerView(userRoom);
-                roomChatAll(bot, gamef.getRoom(userRoom).players, 0, [{
-                    cards: playerListView
-                }, `${user.first_name} đã rời phòng chơi!`]);
+                // let playerListView = gamef.getRoomPlayerView(userRoom);
+                // roomChatAll(bot, gamef.getRoom(userRoom).players, 0, [{
+                //     cards: playerListView
+                // }, `${user.first_name} đã rời phòng chơi!`]);
+
+                let roomView = gamef.getSimpleRoomPlayerView(userRoom);
+                roomChatAll(bot, gamef.getRoom(userRoom).players, 0, `${roomView.join(`\n`)}\n${user.first_name} đã rời phòng chơi!`);
 
                 gamef.gameIsReady(userRoom, async (gameReady) => {
                     if (gameReady && !gamef.getRoom(userRoom).ingame) {
@@ -60,11 +63,11 @@ module.exports = (gamef, bot) => {
                     });
                 }
             } else { // người chơi đã chết có quyền rời phòng chơi
-                // gamef.getRoom(userRoom).justDeletePlayer(user.id);
-                // gamef.setUserRoom(joinID, undefined);
+                gamef.getRoom(userRoom).justDeletePlayer(user.id);
+                gamef.setUserRoom(joinID, undefined);
 
-                // chat.say(`\`\`\`\nBạn đã rời phòng chơi ${userRoom + 1}!\n\`\`\``);
-                // roomChatAll(bot, gamef.getRoom(userRoom).players, joinID, `\`\`\`\n${user.first_name} đã rời phòng chơi!\n\`\`\``);
+                chat.say(`\`\`\`\nBạn đã rời phòng chơi ${userRoom + 1}!\n\`\`\``);
+                roomChatAll(bot, gamef.getRoom(userRoom).players, joinID, `\`\`\`\n${user.first_name} đã rời phòng chơi!\n\`\`\``);
             }
             console.log(`$ ROOM ${userRoom + 1} > LEAVE > ${joinID} : ${user.first_name}`);
         } else {
