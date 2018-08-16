@@ -135,9 +135,10 @@ class Room {
         this.saveOrKill = 0; // nếu vote cứu thì +1, vote treo cổ thì -1.  nhỏ hơn 0 thì treo
 
         let len = this.players.length;
+        console.log(`# ROOM ${this.id} > PLAYERS COUNT : ${len}`);
         for (let index = 0; index < len; index++) {
             let p = this.players[index];
-            if (!p) {
+            if (p === undefined) {
                 this.deletePlayerByID(index);
                 index--;
             } else {
@@ -169,13 +170,12 @@ class Room {
         this.players[playerID] = undefined;
     }
     deletePlayerByID(id) {
-        let playerID = id;
-        let len = this.players.length;
         if (this.players[id] && this.players[id].ready) {
             this.readyCount--;
         }
-        this.players.splice(playerID, 1);
-        for (let i = playerID; i < len - 1; i++) {
+        this.players.splice(id, 1);
+        let len = this.players.length;
+        for (let i = id; i < len; i++) {
             if (this.players[i]) {
                 this.players[i].id--;
             }
@@ -526,7 +526,7 @@ class Game {
         this.room = [];
         this.userRoom = [];
         this.roleTxt = [];
-        this.MIN_PLAYER = 4;
+        this.MIN_PLAYER = 3;
         this.MAX_PER_PAGE = 4;
         this.resetAllRoom();
         this.setRoleTxt();
