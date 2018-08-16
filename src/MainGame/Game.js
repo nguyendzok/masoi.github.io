@@ -33,7 +33,7 @@ class Player {
     }
     backToGame() {
         if (this.afkCount > 0) {
-            this.afkCount -= 0.25;
+            this.afkCount -= 0.5;
         }
     }
 }
@@ -135,12 +135,14 @@ class Room {
         this.saveOrKill = 0; // nếu vote cứu thì +1, vote treo cổ thì -1.  nhỏ hơn 0 thì treo
 
         let len = this.players.length;
-        console.log(`# ROOM ${this.id} > PLAYERS COUNT : ${len}`);
+        console.log(`# ROOM ${this.id + 1} > PLAYERS COUNT : ${len}`);
         for (let index = 0; index < len; index++) {
             let p = this.players[index];
             if (p === undefined) {
-                this.deletePlayerByID(index);
-                index--;
+                console.log(`# ROOM ${this.id + 1} > DELETE PLAYER: ${index}`);
+                // this.deletePlayerByID(index);
+                // index--;
+                // len--;
             } else {
                 this.players[index].ready = false;
                 this.players[index].role = 4; //DÂN
@@ -215,9 +217,9 @@ class Room {
             player.backToGame();
         } else {
             if (this.isNight) {
-                player.afk(4);
+                player.afk(6);
             } else {
-                player.afk(1);
+                player.afk(3);
             }
         }
     }
@@ -486,6 +488,10 @@ class Room {
             this.soiNguyen = false;
             this.nguyenID = this.players[nguyenID].joinID;
             this.wolfsID.push(this.nguyenID);
+            if (this.players[nguyenID].role > 0) {
+                this.villagersCount--;
+                this.wolfsCount++;
+            }
             return true;
         } else {
             return false;
