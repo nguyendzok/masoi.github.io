@@ -172,20 +172,16 @@ class Room {
         this.players[playerID] = undefined;
     }
     deletePlayerByID(id) {
-        console.log('delete1');
         if (this.players[id] && this.players[id].ready) {
             this.readyCount--;
         }
-        console.log('delete2');
         this.players.splice(id, 1);
-        console.log('delete3');
         let len = this.players.length;
         for (let i = id; i < len; i++) {
             if (this.players[i]!=undefined) {
                 this.players[i].id--;
             }
         }
-        console.log('success!');
     }
     addSchedule(time, callback) {
         this.timerSchedule = schedule.scheduleJob(time, callback);
