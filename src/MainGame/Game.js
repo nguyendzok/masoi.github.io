@@ -140,9 +140,9 @@ class Room {
             let p = this.players[index];
             if (p === undefined) {
                 console.log(`# ROOM ${this.id + 1} > DELETE PLAYER: ${index}`);
-                // this.deletePlayerByID(index);
-                // index--;
-                // len--;
+                this.deletePlayerByID(index);
+                index--;
+                len--;
             } else {
                 this.players[index].ready = false;
                 this.players[index].role = 4; //DÂN
