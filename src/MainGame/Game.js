@@ -209,6 +209,9 @@ class Room {
         return this.players[id] ? this.players[id].role : 0;
     }
     roleDoneBy(joinID, autoDone = false) {
+        if (this.roleDone[joinID]) {
+            return false;
+        }
         this.roleDone[joinID] = true;
         this.roleDoneCount++;
         let player = this.getPlayer(joinID);

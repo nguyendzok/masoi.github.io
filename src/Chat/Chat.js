@@ -161,9 +161,6 @@ module.exports = (gamef, bot) => {
                                 }
                             } else if (chatTxt.match(/\/skip/g)) {
                                 await chat.say('🎊Bạn đã không giết ai!');
-                                gamef.getRoom(userRoom).roleDoneBy(joinID);
-                                // kiểm tra đã hết đêm chưa?
-                                gamef.func(nightDoneCheck, bot, userRoom);
                             } else {
                                 if (gamef.getRoom(userRoom).roleDone[joinID]) {
                                     chat.say('```\nBạn không thể trò chuyện trong đêm!\n```');
