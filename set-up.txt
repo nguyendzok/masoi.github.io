@@ -3,4 +3,4 @@
 7:  1 tiên tri +7, 1 bảo vệ +3, 1 sói nguyền -12, 1 phù thủy +3, 1 người hóa sói -1, 2 dân +2 = 2
 8:  1 tiên tri +7, 1 bảo vệ +3, 2 sói -12, 1 phù thủy +3, 1 người hóa sói -1, 2 dân +2 = 2
 9:  1 tiên tri +7, 1 bảo vệ +3, 2 sói -12, 1 phù thủy +3, 1 người hóa sói -1, 1 già làng +0, 2 dân +2 = 2
-10: 1 tiên tri +7, 1 bảo vệ +3, 2 sói -12, 1 bán sói -3, 1 phù thủy +3, 1 già làng +0, 1 thợ săn +3, 2 dân +2 = 3
+10: 1 tiên tri +7, 1 bảo vệ +3, 2 sói -12, 1 BÁN SÓI -3, 1 PHÙ THỦY +4, 1 THỢ SĂN +3, 1 GIÀ LÀNG +0, 1 THẦN TÌNH YÊU -3, 1 DÂN +1= 0
