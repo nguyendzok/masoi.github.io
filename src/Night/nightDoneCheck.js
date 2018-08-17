@@ -14,7 +14,7 @@ module.exports = (gamef, bot, userRoom) => {
                 convo.ask({
                     text: `"Trả lời: "/yes" hay "/no" hoặc /kill <id ai đó>`,
                     quickReplies: ['/yes', '/no'],
-                }, (payload, convo) => {
+                }, async (payload, convo) => {
                     if (!payload.message || !(/(y|Y)es/g.test(payload.message.text) || /(n|N)o/g.test(payload.message.text) || /\/kill\s[0-9]+/g.test(payload.message.text))) {
                         convo.say(`\`\`\`\nKhông hợp lệ!\n\`\`\``);
                         askForSave(convo);
@@ -24,7 +24,7 @@ module.exports = (gamef, bot, userRoom) => {
                         if (/(y|Y)es/g.test(payload.message.text)) { // cứu
                             if (gamef.getRoom(userRoom).witchSaveRemain) { // còn quyền cứu
                                 gamef.getRoom(userRoom).witchUseSave();
-                                convo.say(`🔮Bạn đã cứu *${deathTxt}* thành công!`);
+                                await convo.say(`🔮Bạn đã cứu *${deathTxt}* thành công!`);
                                 gamef.getRoom(userRoom).newLog(`🔮Phù thủy *${gamef.getRoom(userRoom).getPlayer(gamef.getRoom(userRoom).witchID).first_name}* đã cứu *${deathTxt}*!`);
                                 convo.end();
                                 dayNotify(gamef, bot, userRoom, true);
