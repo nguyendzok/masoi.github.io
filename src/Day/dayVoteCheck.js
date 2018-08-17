@@ -12,6 +12,7 @@ module.exports = (gamef, bot, userRoom) => {
     if (deathID != -1 && gamef.getRoom(userRoom).players[deathID] && gamef.getRoom(userRoom).alivePlayer[gamef.getRoom(userRoom).players[deathID].joinID]) { // mời 1 người lên giá treo cổ
       gamef.getRoom(userRoom).afternoonSwitch();
       let deathTxt = gamef.getRoom(userRoom).playersTxt[deathID];
+      gamef.getRoom(userRoom).chatOFF();
       roomChatAll(bot, gamef.getRoom(userRoom).players, 0, `\`\`\`\n🎓Xin mời ${deathTxt} bước lên giá treo cổ!\n⏰Bạn có 1 phút để trăn trối\n\`\`\``);
       // 1 phút trăn trối
       let time = new Date(Date.now() + 1 * 60 * 1000);

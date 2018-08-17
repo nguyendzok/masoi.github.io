@@ -3,7 +3,7 @@ const gameIsNotEndCheck = require('../MainGame/gameIsNotEndCheck');
 const dayVoteCheck = require('../Day/dayVoteCheck');
 
 module.exports = async (gamef, bot, userRoom, witchSaved) => {
-    let deathID = gamef.getRoom(userRoom).deathID;
+    let deathID = parseInt(gamef.getRoom(userRoom).deathID);
     let deathTxt, deathRole;
     if (deathID != -1 && gamef.getRoom(userRoom).players[deathID]) {
         deathTxt = gamef.getRoom(userRoom).playersTxt[deathID];
@@ -35,13 +35,15 @@ module.exports = async (gamef, bot, userRoom, witchSaved) => {
         }
     }
     // PHÙ THỦY giết
-    if (gamef.getRoom(userRoom).witchKillID != undefined && dieArr.indexOf(gamef.getRoom(userRoom).witchKillID) == -1) {
-        let killID = gamef.getRoom(userRoom).witchKillID;
+    if (gamef.getRoom(userRoom).witchKillID != undefined) {
+        let killID = parseInt(gamef.getRoom(userRoom).witchKillID);
         let deathByMagicTxt = gamef.getRoom(userRoom).playersTxt[killID];
         gamef.getRoom(userRoom).witchKillAction(async (witchKillID) => {
             dieCount++;
-            dieArr.push(witchKillID);
-            chatAllTxt += `\n👻 *${deathByMagicTxt}* đã CHẾT!`;
+            dieArr.push(killID);
+            if (dieArr.indexOf(killID) == -1) {
+                chatAllTxt += `\n👻 *${deathByMagicTxt}* đã CHẾT!`;
+            }
             gamef.getRoom(userRoom).newLog(`👻Phù thủy đã phù phép chết ${gamef.roleTxt[gamef.getRoom(userRoom).getRoleByID(witchKillID)]} *${deathByMagicTxt}*`);
             console.log(`$ ROOM ${userRoom + 1} > ${witchKillID}: ${deathByMagicTxt} DIED by witch!`);
         });
