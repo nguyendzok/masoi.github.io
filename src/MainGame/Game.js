@@ -495,6 +495,7 @@ class Room {
                 this.villagersCount--;
                 this.wolfsCount++;
             }
+            this.roleDoneBy(joinID);
             return true;
         } else {
             return false;
