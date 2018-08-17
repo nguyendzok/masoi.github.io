@@ -155,7 +155,7 @@ module.exports = (gamef, bot) => {
                                     chat.say(`\`\`\`\nBạn không thể giết người chơi đã chết!\n\`\`\``);
                                 } else {
                                     await chat.say(`⛔Bạn đã giết ${gamef.getRoom(userRoom).playersTxt[voteID]}!`);
-                                    gamef.getRoom(userRoom).newLog(`⛔Phù thủy ${gamef.getRoom(userRoom).getPlayer(gamef.getRoom(userRoom).witchID).first_name} đã giết ${gamef.getRoom(userRoom).playersTxt[voteID]}!`)
+                                    gamef.getRoom(userRoom).newLog(`⛔Phù thủy ${gamef.getRoom(userRoom).getPlayer(gamef.getRoom(userRoom).witchID).first_name} đã giết *${gamef.getRoom(userRoom).playersTxt[voteID]}* !`)
                                     // kiểm tra đã hết đêm chưa?
                                     gamef.func(nightDoneCheck, bot, userRoom);
                                 }
