@@ -178,7 +178,7 @@ class Room {
         this.players.splice(id, 1);
         let len = this.players.length;
         for (let i = id; i < len; i++) {
-            if (this.players[i]!=undefined) {
+            if (this.players[i] != undefined) {
                 this.players[i].id--;
             }
         }
@@ -655,7 +655,12 @@ class Game {
         let villagersRemain = len - 2, balance = 7 + 3;
         this.setRole(roomID, 1, 1); // 1 TIÊN TRI +7
         this.setRole(roomID, 2, 1); // 1 BẢO VỆ +3
-        if (len <= 5) { // 4,5 = +4
+        if (len <= 4) { // 4,5 = +4
+            roleListTxt += `, 1 SÓI, 1 PHÙ THỦY (VUI LÒNG KHÔNG CHƠI GAME 4 - GAME 4 là để admin thử nghiệm và sửa lỗi)`;
+            villagersRemain -= 2; balance += -6 + 4 + villagersRemain;
+            this.setRole(roomID, -1, 1);  //1 SÓI -6
+            this.setRole(roomID, 5, 1);  // 1 PHÙ THỦY +4
+        } else if (len == 5) { // 5 = +4
             roleListTxt += `, 1 SÓI, 1 NGƯỜI HÓA SÓI`;
             villagersRemain -= 2; balance += -6 - 1 + villagersRemain;
             this.setRole(roomID, -1, 1);  //1 SÓI -6
