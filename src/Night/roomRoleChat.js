@@ -111,11 +111,11 @@ module.exports = async function (gamef, bot, userRoom) {
             } else if (p.role == 5) { // Phù thủy
                 let sayTxt;
                 if (gamef.getRoom(userRoom).witchKillRemain) {
-                    sayTxt = `🔮Bạn là Phù thủy!\n${gamef.getRoom(userRoom).witchSaveRemain ? '☑Bạn còn quyền cứu' : '⛔Bạn đã dùng quyền cứu!'}\n☑"/kill <số ID>" để giết\n☑"/skip" để bỏ qua\n${playersList}`;
+                    sayTxt = `🔮Bạn là Phù thủy!\n${gamef.getRoom(userRoom).witchSaveRemain ? '☑Bạn còn quyền cứu' : '⛔Bạn đã dùng quyền cứu!'}\n☑"/kill <số ID>" để giết\n${playersList}`;
                 } else {
                     sayTxt = `🔮Bạn là Phù thủy!\n${gamef.getRoom(userRoom).witchSaveRemain ? '☑Bạn còn quyền cứu' : '⛔Bạn đã dùng quyền cứu!'}\n⛔Bạn đã dùng quyền giết!\n${playersList}`;
-                    gamef.getRoom(userRoom).roleDoneBy(p.joinID);
                 }
+                gamef.getRoom(userRoom).roleDoneBy(p.joinID);
                 return sendImageCard(bot, p.joinID, 'https://www.facebook.com/masoigame/photos/pcb.1889279921367724/1889278464701203', 'Phù thủy')
                     .then(() => {
                         bot.say(p.joinID, isCupidTxt + sayTxt);

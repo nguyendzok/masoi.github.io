@@ -10,14 +10,14 @@ module.exports = (gamef, bot, userRoom) => {
                 deathTxt = gamef.getRoom(userRoom).playersTxt[deathID];
             }
 
-            const askForSave = (convo, askTxt = `Để giết: "/kill <số id> "\nĐể cứu: "/yes" hay "/no"`) => {
-                convo.ask({
+            const askForSaveKill = (convo, qreply = true, askTxt = `Phù thủy cứu hay không?`) => {
+                convo.ask(qreply ? {
                     text: askTxt,
                     quickReplies: ['/yes', '/no'],
-                }, async (payload, convo) => {
+                } : askTxt, async (payload, convo) => {
                     if (!payload.message || !(/(y|Y)es/g.test(payload.message.text) || /(n|N)o/g.test(payload.message.text) || /\/kill\s[0-9]+/g.test(payload.message.text))) {
                         convo.say(`\`\`\`\nKhông hợp lệ!\n\`\`\``);
-                        askForSave(convo);
+                        askForSaveKill(convo);
                         return;
                     } else {
                         gamef.getRoom(userRoom).cancelSchedule();
@@ -45,11 +45,10 @@ module.exports = (gamef, bot, userRoom) => {
                                     convo.say(`\`\`\`\nBạn không thể giết người đã chết!\n\`\`\``);
                                 } else {
                                     await convo.say(`⛔Bạn đã giết ${gamef.getRoom(userRoom).playersTxt[voteID]}!`);
-                                    gamef.getRoom(userRoom).roleDoneBy(joinID);
                                     gamef.getRoom(userRoom).newLog(`⛔Phù thủy ${gamef.getRoom(userRoom).getPlayer(gamef.getRoom(userRoom).witchID).first_name} đã giết ${gamef.getRoom(userRoom).playersTxt[voteID]}!`)
                                 }
                                 if (gamef.getRoom(userRoom).witchSaveRemain) {
-                                    askForSave(convo, `Bạn có quyền cứu: "/yes" hay "/no" ?`);
+                                    askForSaveKill(convo, true, `Bạn có quyền cứu: "/yes" hay "/no" ?`);
                                 }
                             } else {
                                 convo.say('```\nBạn đã hết quyền giết\n```');
@@ -71,14 +70,16 @@ module.exports = (gamef, bot, userRoom) => {
                             convo.end();
                             dayNotify(gamef, bot, userRoom, false);
                         });
-                        let askTxt;
+                        let askTxt, qreply;
                         if (gamef.getRoom(userRoom).witchKillRemain) {
                             let playerListTxt = gamef.getRoom(userRoom).playersTxt.join(' / ');
                             askTxt = `Để giết: "/kill <số id>"\n${playerListTxt}`;
+                            qreply = false;
                         } else {
                             askTxt = `Bạn có quyền cứu: "/yes" hay "/no" ?`;
+                            qreply = true;
                         }
-                        askForSave(convo, askTxt);
+                        askForSaveKill(convo, qreply, askTxt);
                     }
                 });
             } else {
