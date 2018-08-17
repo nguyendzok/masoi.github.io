@@ -95,23 +95,23 @@ module.exports = async (gamef, bot, userRoom, witchSaved) => {
         gamef.getRoom(userRoom).newLog(`${deathID != -1 ? `👻 *${deathTxt}* bị cắn nhưng không chết!\n` : `🎊Sói không thống nhất được số vote!\n`}🎊Đêm hôm đấy không ai chết cả!`);
         chatAllTxt += `🎊Đêm hôm qua không ai chết cả!`;
     }
+
+    let aliveLeft = gamef.getRoom(userRoom).aliveCount();
+    chatAllTxt += `⏰Mọi người có ${aliveLeft <= 8 ? aliveLeft : 9} phút thảo luận!`;
+
     chatAllTxt += `\n\`\`\``;
     await roomChatAll(bot, gamef.getRoom(userRoom).players, 0, chatAllTxt);
 
-
     gameIsNotEndCheck(gamef, bot, userRoom, () => {
-        let playersInRoomTxt = gamef.getRoom(userRoom).playersTxt.join(' ; ');
-        let aliveLeft = gamef.getRoom(userRoom).aliveCount();
-        roomChatAll(bot, gamef.getRoom(userRoom).players, 0, `⏰Mọi người có ${aliveLeft <= 8 ? aliveLeft : 9} phút thảo luận!`);
         gamef.getRoom(userRoom).dayNightSwitch();
-
         let time = new Date(Date.now() + (aliveLeft <= 8 ? aliveLeft : 9) * 60 * 1000);
         gamef.getRoom(userRoom).addSchedule(time, () => {
-            roomChatAll(bot, gamef.getRoom(userRoom).players, 0, `⏰CÒN 1 PHÚT THẢO LUẬN\nCác bạn nên cân nhắc kĩ, tránh lan man, nhanh chóng tìm ra kẻ đáng nghi nhất!`);
+            roomChatAll(bot, gamef.getRoom(userRoom).players, 0, `\`\`\`\n⏰CÒN 1 PHÚT THẢO LUẬN\nCác bạn nên cân nhắc kĩ, tránh lan man, nhanh chóng tìm ra kẻ đáng nghi nhất!\n\`\`\``);
             console.log(`$ ROOM ${userRoom + 1} > 1 MINUTE REMAINING`);
             let time = new Date(Date.now() + 1 * 60 * 1000);
             gamef.getRoom(userRoom).addSchedule(time, () => {
-                roomChatAll(bot, gamef.getRoom(userRoom).players, 0, `⏰Hết giờ! Mọi người có 1 PHÚT để vote một người lên giá treo cổ!\n/vote <id> để treo cổ 1 người\n${playersInRoomTxt}`);
+                let playersInRoomTxt = gamef.getRoom(userRoom).playersTxt.join(' / ');
+                roomChatAll(bot, gamef.getRoom(userRoom).players, 0, `\`\`\`\n⏰Hết giờ! Mọi người có 1 PHÚT để vote!\n"/vote <số id>" để treo cổ 1 người\n${playersInRoomTxt}\n\`\`\``);
                 gamef.getRoom(userRoom).chatOFF();
                 console.log(`$ ROOM ${userRoom + 1} > END OF DISCUSSION!`);
                 // tự động vote:
@@ -120,7 +120,7 @@ module.exports = async (gamef, bot, userRoom, witchSaved) => {
                         let time = new Date(Date.now() + 60 * 1000);
                         players[index].addSchedule(time, () => {
                             if (p && gamef.getRoom(userRoom).alivePlayer[p.joinID]) {
-                                roomChatAll(bot, gamef.getRoom(userRoom).players, 0, `✊${p.first_name} đã không kịp bỏ phiếu! (-10 uy tín)`);
+                                roomChatAll(bot, gamef.getRoom(userRoom).players, 0, `*✊${p.first_name} đã không kịp bỏ phiếu! (-30 uy tín)*`);
                                 gamef.getRoom(userRoom).autoRole(p.joinID, p.role);
                                 // kiểm tra đã VOTE XONG chưa?
                                 gamef.func(dayVoteCheck, bot, userRoom);

@@ -18,16 +18,16 @@ module.exports = (gamef, bot, userRoom) => {
       gamef.getRoom(userRoom).addSchedule(time, () => {
         // hết giờ, vote treo cổ nào!
         roomChatAll(bot, gamef.getRoom(userRoom).players, 0, {
-          text: `⏰Hết giờ! Mọi người có 1 PHÚT để vote!\n👎TREO CỔ hay 👍THA?\n/treo hoặc /tha`,
+          text: `\`\`\`\n⏰Hết giờ! Mọi người có 30 giây!\n👎TREO CỔ hay 👍THA?\n"/treo" hoặc "/tha"\n\`\`\``,
           quickReplies: ['/treo', '/tha']
         });
         console.log(`$ ROOM ${userRoom + 1} > END OF TRĂN TRỐI :))`);
         // timer để vote treo cổ
         gamef.getRoom(userRoom).players.forEach((p, index, players) => {
           if (p && gamef.getRoom(userRoom).alivePlayer[p.joinID] && !gamef.getRoom(userRoom).roleDone[p.joinID]) {
-            let time = new Date(Date.now() + 60 * 1000);
-            players[index].addSchedule(time, () => {
-              roomChatAll(bot, gamef.getRoom(userRoom).players, 0, `👍👎${p.first_name} đã không kịp vote (-10 uy tín)`);
+            let time = new Date(Date.now() + 30 * 1000);
+            players[index].addSchedule(time, async () => {
+              await roomChatAll(bot, gamef.getRoom(userRoom).players, 0, `*👍👎${p.first_name} đã không kịp vote* (-30 uy tín)`);
               gamef.getRoom(userRoom).roleDoneBy(p.joinID, true);
               gamef.func(yesNoVoteCheck, bot, userRoom);
             });
@@ -35,13 +35,13 @@ module.exports = (gamef, bot, userRoom) => {
         });
       });
     } else {
-      await roomChatAll(bot, gamef.getRoom(userRoom).players, 0, `😇Không ai bị treo cổ do có số vote bằng nhau hoặc người bị vote treo đã tự sát! Mọi người đi ngủ`);
-      gamef.getRoom(userRoom).newLog(`😇Không ai bị treo cổ do có số vote bằng nhau hoặc người bị vote treo đã tự sát!`);
-      gameIsNotEndCheck(gamef, bot, userRoom, () => {
+      gamef.getRoom(userRoom).newLog(`😇Ngày hôm đó không một ai bị treo cổ!`);
+      await roomChatAll(bot, gamef.getRoom(userRoom).players, 0, `\`\`\`\n😇Không một ai bị treo cổ\nDo số vote bằng nhau hoặc người bị vote đã tự sát!\nMọi người đi ngủ\n\`\`\``);
+      gameIsNotEndCheck(gamef, bot, userRoom, async () => {
         // Đêm tiếp theo
         gamef.getRoom(userRoom).dayNightSwitch();
-        roomChatAll(bot, gamef.getRoom(userRoom).players, 0, `🌛Đêm thứ ${gamef.getRoom(userRoom).day}🌛`);
         gamef.getRoom(userRoom).newLog(`\n🌛Đêm thứ ${gamef.getRoom(userRoom).day}🌛\n`);
+        await roomChatAll(bot, gamef.getRoom(userRoom).players, 0, `🌛Đêm thứ ${gamef.getRoom(userRoom).day}🌛`);
         gamef.func(roomRoleChat, bot, userRoom);
       });
     }

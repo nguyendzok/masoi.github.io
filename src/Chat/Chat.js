@@ -23,10 +23,10 @@ module.exports = (gamef, bot) => {
             let user = gamef.getRoom(userRoom).getPlayer(joinID);
             if (gamef.getRoom(userRoom).alivePlayer[joinID]) { // nếu còn sống
                 if (gamef.getRoom(userRoom).cupidsID.indexOf(joinID) != -1) { // cặp đôi
-                    if (chatTxt.match(/\/p.(\w+.?)+/g)) { //private chat
+                    if (/\/p\s.+/g.test(chatTxt)) { //private chat
                         let newChatTxt = chatTxt.match(/(?<=\/p\s).*/g)
                         bot.sendAction(joinID, 'mark_seen');
-                        return roomWolfChatAll(bot, gamef.getRoom(userRoom).cupidsID, joinID, '*' + user.first_name + '*: ' + newChatTxt);
+                        return roomWolfChatAll(bot, gamef.getRoom(userRoom).cupidsID, joinID, '*' + user.first_name + '* (cặp đôi): ' + newChatTxt);
                     }
                 }
                 if (gamef.getRoom(userRoom).isNight) { // ban đêm
@@ -34,7 +34,7 @@ module.exports = (gamef, bot) => {
 
                     //KẺ PHẢN BỘI
                     if (gamef.getRoom(userRoom).nguyenID == joinID) {
-                        if (chatTxt.match(/\/p.(\w+.?)+/g)) { //private chat
+                        if (/\/p\s.+/g.test(chatTxt)) { //private chat
                             let newChatTxt = chatTxt.match(/(?<=\/p\s).*/g)
                             bot.sendAction(joinID, 'mark_seen');
                             return roomWolfChatAll(bot, gamef.getRoom(userRoom).wolfsID, joinID, '*' + user.first_name + '* (kẻ phản bội): ' + newChatTxt);
@@ -56,7 +56,7 @@ module.exports = (gamef, bot) => {
                                         let nguyenJoinID = gamef.getRoom(userRoom).players[nguyenID].joinID;
                                         chat.say(`🐺Bạn đã nguyền ${nguyenName}`);
                                         roomWolfChatAll(bot, gamef.getRoom(userRoom).wolfsID, joinID, `\`\`\`\n🐺${nguyenName} đã bị nguyền và theo phe sói!\n\`\`\``);
-                                        let wolfsListTxt = gamef.getRoom(userRoom).wolfsTxt.join(' ; ');
+                                        let wolfsListTxt = gamef.getRoom(userRoom).wolfsTxt.join(' / ');
                                         bot.say(nguyenJoinID, '```\n🐺Bạn đã bị nguyền, bạn sẽ theo phe 🐺SÓI\nDanh sách phe sói:\n' + wolfsListTxt + '\n```');
                                         gamef.getRoom(userRoom).newLog(`🐺${nguyenName} đã bị nguyền và theo phe sói!`);
                                     } else {
@@ -216,12 +216,12 @@ module.exports = (gamef, bot) => {
                             if (gamef.getRoom(userRoom).deathID != -1) {
                                 if (chatTxt.match(/\/treo/g)) { //vote treo cổ
                                     gamef.getRoom(userRoom).killOrSaveVote(joinID, true);
-                                    await chat.say(`👎Bạn đã vote treo! (${gamef.getRoom(userRoom).saveOrKill})`);
-                                    roomChatAll(bot, gamef.getRoom(userRoom).players, joinID, `👎${user.first_name} đã vote treo! (${gamef.getRoom(userRoom).saveOrKill})`);
+                                    await chat.say(`*👎Bạn đã vote treo! (${gamef.getRoom(userRoom).saveOrKill})*`);
+                                    roomChatAll(bot, gamef.getRoom(userRoom).players, joinID, `*👎${user.first_name} đã vote treo! (${gamef.getRoom(userRoom).saveOrKill})*`);
                                 } else { //vote tha
                                     gamef.getRoom(userRoom).killOrSaveVote(joinID, false);
-                                    await chat.say(`👍Bạn đã vote tha! (${gamef.getRoom(userRoom).saveOrKill})`);
-                                    roomChatAll(bot, gamef.getRoom(userRoom).players, joinID, `👍${user.first_name} đã vote tha! (${gamef.getRoom(userRoom).saveOrKill})`);
+                                    await chat.say(`*👍Bạn đã vote tha! (${gamef.getRoom(userRoom).saveOrKill})*`);
+                                    roomChatAll(bot, gamef.getRoom(userRoom).players, joinID, `*👍${user.first_name} đã vote tha! (${gamef.getRoom(userRoom).saveOrKill})*`);
                                 }
                                 gamef.func(yesNoVoteCheck, bot, userRoom);
                             }
@@ -231,15 +231,15 @@ module.exports = (gamef, bot) => {
                         let voteID = chatTxt.match(/-?[0-9]+/g)[0];
                         if (gamef.getRoom(userRoom).vote(joinID, voteID)) {
                             if (voteID == -1) {
-                                await chat.say(`✊Bạn đã từ chối bỏ phiếu!`);
-                                roomChatAll(bot, gamef.getRoom(userRoom).players, joinID, `✊${user.first_name} đã từ chối bỏ phiếu`);
+                                await chat.say(`*✊Bạn đã từ chối bỏ phiếu!*`);
+                                roomChatAll(bot, gamef.getRoom(userRoom).players, joinID, `*✊${user.first_name} đã từ chối bỏ phiếu*`);
                             } else {
                                 let voteKill = gamef.getRoom(userRoom).playersTxt[voteID];
-                                await chat.say(`✊Bạn đã vote treo cổ ${voteKill} (${gamef.getRoom(userRoom).voteList[voteID]} phiếu)`);
-                                roomChatAll(bot, gamef.getRoom(userRoom).players, joinID, `✊${user.first_name} đã vote treo cổ ${voteKill} (${gamef.getRoom(userRoom).voteList[voteID]} phiếu)`);
+                                await chat.say(`*✊Bạn đã vote treo cổ ${voteKill} (${gamef.getRoom(userRoom).voteList[voteID]} phiếu)*`);
+                                roomChatAll(bot, gamef.getRoom(userRoom).players, joinID, `*✊${user.first_name} đã vote treo cổ ${voteKill} (${gamef.getRoom(userRoom).voteList[voteID]} phiếu)*`);
                             }
                         } else {
-                            chat.say('```\nBạn không thể vote 2 lần hoặc vote người chơi đã chết!\n```');
+                            chat.say('```\nBạn chỉ được vote MỘT lần MỘT người còn sống!\n```');
                         }
                         // kiểm tra đã VOTE XONG chưa?
                         gamef.func(dayVoteCheck, bot, userRoom);

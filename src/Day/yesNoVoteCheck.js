@@ -8,7 +8,7 @@ module.exports = async (gamef, bot, userRoom) => {
         let deathID = gamef.getRoom(userRoom).deathID;
 
         if (!gamef.getRoom(userRoom).players[deathID]) {
-            roomChatAll(bot, gamef.getRoom(userRoom).players, 0, `Người chơi bị vote đã thoát!`);
+            roomChatAll(bot, gamef.getRoom(userRoom).players, 0, '```\nNgười chơi bị vote đã thoát!\n```');
         } else {
             let deathRole = gamef.getRoom(userRoom).players[deathID].role;
             let deathRoleTxt = gamef.roleTxt[deathRole];
@@ -17,7 +17,7 @@ module.exports = async (gamef, bot, userRoom) => {
             let chatAllTxt = "";
             if (gamef.getRoom(userRoom).saveOrKill < 0) {
                 chatAllTxt += `\`\`\`\n👻 *${deathTxt}* đã bị treo cổ theo số đông!`;
-                gamef.getRoom(userRoom).newLog(`👻Mọi người đã treo cổ ${deathRoleTxt} *${deathTxt}* với tha - treo = ${gamef.getRoom(userRoom).saveOrKill}`);
+                gamef.getRoom(userRoom).newLog(`👻Treo cổ ${deathRoleTxt} *${deathTxt}* (tha-treo=${gamef.getRoom(userRoom).saveOrKill})`);
                 gamef.getRoom(userRoom).kill();
                 dieCount++;
                 if (gamef.getRoom(userRoom).cupidsID.indexOf(gamef.getRoom(userRoom).players[deathID].joinID) != -1) { //người chết là cặp đôi
@@ -33,16 +33,16 @@ module.exports = async (gamef, bot, userRoom) => {
                 await roomChatAll(bot, gamef.getRoom(userRoom).players, 0, chatAllTxt);
 
             } else {
-                await roomChatAll(bot, gamef.getRoom(userRoom).players, 0, `😇Đã tha chết cho ${deathTxt}! Mọi người đi ngủ`);
-                gamef.getRoom(userRoom).newLog(`😇Mọi người tha chết cho ${deathRoleTxt} *${deathTxt}* với tha - treo = ${gamef.getRoom(userRoom).saveOrKill}`);
+                gamef.getRoom(userRoom).newLog(`😇Tha chết ${deathRoleTxt} *${deathTxt}* (tha-treo=${gamef.getRoom(userRoom).saveOrKill})`);
+                await roomChatAll(bot, gamef.getRoom(userRoom).players, 0, `\`\`\`\n😇Đã tha chết cho ${deathTxt}! Mọi người đi ngủ\n\`\`\``);
             }
         }
 
-        gameIsNotEndCheck(gamef, bot, userRoom, () => {
+        gameIsNotEndCheck(gamef, bot, userRoom, async () => {
             // Đêm tiếp theo
             gamef.getRoom(userRoom).dayNightSwitch();
-            roomChatAll(bot, gamef.getRoom(userRoom).players, 0, `🌛Đêm thứ ${gamef.getRoom(userRoom).day}🌛`);
             gamef.getRoom(userRoom).newLog(`\n🌛Đêm thứ ${gamef.getRoom(userRoom).day}🌛\n`);
+            await roomChatAll(bot, gamef.getRoom(userRoom).players, 0, `🌛Đêm thứ ${gamef.getRoom(userRoom).day}🌛`);
             gamef.func(roomRoleChat, bot, userRoom);
         });
     })

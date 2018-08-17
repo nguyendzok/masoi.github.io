@@ -693,7 +693,7 @@ class Game {
             this.setRole(roomID, 3, 1);  // 1 THỢ SĂN +3
             this.setRole(roomID, 6, 1);  // 1 GIÀ LÀNG +0
             this.setRole(roomID, 7, 1);  // 1 THẦN TÌNH YÊU -3
-        } else if (len <= 12) { // 11,12 = +1/+2
+        } else if (len <= 12) { // 11,12 = +1/+2 (2,3 DÂN)
             roleListTxt += ", 2 SÓI, 1 BÁN SÓI, 1 THỢ SĂN, 1 PHÙ THỦY, 1 GIÀ LÀNG, 1 THẦN TÌNH YÊU";
             villagersRemain -= 7; balance += -6 * 3 + 3 + 4 + 0 - 3 + villagersRemain;
             this.setRole(roomID, -1, 2);  //2 SÓI -6*2
@@ -702,7 +702,7 @@ class Game {
             this.setRole(roomID, 5, 1);  // 1 PHÙ THỦY +4
             this.setRole(roomID, 6, 1);  // 1 GIÀ LÀNG +0
             this.setRole(roomID, 7, 1);  // 1 THẦN TÌNH YÊU -3
-        } else { // 13,14,15 = +2/+3/+4
+        } else { // 13,14,15 = +2/+3/+4 (3,4,5 DÂN)
             roleListTxt += ", 3 SÓI, 2 THỢ SĂN, 1 PHÙ THỦY, 1 GIÀ LÀNG, 1 THẦN TÌNH YÊU";
             villagersRemain -= 8; balance += - 6 * 3 + 3 * 2 + 4 + 0 - 3 + villagersRemain;
             this.setRole(roomID, -1, 3);  //3 SÓI - 6*3
