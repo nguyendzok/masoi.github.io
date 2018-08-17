@@ -260,7 +260,7 @@ class Room {
         if (this.players[deathID] && this.alivePlayer[this.players[deathID].joinID]) {
             this.alivePlayer[this.players[deathID].joinID] = false;
             this.playersTxt[deathID] = '💀:' + this.playersTxt[deathID].substr(2, this.playersTxt[deathID].length - 2);
-            if (this.players[deathID].role === -1 || this.players[deathID].role === -3) {
+            if (this.players[deathID].role === -1 || this.players[deathID].role === -3 || this.players[deathID].joinID == this.nguyenID) {
                 this.wolfsCount--;
             } else {
                 this.villagersCount--;
@@ -659,10 +659,10 @@ class Game {
         this.setRole(roomID, 1, 1); // 1 TIÊN TRI +7
         this.setRole(roomID, 2, 1); // 1 BẢO VỆ +3
         if (len <= 4) { // 4,5 = +4
-            roleListTxt += `, 1 SÓI, 1 thần tình yêu (VUI LÒNG KHÔNG CHƠI GAME 4 - GAME 4 là để admin thử nghiệm và sửa lỗi)`;
-            villagersRemain -= 2; balance += -6 - 3 + villagersRemain;
+            roleListTxt += `, 1 SÓI, 1 NGƯỜI HÓA SÓI (VUI LÒNG KHÔNG CHƠI GAME 4 - GAME 4 là để admin thử nghiệm và sửa lỗi)`;
+            villagersRemain -= 2; balance += -6 - 1 + villagersRemain;
             this.setRole(roomID, -1, 1);  //1 SÓI -6
-            this.setRole(roomID, 7, 1);  // 1 THẦN TÌNH YÊU -3
+            this.setRole(roomID, 8, 1);  // 1 NGƯỜI HÓA SÓI -1
         } else if (len == 5) { // 5 = +4
             roleListTxt += `, 1 SÓI, 1 NGƯỜI HÓA SÓI`;
             villagersRemain -= 2; balance += -6 - 1 + villagersRemain;

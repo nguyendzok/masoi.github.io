@@ -93,7 +93,7 @@ module.exports = (gamef, bot) => {
                                 if (gamef.getRoom(userRoom).oldManID != undefined && gamef.getRoom(userRoom).oldManLive <= 0) { // già làng chết
                                     gamef.getRoom(userRoom).newLog(`🔍${user.first_name} soi *${gamef.getRoom(userRoom).playersTxt[voteID]}* ra 💩AUTO DÂN`);
                                 } else {
-                                    gamef.getRoom(userRoom).newLog(`🔍${user.first_name} soi *${gamef.getRoom(userRoom).playersTxt[voteID]}* ra ${role == -1 ? '🐺SÓI' : role == 1 ? 'TỰ SOI MÌNH! GG' : '💩PHE DÂN'}`);
+                                    gamef.getRoom(userRoom).newLog(`🔍${user.first_name} soi *${gamef.getRoom(userRoom).playersTxt[voteID]}* ra ${(role == -1 || role == -3 || role == 8) ? '🐺SÓI' : role == 1 ? 'TỰ SOI MÌNH! GG' : '💩PHE DÂN'}`);
                                 }
                             }, (err) => {
                                 chat.say('```\nBạn không thể soi 2 lần hoặc soi người chơi đã chết!\n```');
@@ -176,7 +176,7 @@ module.exports = (gamef, bot) => {
                             let voteID1 = parseInt(chatTxt.match(/[0-9]+/g)[0]);
                             let voteID2 = parseInt(chatTxt.match(/[0-9]+/g)[1]);
                             if (!gamef.getRoom(userRoom).cupid(joinID, voteID1, voteID2)) {
-                                chat.say(`\`\`\`\nBạn không thể ghép 2 người chơi không tồn tại!\n\`\`\``);
+                                chat.say(`\`\`\`\nBạn chỉ được ghép đôi (1 lần duy nhất) 2 người tồn tại!\n\`\`\``);
                             } else {
                                 await chat.say(`👼Bạn đã ghép cặp ${gamef.getRoom(userRoom).playersTxt[voteID1]} với ${gamef.getRoom(userRoom).playersTxt[voteID2]}!\nBạn đã hoàn thành nhiệm vụ và trở thành DÂN!`);
                                 gamef.getRoom(userRoom).newLog(`👼CUPID đã ghép cặp *${gamef.getRoom(userRoom).playersTxt[voteID1]}* với *${gamef.getRoom(userRoom).playersTxt[voteID2]}* !`)
@@ -188,6 +188,8 @@ module.exports = (gamef, bot) => {
                                 }
                                 bot.say(user1.joinID, `\`\`\`\n${thirdParty}\n👼Bạn đã bị ghép đôi với ${user2.first_name}\n/p <nội dung> để chat riêng\n\`\`\``);
                                 bot.say(user2.joinID, `\`\`\`\n${thirdParty}\n👼Bạn đã bị ghép đôi với ${user1.first_name}\n/p <nội dung> để chat riêng\n\`\`\``);
+                                
+                                roomChatAll(bot, gamef.getRoom(userRoom).players, joinID, '```\n👼Thần tình yêu đã ghép đôi thành công\n```');
                                 // kiểm tra đã hết đêm chưa?
                                 gamef.func(nightDoneCheck, bot, userRoom);
                             }

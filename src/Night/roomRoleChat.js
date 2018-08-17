@@ -30,8 +30,8 @@ module.exports = async function (gamef, bot, userRoom) {
                 });
             } else {
                 let time;
-                if (p.role == 7) { // CUPID có 45 giây
-                    time = new Date(Date.now() + 30 * 1000);
+                if (p.role == 7) { // CUPID có 35 giây
+                    time = new Date(Date.now() + 20 * 1000);
                 } else { // còn lại: Tiên tri, bảo vệ, thợ săn, phù thủy có 60 giây
                     time = new Date(Date.now() + 45 * 1000);
                 }
