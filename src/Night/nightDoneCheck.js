@@ -10,9 +10,9 @@ module.exports = (gamef, bot, userRoom) => {
                 deathTxt = gamef.getRoom(userRoom).playersTxt[deathID];
             }
 
-            const askForSave = (convo) => {
+            const askForSave = (convo, askTxt = `Để giết: "/kill <số id> "\nĐể cứu: "/yes" hay "/no"`) => {
                 convo.ask({
-                    text: `"Trả lời: "/yes" hay "/no" hoặc /kill <id ai đó>`,
+                    text: askTxt,
                     quickReplies: ['/yes', '/no'],
                 }, async (payload, convo) => {
                     if (!payload.message || !(/(y|Y)es/g.test(payload.message.text) || /(n|N)o/g.test(payload.message.text) || /\/kill\s[0-9]+/g.test(payload.message.text))) {
@@ -48,6 +48,9 @@ module.exports = (gamef, bot, userRoom) => {
                                     gamef.getRoom(userRoom).roleDoneBy(joinID);
                                     gamef.getRoom(userRoom).newLog(`⛔Phù thủy ${gamef.getRoom(userRoom).getPlayer(gamef.getRoom(userRoom).witchID).first_name} đã giết ${gamef.getRoom(userRoom).playersTxt[voteID]}!`)
                                 }
+                                if (gamef.getRoom(userRoom).witchSaveRemain) {
+                                    askForSave(convo, `Bạn có quyền cứu: "/yes" hay "/no" ?`);
+                                }
                             } else {
                                 convo.say('```\nBạn đã hết quyền giết\n```');
                             }
@@ -58,17 +61,24 @@ module.exports = (gamef, bot, userRoom) => {
 
             //Call phù thủy khi: có người chết, người chết ko phải bán sói hay già làng, còn phù thủy
             if (deathID != -1 && gamef.getRoom(userRoom).players[deathID] && gamef.getRoom(userRoom).players[deathID].role != -2 && gamef.getRoom(userRoom).players[deathID].role != 6 && deathID != gamef.getRoom(userRoom).saveID && gamef.getRoom(userRoom).witchID != undefined) { //phù thủy còn quyền cứu, nạn nhân không phải bán sói
-                bot.conversation(gamef.getRoom(userRoom).witchID, (convo) => {
+                bot.conversation(gamef.getRoom(userRoom).witchID, async (convo) => {
                     let time = new Date(Date.now() + 45 * 1000);
                     if (gamef.getRoom(userRoom).witchSaveRemain || gamef.getRoom(userRoom).witchKillRemain) {
-                        convo.say(`\`\`\`\n🔪Đêm hôm qua: *${deathTxt}* đã CHẾT!\nBạn có 45 giây để quyết định\n\`\`\``);
+                        await convo.say(`\`\`\`\n🔪*${deathTxt}* đã CHẾT!\nBạn có 45 giây để quyết định\n\`\`\``);
                         gamef.getRoom(userRoom).addSchedule(time, () => {
                             console.log(`$ ROOM ${userRoom + 1} > AUTO ROLE > WITCH`);
                             convo.say(`⏰Bạn đã ngủ quên, trời sáng mất rồi!\nBạn không còn cơ hội cứu nữa!`);
                             convo.end();
                             dayNotify(gamef, bot, userRoom, false);
                         });
-                        askForSave(convo);
+                        let askTxt;
+                        if (gamef.getRoom(userRoom).witchKillRemain) {
+                            let playerListTxt = gamef.getRoom(userRoom).playersTxt.join(' / ');
+                            askTxt = `Để giết: "/kill <số id>\n${playerListTxt}`;
+                        } else {
+                            askTxt = `Bạn có quyền cứu: "/yes" hay "/no" ?`;
+                        }
+                        askForSave(convo, askTxt);
                     }
                 });
             } else {
