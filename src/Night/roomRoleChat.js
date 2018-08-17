@@ -111,7 +111,7 @@ module.exports = async function (gamef, bot, userRoom) {
             } else if (p.role == 5) { // Phù thủy
                 let sayTxt;
                 if (gamef.getRoom(userRoom).witchKillRemain) {
-                    sayTxt = `🔮Bạn là Phù thủy!\n${gamef.getRoom(userRoom).witchSaveRemain ? '☑Bạn còn quyền cứu' : '⛔Bạn đã dùng quyền cứu!'}\n☑"/kill <số ID>" để giết\n${playersList}`;
+                    sayTxt = `🔮Bạn là Phù thủy!\n${gamef.getRoom(userRoom).witchSaveRemain ? '☑Bạn còn quyền cứu' : '⛔Bạn đã dùng quyền cứu!'}\n☑"/kill <số ID>" để dùng quyền giết\n${playersList}`;
                 } else {
                     sayTxt = `🔮Bạn là Phù thủy!\n${gamef.getRoom(userRoom).witchSaveRemain ? '☑Bạn còn quyền cứu' : '⛔Bạn đã dùng quyền cứu!'}\n⛔Bạn đã dùng quyền giết!\n${playersList}`;
                 }

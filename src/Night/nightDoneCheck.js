@@ -73,7 +73,7 @@ module.exports = (gamef, bot, userRoom) => {
                         let askTxt, qreply;
                         if (gamef.getRoom(userRoom).witchKillRemain) {
                             let playerListTxt = gamef.getRoom(userRoom).playersTxt.join(' / ');
-                            askTxt = `Để giết: "/kill <số id>"\n${playerListTxt}`;
+                            askTxt = `Để dùng quyền giết: "/kill <số id>"\n${playerListTxt}`;
                             qreply = false;
                         } else {
                             askTxt = `Bạn có quyền cứu: "/yes" hay "/no" ?`;
