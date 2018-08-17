@@ -40,7 +40,7 @@ module.exports = (gamef, bot, userRoom) => {
                             }
                         } else { // kill
                             if (gamef.getRoom(userRoom).witchKillRemain) {
-                                let voteID = chatTxt.match(/[0-9]+/g)[0];
+                                let voteID = payload.message.text.match(/[0-9]+/g)[0];
                                 if (!gamef.getRoom(userRoom).witchKillVote(voteID)) {
                                     convo.say(`\`\`\`\nBạn không thể giết người đã chết!\n\`\`\``);
                                 } else {
@@ -74,7 +74,7 @@ module.exports = (gamef, bot, userRoom) => {
                         let askTxt;
                         if (gamef.getRoom(userRoom).witchKillRemain) {
                             let playerListTxt = gamef.getRoom(userRoom).playersTxt.join(' / ');
-                            askTxt = `Để giết: "/kill <số id>\n${playerListTxt}`;
+                            askTxt = `Để giết: "/kill <số id>"\n${playerListTxt}`;
                         } else {
                             askTxt = `Bạn có quyền cứu: "/yes" hay "/no" ?`;
                         }
