@@ -28,7 +28,7 @@ module.exports = (gamef, bot, userRoom) => {
           if (p && gamef.getRoom(userRoom).alivePlayer[p.joinID] && !gamef.getRoom(userRoom).roleDone[p.joinID]) {
             let time = new Date(Date.now() + 30 * 1000);
             players[index].addSchedule(time, async () => {
-              await roomChatAll(bot, gamef.getRoom(userRoom).players, 0, `*👍👎${p.first_name} đã không kịp vote* (-30 uy tín)`);
+              roomChatAll(bot, gamef.getRoom(userRoom).players, 0, `*👍👎${p.first_name} đã không kịp vote* (-30 uy tín)`);
               gamef.getRoom(userRoom).roleDoneBy(p.joinID, true);
               gamef.func(yesNoVoteCheck, bot, userRoom);
             });
@@ -37,12 +37,12 @@ module.exports = (gamef, bot, userRoom) => {
       });
     } else {
       gamef.getRoom(userRoom).newLog(`😇Ngày hôm đó không một ai bị treo cổ!`);
-      await roomChatAll(bot, gamef.getRoom(userRoom).players, 0, `\`\`\`\n😇Không một ai bị treo cổ\nMọi người đi ngủ\n\`\`\``);
+      roomChatAll(bot, gamef.getRoom(userRoom).players, 0, `\`\`\`\n😇Không một ai bị treo cổ\nMọi người đi ngủ\n\`\`\``);
       gameIsNotEndCheck(gamef, bot, userRoom, async () => {
         // Đêm tiếp theo
         gamef.getRoom(userRoom).dayNightSwitch();
         gamef.getRoom(userRoom).newLog(`\n🌛Đêm thứ ${gamef.getRoom(userRoom).day}🌛\n`);
-        await roomChatAll(bot, gamef.getRoom(userRoom).players, 0, `🌛Đêm thứ ${gamef.getRoom(userRoom).day}🌛`);
+        roomChatAll(bot, gamef.getRoom(userRoom).players, 0, `🌛Đêm thứ ${gamef.getRoom(userRoom).day}🌛`);
         gamef.func(roomRoleChat, bot, userRoom);
       });
     }

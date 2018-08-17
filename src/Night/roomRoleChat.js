@@ -127,7 +127,6 @@ module.exports = async function (gamef, bot, userRoom) {
                         bot.say(p.joinID, isCupidTxt + `👴Bạn là Già làng! Bảo trọng =))\n👨‍👩‍👦‍👦ID CẢ LÀNG:\n${playersList}`);
                     });
             } else if (p.role == 7) { // THẦN TÌNH YÊU
-                gamef.getRoom(userRoom).roleDoneBy(p.joinID);
                 return sendImageCard(bot, p.joinID, 'https://www.facebook.com/masoigame/photos/pcb.1889279921367724/1889278324701217', 'Thần tình yêu')
                     .then(() => {
                         bot.say(p.joinID, isCupidTxt + `👼Bạn là THẦN TÌNH YÊU!\n/cupid <id1> <id2> để ghép đôi\n${playersList}`);
