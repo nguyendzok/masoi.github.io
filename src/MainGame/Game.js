@@ -456,7 +456,7 @@ class Room {
         console.log("$ ROOM " + (this.id + 1) + " > GAME CHECK: " + this.wolfsCount + ' SÓI/' + this.villagersCount + ' DÂN');
         if (this.cupidTeam && this.wolfsCount + this.villagersCount == 2) {
             callback(3);
-        } else if (this.wolfsCount >= this.villagersCount) {
+        } else if (this.wolfsCount > this.villagersCount) {
             //SÓI THẮNG
             callback(-1);
         } else if (this.wolfsCount === 0) {
@@ -674,9 +674,9 @@ class Game {
         this.setRole(roomID, 1, 1); // 1 TIÊN TRI +7
         this.setRole(roomID, 2, 1); // 1 BẢO VỆ +3
         if (len <= 4) { // 4 
-            roleListTxt += `, 1 SÓI, 1 PHÙ THỦY (VUI LÒNG KHÔNG CHƠI GAME 4 - GAME 4 là để admin thử nghiệm và sửa lỗi)`;
-            villagersRemain -= 2; balance += -6 + 4 + villagersRemain;
-            this.setRole(roomID, -1, 1);  //1 SÓI -6
+            roleListTxt += `, 1 SÓI NGUYỀN, 1 PHÙ THỦY (VUI LÒNG KHÔNG CHƠI GAME 4 - GAME 4 là để admin thử nghiệm và sửa lỗi)`;
+            villagersRemain -= 2; balance += -12 + 4 + villagersRemain;
+            this.setRole(roomID, -3, 1);  //1 SÓI NGUYỀN -12
             this.setRole(roomID, 5, 1);  // 1 PHÙ THỦY +4
         } else if (len == 5) { // 5 = +4 (1 DÂN)
             roleListTxt += `, 1 SÓI, 1 NGƯỜI HÓA SÓI`;

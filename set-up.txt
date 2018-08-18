@@ -7,5 +7,6 @@
 
 bug thợ săn:    thợ săn chỉ bắn khi bị cắn hoặc bị treo cổ, các cách chết khác không bắn
                 Không hỗ trợ đa thợ săn
+bug sói nguyền: kẻ bị nguyền : không cắn được
 
 Các role chỉ có 1 mà thôi: 1 PHÙ THỦY, 1 GIÀ LÀNG, 1 THẦN TÌNH YÊU (hiện đang bao gồm THỢ SĂN)

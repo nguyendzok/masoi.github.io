@@ -41,10 +41,10 @@ module.exports = (gamef, bot) => {
                         }
                     }
 
-                    if (userRole == -1 || userRole == -3) {// là SÓI / SÓI NGUYỀN
+                    if (userRole == -1 || userRole == -3 || gamef.getRoom(userRoom).nguyenID == joinID) {// là SÓI / SÓI NGUYỀN / KẺ BỊ SÓI NGUYỀN
                         if (!chatTxt.match(/\/vote.-?[0-9]+/g)) {
                             if (gamef.getRoom(userRoom).chatON) {
-                                roomWolfChatAll(bot, gamef.getRoom(userRoom).wolfsID, joinID, '*' + user.first_name + '*: ' + chatTxt);
+                                roomWolfChatAll(bot, gamef.getRoom(userRoom).wolfsID, joinID, '*' + user.first_name + '*(sói): ' + chatTxt);
                                 bot.sendAction(joinID, 'mark_seen');
                             }
                         } else {// SÓI VOTE
@@ -66,7 +66,8 @@ module.exports = (gamef, bot) => {
                             gamef.func(nightDoneCheck, bot, userRoom);
 
                         }
-                    } else if (userRole == 1) { // là tiên tri
+                    }
+                    if (userRole == 1) { // là tiên tri
                         if (chatTxt.match(/\/see.[0-9]+/g)) {//see
                             let voteID = chatTxt.match(/[0-9]+/g)[0];
                             gamef.getRoom(userRoom).see(joinID, voteID, async (role) => {
