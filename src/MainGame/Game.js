@@ -376,7 +376,14 @@ class Room {
             if (this.oldManID != undefined && this.oldManLive <= 0) { // có GIÀ LÀNG đã chết
                 trueCallback(4); // già làng chết: soi ra DÂN
             } else {
-                trueCallback(this.getRoleByID(voteID));
+                let role = this.getRoleByID(voteID);
+                if (role == -1 || role == -3 || role == 8 || (this.nguyenID && this.players[voteID].joinID == this.nguyenID)) { // sói, sói nguyền, người hóa sói, kẻ bị sói nguyền
+                    trueCallback(-1);
+                } else if (role == 1) { // soi tiên tri :v
+                    trueCallback(1);
+                } else { // còn lại là DÂN
+                    trueCallback(4);
+                }
             }
             return true;
         } else {

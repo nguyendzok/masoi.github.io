@@ -135,7 +135,7 @@ module.exports = (gamef, bot, userRoom) => {
                 thereIsOneDied = true;
             }
             //Call sói nguyền
-            if (thereIsOneDied && gamef.getRoom(userRoom).soiNguyenID != undefined) {
+            if (thereIsOneDied && gamef.getRoom(userRoom).soiNguyen && gamef.getRoom(userRoom).soiNguyenID != undefined) {
                 bot.conversation(gamef.getRoom(userRoom).soiNguyenID, async (convo) => {
                     let time = new Date(Date.now() + 30 * 1000);
                     gamef.getRoom(userRoom).addSchedule(time, () => {
