@@ -692,14 +692,14 @@ class Game {
             this.setRole(roomID, -1, 1);  //1 SÓI -6
             this.setRole(roomID, 8, 1);  // 1 NGƯỜI HÓA SÓI -1
         } else if (len == 6) { // 6 = +3
-            roleListTxt += `, 2 SÓI, 1 THỢ SĂN`;
-            villagersRemain -= 3; balance += -12 + 3 + villagersRemain;
-            this.setRole(roomID, -1, 2);  //2 SÓI -6 * 2
+            roleListTxt += `, 1 SÓI NGUYỀN, 1 THỢ SĂN`;
+            villagersRemain -= 2; balance += -12 + 3 + villagersRemain;
+            this.setRole(roomID, -3, 1);  //1 SÓI NGUYỀN -12
             this.setRole(roomID, 3, 1);  // 1 THỢ SĂN +3
         } else if (len == 7) { // 7 = +3
-            roleListTxt += `, 2 SÓI, 1 PHÙ THỦY, 1 NGƯỜI HÓA SÓI`;
-            villagersRemain -= 4; balance += -12 + 4 - 1 + villagersRemain;
-            this.setRole(roomID, -1, 2);  //2 SÓI -6 * 2
+            roleListTxt += `, 1 SÓI NGUYỀN, 1 PHÙ THỦY, 1 NGƯỜI HÓA SÓI`;
+            villagersRemain -= 3; balance += -12 + 4 - 1 + villagersRemain;
+            this.setRole(roomID, -3, 1);  //1 SÓI NGUYỀN -12
             this.setRole(roomID, 5, 1);  // 1 PHÙ THỦY +4
             this.setRole(roomID, 8, 1);  // 1 NGƯỜI HÓA SÓI -1
         } else if (len == 8) { // 8 = +3
