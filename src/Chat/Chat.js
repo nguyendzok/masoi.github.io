@@ -38,10 +38,17 @@ module.exports = (gamef, bot) => {
                             let newChatTxt = chatTxt.match(/(?<=\/p\s).*/g)
                             bot.sendAction(joinID, 'mark_seen');
                             return roomWolfChatAll(bot, gamef.getRoom(userRoom).wolfsID, joinID, '*' + user.first_name + '* (kẻ phản bội): ' + newChatTxt);
+                        } else if (/\/vote.-?[0-9]+/g.test(chatTxt)) {
+                            if (gamef.getRoom(userRoom).wolfsCount == 1) { // còn một mình kẻ bị sói nguyền
+                                let voteID = chatTxt.match(/-?[0-9]+/g)[0];
+                                gamef.getRoom(userRoom).justVote(voteID);
+                            } else {
+                                chat.say('```\nBạn chỉ có thể cắn khi là con sói cuối cùng còn sống sót!\n```')
+                            }
                         }
                     }
 
-                    if (userRole == -1 || userRole == -3 || gamef.getRoom(userRoom).nguyenID == joinID) {// là SÓI / SÓI NGUYỀN / KẺ BỊ SÓI NGUYỀN
+                    if (userRole == -1 || userRole == -3) {// là SÓI / SÓI NGUYỀN
                         if (!chatTxt.match(/\/vote.-?[0-9]+/g)) {
                             if (gamef.getRoom(userRoom).chatON) {
                                 roomWolfChatAll(bot, gamef.getRoom(userRoom).wolfsID, joinID, '*' + user.first_name + '*(sói): ' + chatTxt);
@@ -66,8 +73,7 @@ module.exports = (gamef, bot) => {
                             gamef.func(nightDoneCheck, bot, userRoom);
 
                         }
-                    }
-                    if (userRole == 1) { // là tiên tri
+                    } else if (userRole == 1) { // là tiên tri
                         if (chatTxt.match(/\/see.[0-9]+/g)) {//see
                             let voteID = chatTxt.match(/[0-9]+/g)[0];
                             gamef.getRoom(userRoom).see(joinID, voteID, async (role) => {

@@ -456,7 +456,7 @@ class Room {
         console.log("$ ROOM " + (this.id + 1) + " > GAME CHECK: " + this.wolfsCount + ' SÓI/' + this.villagersCount + ' DÂN');
         if (this.cupidTeam && this.wolfsCount + this.villagersCount == 2) {
             callback(3);
-        } else if (this.wolfsCount > this.villagersCount) {
+        } else if (this.wolfsCount >= this.villagersCount) {
             //SÓI THẮNG
             callback(-1);
         } else if (this.wolfsCount === 0) {
@@ -506,6 +506,10 @@ class Room {
             console.log('>>> VOTE FAILED (roleAlreadyDONE)!')
             return false;
         }
+    }
+    justVote(voteID) {
+        this.voteList[voteID] = 1;
+        console.log('>>> JUST VOTE! (kẻ bị sói nguyền)');
     }
     nguyen(nguyenID) {
         if (this.soiNguyen && this.players[nguyenID] && this.alivePlayer[this.players[nguyenID].joinID]) {
