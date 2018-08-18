@@ -41,9 +41,14 @@ module.exports = (gamef, bot) => {
                         } else if (/\/vote.-?[0-9]+/g.test(chatTxt)) {
                             if (gamef.getRoom(userRoom).wolfsCount == 1) { // còn một mình kẻ bị sói nguyền
                                 let voteID = chatTxt.match(/-?[0-9]+/g)[0];
-                                gamef.getRoom(userRoom).justVote(voteID);
+                                if (gamef.getRoom(userRoom).justVote(voteID)) {
+                                    chat.say('```\nBạn đã cắn ' + gamef.getRoom(userRoom).playersTxt[voteID] + '\n```');
+                                } else {
+                                    chat.say('```\nBạn chỉ có thể cắn người còn sống!\n```');
+                                }
+
                             } else {
-                                chat.say('```\nBạn chỉ có thể cắn khi là con sói cuối cùng còn sống sót!\n```')
+                                chat.say('```\nBạn chỉ có thể cắn khi là con sói cuối cùng còn sống sót!\n```');
                             }
                         }
                     }
@@ -89,6 +94,9 @@ module.exports = (gamef, bot) => {
                             // kiểm tra đã hết đêm chưa?
                             gamef.func(nightDoneCheck, bot, userRoom);
                         } else {
+                            if (gamef.getRoom(userRoom).nguyenID == joinID && /\/vote.-?[0-9]+/g.test(chatTxt)) {
+                                return;
+                            }
                             if (gamef.getRoom(userRoom).roleDone[joinID]) {
                                 chat.say('```\nBạn không thể trò chuyện trong đêm!\n```');
                             } else {
@@ -106,6 +114,9 @@ module.exports = (gamef, bot) => {
                                 gamef.func(nightDoneCheck, bot, userRoom);
                             }
                         } else {
+                            if (gamef.getRoom(userRoom).nguyenID == joinID && /\/vote.-?[0-9]+/g.test(chatTxt)) {
+                                return;
+                            }
                             if (gamef.getRoom(userRoom).roleDone[joinID]) {
                                 chat.say('```\nBạn không thể trò chuyện trong đêm!\n```');
                             } else {
@@ -129,6 +140,9 @@ module.exports = (gamef, bot) => {
                                 gamef.func(nightDoneCheck, bot, userRoom);
                             }
                         } else {
+                            if (gamef.getRoom(userRoom).nguyenID == joinID && /\/vote.-?[0-9]+/g.test(chatTxt)) {
+                                return;
+                            }
                             if (gamef.getRoom(userRoom).roleDone[joinID]) {
                                 chat.say('```\nBạn không thể trò chuyện trong đêm!\n```');
                             } else {
@@ -150,6 +164,9 @@ module.exports = (gamef, bot) => {
                             } else if (chatTxt.match(/\/skip/g)) {
                                 await chat.say('🎊Bạn đã không giết ai!');
                             } else {
+                                if (gamef.getRoom(userRoom).nguyenID == joinID && /\/vote.-?[0-9]+/g.test(chatTxt)) {
+                                    return;
+                                }
                                 if (gamef.getRoom(userRoom).roleDone[joinID]) {
                                     chat.say('```\nBạn không thể trò chuyện trong đêm!\n```');
                                 } else {
@@ -182,6 +199,9 @@ module.exports = (gamef, bot) => {
                                 gamef.func(nightDoneCheck, bot, userRoom);
                             }
                         } else {
+                            if (gamef.getRoom(userRoom).nguyenID == joinID && /\/vote.-?[0-9]+/g.test(chatTxt)) {
+                                return;
+                            }
                             if (gamef.getRoom(userRoom).roleDone[joinID]) {
                                 chat.say('```\nBạn không thể trò chuyện trong đêm!\n```');
                             } else {

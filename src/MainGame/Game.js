@@ -508,8 +508,12 @@ class Room {
         }
     }
     justVote(voteID) {
-        this.voteList[voteID] = 1;
-        console.log('>>> JUST VOTE! (kẻ bị sói nguyền)');
+        if (this.players[voteID] && this.alivePlayer[this.players[voteID].joinID]) {
+            this.voteList[voteID] = 1;
+            console.log('>>> JUST VOTE! (kẻ bị sói nguyền)');
+            return true;
+        }
+        return false;
     }
     nguyen(nguyenID) {
         if (this.soiNguyen && this.players[nguyenID] && this.alivePlayer[this.players[nguyenID].joinID]) {
