@@ -107,9 +107,12 @@ module.exports = (gamef, bot, userRoom) => {
                         if (/(y|Y)es/g.test(payload.message.text)) { // nguyền
                             gamef.getRoom(userRoom).nguyen(deathID);
                             convo.say(`Bạn đã nguyền thành công!`);
+                            convo.end();
+                            dayNotify(gamef, bot, userRoom, false);
+                        } else {
+                            convo.end();
+                            callWitch(gamef, bot, userRoom, deathID, deathTxt);
                         }
-                        convo.end();
-                        callWitch(gamef, bot, userRoom, deathID, deathTxt);
                     }
                 });
             };
