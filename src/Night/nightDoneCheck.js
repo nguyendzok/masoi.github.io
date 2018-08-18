@@ -11,11 +11,12 @@ function callWitch(gamef, bot, userRoom, deathID, deathTxt, thereIsOneDied) {
                 askForSaveKill(convo, qreply, askTxt);
                 return;
             } else {
-                gamef.getRoom(userRoom).cancelSchedule();
                 if (/(y|Y)es/g.test(payload.message.text)) { // cứu
+                    gamef.getRoom(userRoom).cancelSchedule();
                     if (gamef.getRoom(userRoom).witchSaveRemain) { // còn quyền cứu
                         gamef.getRoom(userRoom).witchUseSave();
                         await convo.say(`🔮Bạn đã cứu *${deathTxt}* thành công!`);
+                        console.log(`$ ROOM ${userRoom+1} > WITCH SAVE OK`);
                         gamef.getRoom(userRoom).newLog(`🔮Phù thủy *${gamef.getRoom(userRoom).getPlayer(gamef.getRoom(userRoom).witchID).first_name}* đã cứu *${deathTxt}*!`);
                         convo.end();
                         dayNotify(gamef, bot, userRoom, true);
@@ -23,6 +24,7 @@ function callWitch(gamef, bot, userRoom, deathID, deathTxt, thereIsOneDied) {
                         convo.say('```\nBạn đã hết quyền cứu\n```');
                     }
                 } else if (/(n|N)o/g.test(payload.message.text)) { // không cứu
+                    gamef.getRoom(userRoom).cancelSchedule();
                     if (gamef.getRoom(userRoom).witchSaveRemain) { // còn quyền cứu
                         convo.end();
                         dayNotify(gamef, bot, userRoom, false);
@@ -38,12 +40,18 @@ function callWitch(gamef, bot, userRoom, deathID, deathTxt, thereIsOneDied) {
                                 askForSaveKill(convo, qreply, askTxt);
                                 return;
                             } else {
-                                await convo.say(`⛔Bạn đã giết ${gamef.getRoom(userRoom).playersTxt[voteID]}!`);
-                                gamef.getRoom(userRoom).newLog(`⛔Phù thủy ${gamef.getRoom(userRoom).getPlayer(gamef.getRoom(userRoom).witchID).first_name} đã giết ${gamef.getRoom(userRoom).playersTxt[voteID]}!`)
+                                let witchKillName = gamef.getRoom(userRoom).playersTxt[voteID];
+                                console.log(`$ ROOM ${userRoom+1} > WITCH KILL: ${witchKillName}`);
+                                gamef.getRoom(userRoom).newLog(`⛔Phù thủy ${gamef.getRoom(userRoom).getPlayer(gamef.getRoom(userRoom).witchID).first_name} đã giết ${witchKillName}!`)
+                                await convo.say(`⛔Bạn đã giết ${witchKillName}!`);
                             }
                         }
-                        if (gamef.getRoom(userRoom).witchSaveRemain) {
+                        // kill hoặc skip đều chạy đoạn code bên dưới:
+                        if (thereIsOneDied && gamef.getRoom(userRoom).witchSaveRemain) {
                             askForSaveKill(convo, true, `Bạn có quyền cứu: "/yes" hay "/no" ?`);
+                        } else {
+                            gamef.getRoom(userRoom).cancelSchedule();
+                            dayNotify(gamef, bot, userRoom, false);
                         }
                     } else {
                         convo.say('```\nBạn đã hết quyền giết\n```');
