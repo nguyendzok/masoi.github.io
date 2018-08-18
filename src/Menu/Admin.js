@@ -59,7 +59,7 @@ module.exports = (gamef, bot) => {
                         }
                         convo.say('Thành công!');
                         convo.end();
-                        console.log(`$ ROOM ${userRoom} > KICK PLAYER ${player.first_name}`);
+                        console.log(`$ ROOM ${userRoom+1} > KICK PLAYER ${player.first_name}`);
                     } else {
                         convo.say(`Bạn đã hủy không thực hiện lệnh nào!`)
                         convo.end();

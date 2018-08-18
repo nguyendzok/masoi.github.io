@@ -66,7 +66,7 @@ function callWitch(gamef, bot, userRoom, deathID, deathTxt, thereIsOneDied) {
             let time;
             if (gamef.getRoom(userRoom).witchSaveRemain || gamef.getRoom(userRoom).witchKillRemain) {
                 if (thereIsOneDied) {
-                    await convo.say(`\`\`\`\n🔪*${deathTxt}* đã CHẾT!\nBạn có 45 giây để quyết định\n\`\`\``);
+                    await convo.say(`\`\`\`\n*${deathTxt}* đã CHẾT!\nBạn có 45 giây để quyết định\n\`\`\``);
                     time = new Date(Date.now() + 45 * 1000);
                 } else if (gamef.getRoom(userRoom).witchKillRemain) {
                     await convo.say(`\`\`\`\nĐêm qua không ai chết!\nBạn có 30 giây để quyết định\n\`\`\``);
@@ -107,7 +107,7 @@ module.exports = (gamef, bot, userRoom) => {
 
             const askForNguyen = (convo) => {
                 convo.ask({
-                    text: `\`\`\`\n🔪*${deathTxt}* đã CHẾT!\nBạn 30 giây để quyết định nguyền hay không?\n\`\`\``,
+                    text: `\`\`\`\n*${deathTxt}* đã CHẾT!\nBạn 30 giây để quyết định nguyền hay không?\n\`\`\``,
                     quickReplies: ['/yes', '/no'],
                 }, async (payload, convo) => {
                     if (!payload.message || !(/(y|Y)es/g.test(payload.message.text) || /(n|N)o/g.test(payload.message.text))) {

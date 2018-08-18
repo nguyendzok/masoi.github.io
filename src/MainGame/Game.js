@@ -669,7 +669,7 @@ class Game {
         if (len <= 4) { // 4 
             roleListTxt += `, 1 SÓI NGUYỀN, 1 PHÙ THỦY (VUI LÒNG KHÔNG CHƠI GAME 4 - GAME 4 là để admin thử nghiệm và sửa lỗi)`;
             villagersRemain -= 2; balance += -12 + 4 + villagersRemain;
-            this.setRole(roomID, -3, 1);  //1 SÓI NGUYỀN -12
+            // this.setRole(roomID, -3, 1);  //1 SÓI NGUYỀN -12
             this.setRole(roomID, 5, 1);  // 1 PHÙ THỦY +4
         } else if (len == 5) { // 5 = +4 (1 DÂN)
             roleListTxt += `, 1 SÓI, 1 NGƯỜI HÓA SÓI`;

@@ -14,9 +14,6 @@ module.exports = async (gamef, bot, userRoom, witchSaved) => {
 
     let chatAllTxt = `\`\`\`\n🌞Trời sáng rồi mọi người dậy đi\n`;
 
-    // SÓI NGUYỀN:
-    gamef.getRoom(userRoom).nguyenAction();
-
     // SÓI CẮN
     if (!witchSaved && gamef.getRoom(userRoom).kill()) {
         dieCount++;
@@ -24,28 +21,30 @@ module.exports = async (gamef, bot, userRoom, witchSaved) => {
         chatAllTxt += `👻 *${deathTxt}* đã CHẾT!`;
         gamef.getRoom(userRoom).newLog(`👻 *${deathTxt}* là ${deathRole} đã bị SÓI cắn!`);
         console.log(`$ ROOM ${userRoom + 1} > ${deathTxt} DIED!`);
-        if (gamef.getRoom(userRoom).players[deathID] && gamef.getRoom(userRoom).players[deathID].role === 3 && dieArr.indexOf(gamef.getRoom(userRoom).fireID) == -1) { //người chết là thợ săn
-            let fireID = gamef.getRoom(userRoom).fireID;
+        if (gamef.getRoom(userRoom).players[deathID] && gamef.getRoom(userRoom).players[deathID].role === 3) { //người chết là thợ săn
+            let fireID = parseInt(gamef.getRoom(userRoom).fireID);
             let deathFireTxt = gamef.getRoom(userRoom).playersTxt[fireID];
-            dieCount++;
-            dieArr.push(fireID);
-            chatAllTxt += `\n👻 *${deathFireTxt}* đã CHẾT!`;
+            dieCount++;  
+            if (dieArr.indexOf(fireID) == -1) {
+                chatAllTxt += `\n👻 *${deathFireTxt}* đã CHẾT!`;
+                dieArr.push(fireID);
+            }  
             gamef.getRoom(userRoom).newLog(`👻Thợ săn chết đã ghim ${gamef.roleTxt[gamef.getRoom(userRoom).getRoleByID(fireID)]} *${deathFireTxt}*`);
             console.log(`$ ROOM ${userRoom + 1} > ${deathFireTxt} DIED!`);
         }
     }
     // PHÙ THỦY giết
     if (gamef.getRoom(userRoom).witchKillID != undefined) {
-        let killID = parseInt(gamef.getRoom(userRoom).witchKillID);
-        let deathByMagicTxt = gamef.getRoom(userRoom).playersTxt[killID];
         gamef.getRoom(userRoom).witchKillAction(async (witchKillID) => {
             dieCount++;
-            dieArr.push(killID);
+            let killID = parseInt(witchKillID);
+            let deathByMagicTxt = gamef.getRoom(userRoom).playersTxt[killID];
             if (dieArr.indexOf(killID) == -1) {
                 chatAllTxt += `\n👻 *${deathByMagicTxt}* đã CHẾT!`;
+                dieArr.push(killID);
             }
             gamef.getRoom(userRoom).newLog(`👻Phù thủy đã phù phép chết ${gamef.roleTxt[gamef.getRoom(userRoom).getRoleByID(witchKillID)]} *${deathByMagicTxt}*`);
-            console.log(`$ ROOM ${userRoom + 1} > ${witchKillID}: ${deathByMagicTxt} DIED by witch!`);
+            console.log(`$ ROOM ${userRoom + 1} > ${deathByMagicTxt} DIED by witch!`);
         });
     }
 
@@ -67,7 +66,7 @@ module.exports = async (gamef, bot, userRoom, witchSaved) => {
         console.log(`$ ROOM ${userRoom + 1} > ${die2User.first_name} DIED!`);
     }
 
-    if (deathID != -1 && gamef.getRoom(userRoom).players[deathID]) { // kẻ bị chết tồn tại
+    if (deathID != -1 && gamef.getRoom(userRoom).players[deathID]) { // kẻ bị chết tồn tại và không chết :v
         //là BÁN SÓI
         if (gamef.getRoom(userRoom).players[deathID].role == -2) {
             let halfWolfjoinID = gamef.getRoom(userRoom).players[deathID].joinID;
@@ -99,7 +98,7 @@ module.exports = async (gamef, bot, userRoom, witchSaved) => {
             let nguyenName = gamef.getRoom(userRoom).playersTxt[gamef.getRoom(userRoom).getPlayer(nguyenJoinID).id];
             roomWolfChatAll(bot, gamef.getRoom(userRoom).wolfsID, nguyenJoinID, `\`\`\`\n🐺${nguyenName} đã bị nguyền và theo phe sói!\n\`\`\``);
             let wolfsListTxt = gamef.getRoom(userRoom).wolfsTxt.join(' / ');
-            bot.say(nguyenJoinID, '```\n🐺Bạn đã bị nguyền, bạn sẽ theo phe 🐺SÓI\nDanh sách phe sói:\n' + wolfsListTxt + '\n```');
+            bot.say(nguyenJoinID, '```\n🐺Bạn đã bị nguyền\nBạn sẽ theo phe 🐺SÓI\nDanh sách phe sói:\n' + wolfsListTxt + '\n```');
             gamef.getRoom(userRoom).newLog(`🐺${nguyenName} đã bị nguyền và theo phe sói!`);
             console.log(`$ ROOM ${userRoom + 1} > SÓI ĐÃ NGUYỀN: ${nguyenName}!`);
         }
