@@ -1,6 +1,6 @@
 const dayNotify = require('../Night/dayNotify');
 
-function callWitch(deathID, deathTxt) {
+function callWitch(gamef, bot, userRoom, deathID, deathTxt) {
     const askForSaveKill = (convo, qreply = true, askTxt = `Phù thủy cứu hay không?`) => {
         convo.ask(qreply ? {
             text: askTxt,
@@ -109,7 +109,7 @@ module.exports = (gamef, bot, userRoom) => {
                             convo.say(`Bạn đã nguyền thành công!`);
                         }
                         convo.end();
-                        callWitch(deathID, deathTxt);
+                        callWitch(gamef, bot, userRoom, deathID, deathTxt);
                     }
                 });
             };
@@ -121,10 +121,12 @@ module.exports = (gamef, bot, userRoom) => {
                         console.log(`$ ROOM ${userRoom + 1} > AUTO ROLE > SÓI NGUYỀN`);
                         convo.say(`⏰Bạn đã ngủ quên, trời sáng mất rồi!\nBạn không còn cơ hội nguyền nữa!`);
                         convo.end();
-                        callWitch(deathID, deathTxt);
+                        callWitch(gamef, bot, userRoom, deathID, deathTxt);
                     });
                     askForNguyen(convo);
                 });
+            } else {
+                callWitch(gamef, bot, userRoom, deathID, deathTxt);
             }
         }
     });
