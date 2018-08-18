@@ -12,7 +12,7 @@ module.exports = async function (gamef, bot, userRoom) {
         }
 
         if (p && gamef.getRoom(userRoom).alivePlayer[p.joinID]) {
-            if (p.role == -2 || p.role == 4 || p.role == 6) { //BÁN SÓI / DÂN / GIÀ LÀNG
+            if (p.role == -2 || p.role == 4 || p.role == 6 || p.role == 5) { //BÁN SÓI / DÂN / GIÀ LÀNG / PHÙ THỦY
                 return;
             }
             if (p.role == -1 || p.role == -3) { // SÓI có 1 phút 30 giây
@@ -111,7 +111,7 @@ module.exports = async function (gamef, bot, userRoom) {
             } else if (p.role == 5) { // Phù thủy
                 let sayTxt;
                 if (gamef.getRoom(userRoom).witchKillRemain) {
-                    sayTxt = `🔮Bạn là Phù thủy!\n${gamef.getRoom(userRoom).witchSaveRemain ? '☑Bạn còn quyền cứu' : '⛔Bạn đã dùng quyền cứu!'}\n☑Bạn còn quyền giết\n"/kill <số id>" để giết hoặc giữ im lặng đợi đêm kết thúc\n${playersList}`;
+                    sayTxt = `🔮Bạn là Phù thủy!\n${gamef.getRoom(userRoom).witchSaveRemain ? '☑Bạn còn quyền cứu' : '⛔Bạn đã dùng quyền cứu!'}\n☑Bạn còn quyền giết\n(Bạn vẫn có thể sử dụng lệnh /kill)\n${playersList}`;
                 } else {
                     sayTxt = `🔮Bạn là Phù thủy!\n${gamef.getRoom(userRoom).witchSaveRemain ? '☑Bạn còn quyền cứu' : '⛔Bạn đã dùng quyền cứu!'}\n⛔Bạn đã dùng quyền giết!\n${playersList}`;
                 }

@@ -1,6 +1,6 @@
 const dayNotify = require('../Night/dayNotify');
 
-function callWitch(gamef, bot, userRoom, deathID, deathTxt) {
+function callWitch(gamef, bot, userRoom, deathID, deathTxt, thereIsOneDied) {
     const askForSaveKill = (convo, qreply = true, askTxt = `Phù thủy cứu hay không?`) => {
         convo.ask(qreply ? {
             text: askTxt,
@@ -52,33 +52,37 @@ function callWitch(gamef, bot, userRoom, deathID, deathTxt) {
             }
         });
     };
-    //Call phù thủy khi: có người chết, người chết ko phải bán sói hay già làng, còn phù thủy
-    if (deathID != -1 && gamef.getRoom(userRoom).players[deathID] && gamef.getRoom(userRoom).players[deathID].role != -2 && gamef.getRoom(userRoom).players[deathID].role != 6 && deathID != gamef.getRoom(userRoom).saveID && gamef.getRoom(userRoom).witchID != undefined) { //phù thủy còn quyền cứu, nạn nhân không phải bán sói
+    //Call phù thủy khi: còn phù thủy
+    if (gamef.getRoom(userRoom).witchID != undefined) {
         bot.conversation(gamef.getRoom(userRoom).witchID, async (convo) => {
-            let time = new Date(Date.now() + 45 * 1000);
+            let time;
             if (gamef.getRoom(userRoom).witchSaveRemain || gamef.getRoom(userRoom).witchKillRemain) {
-                await convo.say(`\`\`\`\n🔪*${deathTxt}* đã CHẾT!\nBạn có 45 giây để quyết định\n\`\`\``);
+                if (thereIsOneDied) {
+                    await convo.say(`\`\`\`\n🔪*${deathTxt}* đã CHẾT!\nBạn có 45 giây để quyết định\n\`\`\``);
+                    time = new Date(Date.now() + 45 * 1000);
+                } else if (gamef.getRoom(userRoom).witchKillRemain) {
+                    await convo.say(`\`\`\`\nĐêm qua không ai chết!\nBạn có 30 giây để quyết định\n\`\`\``);
+                    time = new Date(Date.now() + 30 * 1000);
+                }
                 gamef.getRoom(userRoom).addSchedule(time, () => {
                     console.log(`$ ROOM ${userRoom + 1} > AUTO ROLE > WITCH`);
                     convo.say(`⏰Bạn đã ngủ quên, trời sáng mất rồi!\nBạn không còn cơ hội cứu nữa!`);
                     convo.end();
                     dayNotify(gamef, bot, userRoom, false);
                 });
-                let askTxt, qreply;
                 if (gamef.getRoom(userRoom).witchKillRemain) {
                     let playerListTxt = gamef.getRoom(userRoom).playersTxt.join(' / ');
-                    askTxt = `Để dùng quyền giết: "/kill <số id>"\nNếu không giết ai: "/skip"\n${playerListTxt}`;
-                    qreply = false;
-                } else {
-                    askTxt = `Bạn có quyền cứu: "/yes" hay "/no" ?`;
-                    qreply = true;
+                    askForSaveKill(convo, false, `Để dùng quyền giết: "/kill <số id>"\nNếu không giết ai: "/skip"\n${playerListTxt}`);
+                } else if (thereIsOneDied) {
+                    askForSaveKill(convo, true, `Bạn có quyền cứu: "/yes" hay "/no" ?`);
+                } else { // không còn quyền giết và không ai chết
+                    dayNotify(gamef, bot, userRoom, false);
                 }
-                askForSaveKill(convo, qreply, askTxt);
-            } else {
+            } else { // hết quyền
                 dayNotify(gamef, bot, userRoom, false);
             }
         });
-    } else {
+    } else { // không có phù thủy
         dayNotify(gamef, bot, userRoom, false);
     }
 }
@@ -104,32 +108,38 @@ module.exports = (gamef, bot, userRoom) => {
                         return;
                     } else {
                         gamef.getRoom(userRoom).cancelSchedule();
-                        if (/(y|Y)es/g.test(payload.message.text)) { // nguyền
+                        if (/(y|Y)es/g.test(payload.message.text)) { // nguyền, trời sáng luôn
                             gamef.getRoom(userRoom).nguyen(deathID);
                             convo.say(`Bạn đã nguyền thành công!`);
                             convo.end();
                             dayNotify(gamef, bot, userRoom, false);
-                        } else {
+                        } else { // không nguyền, hỏi phù thủy cứu
                             convo.end();
-                            callWitch(gamef, bot, userRoom, deathID, deathTxt);
+                            callWitch(gamef, bot, userRoom, deathID, deathTxt, true);
                         }
                     }
                 });
             };
+
+            // kiểm tra có người chết không?
+            let thereIsOneDied = false;
+            if (deathID != -1 && gamef.getRoom(userRoom).players[deathID] && gamef.getRoom(userRoom).players[deathID].role != -2 && gamef.getRoom(userRoom).players[deathID].role != 6 && deathID != gamef.getRoom(userRoom).saveID) {
+                thereIsOneDied = true;
+            }
             //Call sói nguyền
-            if (deathID != -1 && gamef.getRoom(userRoom).players[deathID] && gamef.getRoom(userRoom).players[deathID].role != -2 && gamef.getRoom(userRoom).players[deathID].role != 6 && deathID != gamef.getRoom(userRoom).saveID && gamef.getRoom(userRoom).soiNguyenID != undefined) {
+            if (thereIsOneDied && gamef.getRoom(userRoom).soiNguyenID != undefined) {
                 bot.conversation(gamef.getRoom(userRoom).soiNguyenID, async (convo) => {
                     let time = new Date(Date.now() + 30 * 1000);
                     gamef.getRoom(userRoom).addSchedule(time, () => {
                         console.log(`$ ROOM ${userRoom + 1} > AUTO ROLE > SÓI NGUYỀN`);
                         convo.say(`⏰Bạn đã ngủ quên, trời sáng mất rồi!\nBạn không còn cơ hội nguyền nữa!`);
                         convo.end();
-                        callWitch(gamef, bot, userRoom, deathID, deathTxt);
+                        callWitch(gamef, bot, userRoom, deathID, deathTxt, true);
                     });
                     askForNguyen(convo);
                 });
             } else {
-                callWitch(gamef, bot, userRoom, deathID, deathTxt);
+                callWitch(gamef, bot, userRoom, deathID, deathTxt, thereIsOneDied);
             }
         }
     });
