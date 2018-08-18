@@ -10,6 +10,25 @@ module.exports = (gamef, bot, userRoom) => {
                 deathTxt = gamef.getRoom(userRoom).playersTxt[deathID];
             }
 
+            const askForNguyen = (convo) => {
+                convo.ask({
+                    text: `\`\`\`\n🔪*${deathTxt}* đã CHẾT!\nBạn 30 giây để quyết định nguyền hay không?\n\`\`\``,
+                    quickReplies: ['/yes', '/no'],
+                }, async (payload, convo) => {
+                    if (!payload.message || !(/(y|Y)es/g.test(payload.message.text) || /(n|N)o/g.test(payload.message.text))) {
+                        convo.say(`\`\`\`\nKhông hợp lệ!\n\`\`\``);
+                        askForNguyen(convo);
+                        return;
+                    } else {
+                        gamef.getRoom(userRoom).cancelSchedule();
+                        if (/(y|Y)es/g.test(payload.message.text)) { // nguyền
+                            gamef.getRoom(userRoom).nguyen(deathID);
+                        }
+                        convo.end();
+                    }
+                });
+            };
+
             const askForSaveKill = (convo, qreply = true, askTxt = `Phù thủy cứu hay không?`) => {
                 convo.ask(qreply ? {
                     text: askTxt,
@@ -61,6 +80,19 @@ module.exports = (gamef, bot, userRoom) => {
                     }
                 });
             };
+
+            //Call sói nguyền
+            if (deathID != -1 && gamef.getRoom(userRoom).players[deathID] && gamef.getRoom(userRoom).players[deathID].role != -2 && gamef.getRoom(userRoom).players[deathID].role != 6 && deathID != gamef.getRoom(userRoom).saveID && gamef.getRoom(userRoom).soiNguyenID != undefined) {
+                bot.conversation(gamef.getRoom(userRoom).soiNguyenID, async (convo) => {
+                    let time = new Date(Date.now() + 30 * 1000);
+                    gamef.getRoom(userRoom).addSchedule(time, () => {
+                        console.log(`$ ROOM ${userRoom + 1} > AUTO ROLE > SÓI NGUYỀN`);
+                        convo.say(`⏰Bạn đã ngủ quên, trời sáng mất rồi!\nBạn không còn cơ hội cứu nữa!`);
+                        convo.end();
+                    });
+                    askForNguyen(convo);
+                });
+            }
 
             //Call phù thủy khi: có người chết, người chết ko phải bán sói hay già làng, còn phù thủy
             if (deathID != -1 && gamef.getRoom(userRoom).players[deathID] && gamef.getRoom(userRoom).players[deathID].role != -2 && gamef.getRoom(userRoom).players[deathID].role != 6 && deathID != gamef.getRoom(userRoom).saveID && gamef.getRoom(userRoom).witchID != undefined) { //phù thủy còn quyền cứu, nạn nhân không phải bán sói

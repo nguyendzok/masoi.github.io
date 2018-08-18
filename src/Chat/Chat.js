@@ -43,28 +43,9 @@ module.exports = (gamef, bot) => {
 
                     if (userRole == -1 || userRole == -3) {// là SÓI / SÓI NGUYỀN
                         if (!chatTxt.match(/\/vote.-?[0-9]+/g)) {
-                            if (userRole == -1 || !chatTxt.match(/\/nguyen.-?[0-9]+/g)) {//chat
-                                if (gamef.getRoom(userRoom).chatON) {
-                                    roomWolfChatAll(bot, gamef.getRoom(userRoom).wolfsID, joinID, '*' + user.first_name + '*: ' + chatTxt);
-                                    bot.sendAction(joinID, 'mark_seen');
-                                }
-                            } else { //SÓI NGUYỀN
-                                let nguyenID = chatTxt.match(/-?[0-9]+/g)[0];
-                                if (gamef.getRoom(userRoom).soiNguyen) {
-                                    if (gamef.getRoom(userRoom).nguyen(joinID, nguyenID)) {
-                                        let nguyenName = gamef.getRoom(userRoom).playersTxt[nguyenID];
-                                        chat.say(`🐺Bạn đã nguyền ${nguyenName}`);
-                                        // let nguyenJoinID = gamef.getRoom(userRoom).players[nguyenID].joinID;
-                                        // roomWolfChatAll(bot, gamef.getRoom(userRoom).wolfsID, joinID, `\`\`\`\n🐺${nguyenName} đã bị nguyền và theo phe sói!\n\`\`\``);
-                                        // let wolfsListTxt = gamef.getRoom(userRoom).wolfsTxt.join(' / ');
-                                        // bot.say(nguyenJoinID, '```\n🐺Bạn đã bị nguyền, bạn sẽ theo phe 🐺SÓI\nDanh sách phe sói:\n' + wolfsListTxt + '\n```');
-                                        // gamef.getRoom(userRoom).newLog(`🐺${nguyenName} đã bị nguyền và theo phe sói!`);
-                                    } else {
-                                        chat.say('```\nBạn không thể nguyền người chơi đã chết!\n```');
-                                    }
-                                } else {
-                                    chat.say('```\nBạn đã hết quyền nguyền!\n```');
-                                }
+                            if (gamef.getRoom(userRoom).chatON) {
+                                roomWolfChatAll(bot, gamef.getRoom(userRoom).wolfsID, joinID, '*' + user.first_name + '*: ' + chatTxt);
+                                bot.sendAction(joinID, 'mark_seen');
                             }
                         } else {// SÓI VOTE
                             let voteID = chatTxt.match(/-?[0-9]+/g)[0];
@@ -188,7 +169,7 @@ module.exports = (gamef, bot) => {
                                 }
                                 bot.say(user1.joinID, `\`\`\`\n${thirdParty}\n👼Bạn đã bị ghép đôi với ${user2.first_name}\n/p <nội dung> để chat riêng\n\`\`\``);
                                 bot.say(user2.joinID, `\`\`\`\n${thirdParty}\n👼Bạn đã bị ghép đôi với ${user1.first_name}\n/p <nội dung> để chat riêng\n\`\`\``);
-                                
+
                                 roomChatAll(bot, gamef.getRoom(userRoom).players, joinID, '```\n👼Thần tình yêu đã ghép đôi thành công\n```');
                                 // kiểm tra đã hết đêm chưa?
                                 gamef.func(nightDoneCheck, bot, userRoom);

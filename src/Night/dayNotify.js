@@ -1,4 +1,4 @@
-const { roomChatAll } = require('../Chat/Utils');
+const { roomChatAll, roomWolfChatAll } = require('../Chat/Utils');
 const gameIsNotEndCheck = require('../MainGame/gameIsNotEndCheck');
 const dayVoteCheck = require('../Day/dayVoteCheck');
 
@@ -67,29 +67,42 @@ module.exports = async (gamef, bot, userRoom, witchSaved) => {
         console.log(`$ ROOM ${userRoom + 1} > ${die2User.first_name} DIED!`);
     }
 
-    //là BÁN SÓI
-    if (deathID != -1 && gamef.getRoom(userRoom).players[deathID] && gamef.getRoom(userRoom).players[deathID].role == -2) {
-        let halfWolfjoinID = gamef.getRoom(userRoom).players[deathID].joinID;
-        let halfWolfTxt = gamef.getRoom(userRoom).players[deathID].first_name;
-        await bot.say(halfWolfjoinID, `\`\`\`\nBạn đã bị sói cắn!\nTừ giờ bạn là 🐺SÓI!\n\`\`\``);
-        gamef.getRoom(userRoom).players[deathID].setRole(-1);
-        gamef.getRoom(userRoom).newLog(`🐺BÁN SÓI *${halfWolfTxt}* bị cắn và trở thành 🐺SÓI`);
-        console.log(`$ ROOM ${userRoom + 1} > HALF WOLF!`);
-    }
-
-    //là GIÀ LÀNG
-    if (deathID != -1 && gamef.getRoom(userRoom).players[deathID] && gamef.getRoom(userRoom).players[deathID].role == 6) {
-        let oldManjoinID = gamef.getRoom(userRoom).players[deathID].joinID;
-        let oldManTxt = gamef.getRoom(userRoom).players[deathID].first_name;
-        if (gamef.getRoom(userRoom).oldManLive > 0) {
-            await bot.say(oldManjoinID, `\`\`\`\nBạn đã bị SÓI cắn!\nBạn chỉ còn 1 mạng!\nHãy bảo trọng =))\n\`\`\``);
-            gamef.getRoom(userRoom).newLog(`👴GIÀ LÀNG *${oldManTxt}* bị cắn lần 1!`);
-        } else {
-            await bot.say(oldManjoinID, `\`\`\`\nBạn đã bị SÓI cắn chết!\nVĩnh biệt =))\n\`\`\``);
-            gamef.getRoom(userRoom).newLog(`👴GIÀ LÀNG *${oldManTxt}* đã CHẾT!`);
+    if (deathID != -1 && gamef.getRoom(userRoom).players[deathID]) { // kẻ bị chết tồn tại
+        //là BÁN SÓI
+        if (gamef.getRoom(userRoom).players[deathID].role == -2) {
+            let halfWolfjoinID = gamef.getRoom(userRoom).players[deathID].joinID;
+            let halfWolfTxt = gamef.getRoom(userRoom).players[deathID].first_name;
+            await bot.say(halfWolfjoinID, `\`\`\`\nBạn đã bị sói cắn!\nTừ giờ bạn là 🐺SÓI!\n\`\`\``);
+            gamef.getRoom(userRoom).players[deathID].setRole(-1);
+            gamef.getRoom(userRoom).newLog(`🐺BÁN SÓI *${halfWolfTxt}* bị cắn và trở thành 🐺SÓI`);
+            console.log(`$ ROOM ${userRoom + 1} > HALF WOLF!`);
         }
 
-        console.log(`$ ROOM ${userRoom + 1} > OLD MAN FIRST BLOOD!`);
+        //là GIÀ LÀNG
+        if (gamef.getRoom(userRoom).players[deathID].role == 6) {
+            let oldManjoinID = gamef.getRoom(userRoom).players[deathID].joinID;
+            let oldManTxt = gamef.getRoom(userRoom).players[deathID].first_name;
+            if (gamef.getRoom(userRoom).oldManLive > 0) {
+                await bot.say(oldManjoinID, `\`\`\`\nBạn đã bị SÓI cắn!\nBạn chỉ còn 1 mạng!\nHãy bảo trọng =))\n\`\`\``);
+                gamef.getRoom(userRoom).newLog(`👴GIÀ LÀNG *${oldManTxt}* bị cắn lần 1!`);
+            } else {
+                await bot.say(oldManjoinID, `\`\`\`\nBạn đã bị SÓI cắn chết!\nVĩnh biệt =))\n\`\`\``);
+                gamef.getRoom(userRoom).newLog(`👴GIÀ LÀNG *${oldManTxt}* đã CHẾT!`);
+            }
+
+            console.log(`$ ROOM ${userRoom + 1} > OLD MAN FIRST BLOOD!`);
+        }
+
+        //là kẻ bị sói nguyền
+        if (gamef.getRoom(userRoom).nguyenID && gamef.getRoom(userRoom).players[deathID].joinID == gamef.getRoom(userRoom).nguyenID) {
+            let nguyenJoinID = gamef.getRoom(userRoom).nguyenID;
+            let nguyenName = gamef.getRoom(userRoom).playersTxt[gamef.getRoom(userRoom).getPlayer(nguyenJoinID).id];
+            roomWolfChatAll(bot, gamef.getRoom(userRoom).wolfsID, nguyenJoinID, `\`\`\`\n🐺${nguyenName} đã bị nguyền và theo phe sói!\n\`\`\``);
+            let wolfsListTxt = gamef.getRoom(userRoom).wolfsTxt.join(' / ');
+            bot.say(nguyenJoinID, '```\n🐺Bạn đã bị nguyền, bạn sẽ theo phe 🐺SÓI\nDanh sách phe sói:\n' + wolfsListTxt + '\n```');
+            gamef.getRoom(userRoom).newLog(`🐺${nguyenName} đã bị nguyền và theo phe sói!`);
+            console.log(`$ ROOM ${userRoom + 1} > SÓI ĐÃ NGUYỀN: ${nguyenName}!`);
+        }
     }
 
     if (dieCount == 0) {

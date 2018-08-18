@@ -76,6 +76,7 @@ class Room {
         this.witchKillID = undefined;
 
         this.soiNguyen = false;
+        this.soiNguyenID = undefined;
         this.nguyenID = undefined;
 
         //Già làng
@@ -124,6 +125,7 @@ class Room {
         this.witchKillID = undefined;
 
         this.soiNguyen = false;
+        this.soiNguyenID = undefined;
         this.nguyenID = undefined;
 
         this.oldManID = undefined;
@@ -254,6 +256,10 @@ class Room {
             this.witchKillRemain = false;
             this.witchSaveRemain = false;
         }
+        if (this.players[deathID] && this.players[deathID].role == -3) { //người chết là sói nguyền
+            this.soiNguyen = false;
+            this.soiNguyenID = undefined;
+        }
         if (this.players[deathID] && this.players[deathID].role == 2) { //người chết là bảo vệ
             this.saveID = -1;
         }
@@ -280,30 +286,38 @@ class Room {
     }
     kill() {
         console.log(`$ ROOM ${this.id + 1} > KILL ${this.deathID} > SAVE ${this.saveID} !!!`);
-        if (this.deathID != -1 && (!this.isNight || (this.isNight && this.deathID != this.saveID)) && this.players[this.deathID]) {
-            if (this.players[this.deathID].role === -2 && this.isNight) { //là BÁN SÓI
-                this.wolfsCount++;
-                this.villagersCount--;
+        if (this.deathID != -1 && this.players[this.deathID]) {
+            if (!this.isNight || (this.isNight && this.deathID != this.saveID)) { // là ban ngày hoặc ban đêm bảo vệ sai
+                if (this.players[this.deathID].role === -2 && this.isNight) { //là BÁN SÓI
+                    this.wolfsCount++;
+                    this.villagersCount--;
+                    return false;
+                }
+                if (this.players[this.deathID].role === 6) { //là Già làng
+                    if (this.isNight) {
+                        this.oldManLive--;
+                        if (this.oldManLive > 0) { // còn 1 mạng
+                            return false;
+                        }
+                    } else {
+                        this.oldManLive = 0;
+                    }
+                }
+                if (this.nguyenID && this.players[this.deathID].joinID == this.nguyenID && this.isNight) { //là kẻ bị sói nguyền
+                    this.nguyenAction();
+                    return false;
+                }
+                this.killAction(this.deathID);
+                this.cupidKill(this.deathID);
+                if (this.players[this.deathID].role === 3) { //là thợ săn
+                    this.killAction(this.fireID);
+                    this.cupidKill(this.fireID);
+                }
+                return true;
+            } else { // bảo vệ thành công 
                 return false;
             }
-            if (this.players[this.deathID].role === 6) { //là Già làng
-                if (this.isNight) {
-                    this.oldManLive--;
-                    if (this.oldManLive > 0) { // còn 1 mạng
-                        return false;
-                    }
-                } else {
-                    this.oldManLive = 0;
-                }
-            }
-            this.killAction(this.deathID);
-            this.cupidKill(this.deathID);
-            if (this.players[this.deathID].role === 3) { //là thợ săn
-                this.killAction(this.fireID);
-                this.cupidKill(this.fireID);
-            }
-            return true;
-        } else { // bảo vệ thành công hoặc sói không cắn ai
+        } else { // sói không cắn ai
             return false;
         }
     }
@@ -486,16 +500,10 @@ class Room {
             return false;
         }
     }
-    nguyen(joinID, nguyenID) {
+    nguyen(nguyenID) {
         if (this.soiNguyen && this.players[nguyenID] && this.alivePlayer[this.players[nguyenID].joinID]) {
             this.soiNguyen = false;
             this.nguyenID = this.players[nguyenID].joinID;
-            this.wolfsID.push(this.nguyenID);
-            if (this.players[nguyenID].role > 0) {
-                this.villagersCount--;
-                this.wolfsCount++;
-            }
-            this.vote(joinID, nguyenID);
             return true;
         } else {
             return false;
@@ -505,14 +513,13 @@ class Room {
         if (!this.nguyenID) {
             return false;
         }
-        // nguyenID is joinID, code below is wrong!
-        // this.players[this.nguyenID].setRole(-1);
-        // this.playersRole[this.players[this.nguyenID].joinID] = -1;
-        // if (this.players[this.nguyenID].role > 0) {
-        //     this.wolfsCount++;
-        //     this.villagersCount--;
-        // }
-        // this.nguyenID = undefined;
+        this.wolfsID.push(this.nguyenID);
+        let nguyenUser = this.getPlayer(this.nguyenID);
+        if (nguyenUser.role > 0) {
+            this.villagersCount--;
+            this.wolfsCount++;
+        }
+        return true;
     }
     witchUseSave() {
         this.witchSaveRemain = false;
@@ -659,12 +666,12 @@ class Game {
         let villagersRemain = len - 2, balance = 7 + 3;
         this.setRole(roomID, 1, 1); // 1 TIÊN TRI +7
         this.setRole(roomID, 2, 1); // 1 BẢO VỆ +3
-        if (len <= 4) { // 4,5 = +4
-            roleListTxt += `, 1 SÓI, 1 NGƯỜI HÓA SÓI (VUI LÒNG KHÔNG CHƠI GAME 4 - GAME 4 là để admin thử nghiệm và sửa lỗi)`;
-            villagersRemain -= 2; balance += -6 - 1 + villagersRemain;
-            this.setRole(roomID, -1, 1);  //1 SÓI -6
-            this.setRole(roomID, 8, 1);  // 1 NGƯỜI HÓA SÓI -1
-        } else if (len == 5) { // 5 = +4
+        if (len <= 4) { // 4 
+            roleListTxt += `, 1 SÓI NGUYỀN, 1 PHÙ THỦY (VUI LÒNG KHÔNG CHƠI GAME 4 - GAME 4 là để admin thử nghiệm và sửa lỗi)`;
+            villagersRemain -= 2; balance += -12 + 4 + villagersRemain;
+            this.setRole(roomID, -3, 1);  //1 SÓI NGUYỀN -12
+            this.setRole(roomID, 5, 1);  // 1 PHÙ THỦY +4
+        } else if (len == 5) { // 5 = +4 (1 DÂN)
             roleListTxt += `, 1 SÓI, 1 NGƯỜI HÓA SÓI`;
             villagersRemain -= 2; balance += -6 - 1 + villagersRemain;
             this.setRole(roomID, -1, 1);  //1 SÓI -6
@@ -754,6 +761,7 @@ class Game {
                 this.room[roomID].oldManID = this.room[roomID].players[rand].joinID;
             } else if (role == -3) { // sói nguyền
                 this.room[roomID].soiNguyen = true;
+                this.room[roomID].soiNguyenID = this.room[roomID].players[rand].joinID;
             }
         }
     }
