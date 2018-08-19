@@ -23,7 +23,7 @@ module.exports = async function (gamef, bot, userRoom) {
                     console.log(`$ ROOM ${userRoom + 1} > TIMER > WOLF > 30 SECONDS REMAINING`);
                     players[index].addSchedule(time, () => {
                         console.log(`$ ROOM ${userRoom + 1} > AUTO ROLE > WOLF`);
-                        bot.say(p.joinID, '```\n⏰Bạn đã ngủ quên mà không cắn ai! (-60 uy tín)\n```');
+                        bot.say(p.joinID, '```\n⏰Bạn đã ngủ quên mà không cắn ai! (-50 uy tín)\n```');
                         gamef.getRoom(userRoom).autoRole(p.joinID, p.role);
                         gamef.func(nightDoneCheck, bot, userRoom);
                     });
@@ -40,7 +40,7 @@ module.exports = async function (gamef, bot, userRoom) {
                     console.log(`$ ROOM ${userRoom + 1} > TIMER > 15 SECONDS REMAINING`);
                     let time = new Date(Date.now() + 15 * 1000);
                     players[index].addSchedule(time, () => {
-                        bot.say(p.joinID, '```\n⏰Hết giờ! Bạn đã mất quyền năng! (-60 uy tín)\n```');
+                        bot.say(p.joinID, '```\n⏰Hết giờ! Bạn đã mất quyền năng! (-50 uy tín)\n```');
                         gamef.getRoom(userRoom).autoRole(p.joinID, p.role);
                         console.log(`$ ROOM ${userRoom + 1} > AUTO ROLE > ${p.first_name} > ${p.role}`);
                         gamef.func(nightDoneCheck, bot, userRoom);

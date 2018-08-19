@@ -243,34 +243,40 @@ class Room {
         }
     }
     killAction(deathID) {
-        if (deathID == -1 || !this.players[deathID]) {
+        // không giết ai, thằng bị giết out rồi, thằng cần giết chết rồi
+        if (deathID == -1 || !this.players[deathID] || !this.alivePlayer[this.players[deathID].joinID]) {
             return;
         }
         if (this.roleDone[this.players[deathID].joinID]) { //người tự sát đã thực hiện ROLE
             this.roleDoneCount--;
-        } else if (this.players[deathID]) {
+        } else {
             this.players[deathID].cancelSchedule();
         }
-        if (this.players[deathID] && this.players[deathID].role == 5) { //người chết là phù thủy
+        if (this.players[deathID].role == 5) { //người chết là phù thủy
             this.witchID = undefined;
             this.witchKillRemain = false;
             this.witchSaveRemain = false;
         }
-        if (this.players[deathID] && this.players[deathID].role == -3) { //người chết là sói nguyền
+        if (this.players[deathID].role == -3) { //người chết là sói nguyền
             this.soiNguyen = false;
             this.soiNguyenID = undefined;
         }
-        if (this.players[deathID] && this.players[deathID].role == 2) { //người chết là bảo vệ
+        if (this.players[deathID].role == 2) { //người chết là bảo vệ
             this.saveID = -1;
         }
-        if (this.players[deathID] && this.alivePlayer[this.players[deathID].joinID]) {
-            this.alivePlayer[this.players[deathID].joinID] = false;
-            this.playersTxt[deathID] = '💀:' + this.playersTxt[deathID].substr(2, this.playersTxt[deathID].length - 2);
-            if (this.players[deathID].role === -1 || this.players[deathID].role === -3 || this.players[deathID].joinID == this.nguyenID) {
-                this.wolfsCount--;
-            } else {
-                this.villagersCount--;
-            }
+        if (this.players[deathID].role === 3) { //người chết là thợ săn
+            this.killAction(this.fireID);
+            this.cupidKill(this.fireID);
+            this.fireID = -1;
+        }
+
+        // kill action MAIN
+        this.alivePlayer[this.players[deathID].joinID] = false;
+        this.playersTxt[deathID] = '💀:' + this.playersTxt[deathID].substr(2, this.playersTxt[deathID].length - 2);
+        if (this.players[deathID].role === -1 || this.players[deathID].role === -3 || this.players[deathID].joinID == this.nguyenID) {
+            this.wolfsCount--;
+        } else {
+            this.villagersCount--;
         }
     }
     cupidKill(deathID) {
@@ -309,10 +315,6 @@ class Room {
                 }
                 this.killAction(this.deathID);
                 this.cupidKill(this.deathID);
-                if (this.players[this.deathID].role === 3) { //là thợ săn
-                    this.killAction(this.fireID);
-                    this.cupidKill(this.fireID);
-                }
                 return true;
             } else { // bảo vệ thành công 
                 return false;
@@ -424,6 +426,7 @@ class Room {
             this.fireID = -1;
         } else if (role == 7) { // CUPID
             user.setRole(4);
+            this.playersRole[user.joinID] = 4;
         }
         this.roleDoneBy(joinID, true);
     }

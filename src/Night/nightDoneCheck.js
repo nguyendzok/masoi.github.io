@@ -1,4 +1,5 @@
 const dayNotify = require('../Night/dayNotify');
+const { roomChatAll } = require('../Chat/Utils');
 
 function callWitch(gamef, bot, userRoom, deathID, deathTxt, thereIsOneDied) {
     const askForSaveKill = (convo, qreply = true, askTxt = `CALL phù thủy improper way`) => {
@@ -73,6 +74,7 @@ function callWitch(gamef, bot, userRoom, deathID, deathTxt, thereIsOneDied) {
                     time = new Date(Date.now() + 30 * 1000);
                 }
                 if (time) {
+                    roomChatAll(bot, gamef.getRoom(userRoom).players, gamef.getRoom(userRoom).witchID, '```\nSTEP 3/3: Phù thủy\n```');
                     gamef.getRoom(userRoom).addSchedule(time, () => {
                         console.log(`$ ROOM ${userRoom + 1} > AUTO ROLE > WITCH`);
                         convo.say(`⏰Bạn đã ngủ quên, trời sáng mất rồi!\nBạn không còn cơ hội cứu nữa!`);
@@ -143,6 +145,7 @@ module.exports = (gamef, bot, userRoom) => {
             //Call sói nguyền
             if (thereIsOneDied && gamef.getRoom(userRoom).soiNguyen && gamef.getRoom(userRoom).soiNguyenID != undefined) {
                 bot.conversation(gamef.getRoom(userRoom).soiNguyenID, async (convo) => {
+                    roomChatAll(bot, gamef.getRoom(userRoom).players, gamef.getRoom(userRoom).soiNguyenID, '```\nSTEP 2/3: Sói nguyền\n```');
                     let time = new Date(Date.now() + 30 * 1000);
                     gamef.getRoom(userRoom).addSchedule(time, () => {
                         console.log(`$ ROOM ${userRoom + 1} > AUTO ROLE > SÓI NGUYỀN`);
