@@ -282,7 +282,7 @@ class Room {
         if (this.players[deathID] && this.cupidsID.indexOf(this.players[deathID].joinID) != -1) { //là 1 người trong cặp đôi
             this.cupidsID.forEach((joinID) => {
                 let playerID = this.getPlayer(joinID).id;
-                if (deathID != playerID) {
+                if (deathID != playerID && this.alivePlayer[joinID]) {
                     this.killAction(playerID);
                 }
             });

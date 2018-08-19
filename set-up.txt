@@ -4,8 +4,15 @@
 8:  1 tiên tri +7, 1 bảo vệ +3, 2 sói -12, 1 phù thủy +3, 1 người hóa sói -1, 2 dân +2 = 2
 9:  1 tiên tri +7, 1 bảo vệ +3, 2 sói -12, 1 phù thủy +3, 1 người hóa sói -1, 1 già làng +0, 2 dân +2 = 2
 10: 1 tiên tri +7, 1 bảo vệ +3, 2 sói -12, 1 BÁN SÓI -3, 1 PHÙ THỦY +4, 1 THỢ SĂN +3, 1 GIÀ LÀNG +0, 1 THẦN TÌNH YÊU -3, 1 DÂN +1= 0
+    1 thường 1 nguyền 1 bán sói 1 tiên tri 1 bve 1 pt 1 thợ săn 3 dân
 
 bug thợ săn:    thợ săn chỉ bắn khi bị cắn hoặc bị treo cổ, các cách chết khác không bắn
                 Không hỗ trợ đa thợ săn
 
 Các role chỉ có 1 mà thôi: 1 PHÙ THỦY, 1 GIÀ LÀNG, 1 THẦN TÌNH YÊU (hiện đang bao gồm THỢ SĂN)
+
+kill thợ săn {
+    kill DÂN
+    cupidKill(DÂN) => Kill thợ săn
+}
+cupidKill(thợ săn) => kill DÂN
