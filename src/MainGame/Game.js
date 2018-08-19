@@ -267,7 +267,6 @@ class Room {
         if (this.players[deathID].role === 3) { //người chết là thợ săn
             this.killAction(this.fireID);
             this.cupidKill(this.fireID);
-            this.fireID = -1;
         }
 
         // kill action MAIN
@@ -457,7 +456,7 @@ class Room {
     }
     gameIsEnd(callback) {
         console.log("$ ROOM " + (this.id + 1) + " > GAME CHECK: " + this.wolfsCount + ' SÓI/' + this.villagersCount + ' DÂN');
-        if (this.cupidTeam && this.wolfsCount + this.villagersCount == 2) {
+        if (this.cupidTeam && this.wolfsCount + this.villagersCount == 2 && this.wolfsCount > 0) {
             callback(3);
         } else if (this.wolfsCount >= this.villagersCount) {
             //SÓI THẮNG
