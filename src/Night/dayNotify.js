@@ -23,12 +23,13 @@ module.exports = async (gamef, bot, userRoom, witchSaved) => {
         console.log(`$ ROOM ${userRoom + 1} > ${deathTxt} DIED!`);
         if (gamef.getRoom(userRoom).players[deathID] && gamef.getRoom(userRoom).players[deathID].role === 3) { //người chết là thợ săn
             let fireID = parseInt(gamef.getRoom(userRoom).fireID);
-            let deathFireTxt = gamef.getRoom(userRoom).playersTxt[fireID];
-            dieCount++;  
+            let deathUser = gamef.getRoom(userRoom).players[fireID];
+            let deathFireTxt = `${fireID}: ${deathUser.first_name}`;
+            dieCount++;
             if (dieArr.indexOf(fireID) == -1) {
                 chatAllTxt += `\n👻 *${deathFireTxt}* đã CHẾT!`;
                 dieArr.push(fireID);
-            }  
+            }
             gamef.getRoom(userRoom).newLog(`👻Thợ săn chết đã ghim ${gamef.roleTxt[gamef.getRoom(userRoom).getRoleByID(fireID)]} *${deathFireTxt}*`);
             console.log(`$ ROOM ${userRoom + 1} > ${deathFireTxt} DIED!`);
         }
@@ -38,7 +39,8 @@ module.exports = async (gamef, bot, userRoom, witchSaved) => {
         gamef.getRoom(userRoom).witchKillAction(async (witchKillID) => {
             dieCount++;
             let killID = parseInt(witchKillID);
-            let deathByMagicTxt = gamef.getRoom(userRoom).playersTxt[killID];
+            let deathUser = gamef.getRoom(userRoom).players[killID];
+            let deathByMagicTxt = `${killID}: ${deathUser.first_name}`;
             if (dieArr.indexOf(killID) == -1) {
                 chatAllTxt += `\n👻 *${deathByMagicTxt}* đã CHẾT!`;
                 dieArr.push(killID);
@@ -61,7 +63,10 @@ module.exports = async (gamef, bot, userRoom, witchSaved) => {
         let die1Index = gamef.getRoom(userRoom).cupidsID.indexOf(gamef.getRoom(userRoom).players[cupidDieID].joinID); // index trong mảng cupidsID
         let die2JoinID = gamef.getRoom(userRoom).cupidsID[die1Index == 1 ? 0 : 1];
         let die2User = gamef.getRoom(userRoom).getPlayer(die2JoinID);
-        chatAllTxt += `\n👻 *${die2User.first_name}* đã CHẾT!`;
+        if (dieArr.indexOf(die2User.id) == -1) {
+            chatAllTxt += `\n👻 *${die2User.id}: ${die2User.first_name}* đã CHẾT!`;
+            dieArr.push(die2User.id);
+        }
         gamef.getRoom(userRoom).newLog(`👻Tình yêu đã giết chết ${gamef.roleTxt[gamef.getRoom(userRoom).getRoleByID(die2User.id)]} *${die2User.id}: ${die2User.first_name}*`);
         console.log(`$ ROOM ${userRoom + 1} > ${die2User.first_name} DIED!`);
     }
