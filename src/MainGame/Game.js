@@ -210,21 +210,21 @@ class Room {
     getRoleByID(id) {
         return this.players[id] ? this.players[id].role : 0;
     }
-    roleDoneBy(joinID, autoDone = false) {
+    roleDoneBy(joinID, autoDone = false, nothingToDo = false) {
         if (this.roleDone[joinID]) {
             return false;
         }
         this.roleDone[joinID] = true;
         this.roleDoneCount++;
         let player = this.getPlayer(joinID);
-        if (!autoDone) { // người làm
-            player.cancelSchedule();
+        if (!autoDone && !nothingToDo) { // người làm
             player.backToGame();
+            player.cancelSchedule();
         } else {
             if (this.isNight) {
-                player.afk(6);
+                player.afk(5);
             } else {
-                player.afk(3);
+                player.afk(1);
             }
         }
     }

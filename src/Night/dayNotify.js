@@ -134,7 +134,7 @@ module.exports = async (gamef, bot, userRoom, witchSaved) => {
                         let time = new Date(Date.now() + 60 * 1000);
                         players[index].addSchedule(time, () => {
                             if (p && gamef.getRoom(userRoom).alivePlayer[p.joinID]) {
-                                roomChatAll(bot, gamef.getRoom(userRoom).players, 0, `*✊${p.first_name} đã không kịp bỏ phiếu! (-30 uy tín)*`);
+                                roomChatAll(bot, gamef.getRoom(userRoom).players, 0, `*✊${p.first_name} đã không kịp bỏ phiếu! (-10 uy tín)*`);
                                 gamef.getRoom(userRoom).autoRole(p.joinID, p.role);
                                 // kiểm tra đã VOTE XONG chưa?
                                 gamef.func(dayVoteCheck, bot, userRoom);

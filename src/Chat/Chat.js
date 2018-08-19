@@ -38,7 +38,7 @@ module.exports = (gamef, bot) => {
                             let newChatTxt = chatTxt.match(/(?<=\/p\s).*/g)
                             bot.sendAction(joinID, 'mark_seen');
                             return roomWolfChatAll(bot, gamef.getRoom(userRoom).wolfsID, joinID, '*' + user.first_name + '* (kẻ phản bội): ' + newChatTxt);
-                        } else if (/\/vote.-?[0-9]+/g.test(chatTxt)) {
+                        } else if (/^\/vote\s-?[0-9]+$/.test(chatTxt)) {
                             if (gamef.getRoom(userRoom).wolfsCount == 1) { // còn một mình kẻ bị sói nguyền
                                 let voteID = chatTxt.match(/-?[0-9]+/g)[0];
                                 if (gamef.getRoom(userRoom).justVote(voteID)) {
@@ -54,7 +54,7 @@ module.exports = (gamef, bot) => {
                     }
 
                     if (userRole == -1 || userRole == -3) {// là SÓI / SÓI NGUYỀN
-                        if (!chatTxt.match(/\/vote.-?[0-9]+/g)) {
+                        if (!/^\/vote\s-?[0-9]+$/.test(chatTxt)) {
                             if (gamef.getRoom(userRoom).chatON) {
                                 roomWolfChatAll(bot, gamef.getRoom(userRoom).wolfsID, joinID, '*' + user.first_name + '*(sói): ' + chatTxt);
                                 bot.sendAction(joinID, 'mark_seen');
@@ -94,7 +94,7 @@ module.exports = (gamef, bot) => {
                             // kiểm tra đã hết đêm chưa?
                             gamef.func(nightDoneCheck, bot, userRoom);
                         } else {
-                            if (gamef.getRoom(userRoom).nguyenID == joinID && /\/vote.-?[0-9]+/g.test(chatTxt)) {
+                            if (gamef.getRoom(userRoom).nguyenID == joinID && /^\/vote\s-?[0-9]+$/.test(chatTxt)) {
                                 return;
                             }
                             if (gamef.getRoom(userRoom).roleDone[joinID]) {
@@ -114,7 +114,7 @@ module.exports = (gamef, bot) => {
                                 gamef.func(nightDoneCheck, bot, userRoom);
                             }
                         } else {
-                            if (gamef.getRoom(userRoom).nguyenID == joinID && /\/vote.-?[0-9]+/g.test(chatTxt)) {
+                            if (gamef.getRoom(userRoom).nguyenID == joinID && /^\/vote\s-?[0-9]+$/.test(chatTxt)) {
                                 return;
                             }
                             if (gamef.getRoom(userRoom).roleDone[joinID]) {
@@ -140,7 +140,7 @@ module.exports = (gamef, bot) => {
                                 gamef.func(nightDoneCheck, bot, userRoom);
                             }
                         } else {
-                            if (gamef.getRoom(userRoom).nguyenID == joinID && /\/vote.-?[0-9]+/g.test(chatTxt)) {
+                            if (gamef.getRoom(userRoom).nguyenID == joinID && /^\/vote\s-?[0-9]+$/.test(chatTxt)) {
                                 return;
                             }
                             if (gamef.getRoom(userRoom).roleDone[joinID]) {
@@ -162,9 +162,9 @@ module.exports = (gamef, bot) => {
                                     gamef.func(nightDoneCheck, bot, userRoom);
                                 }
                             } else if (chatTxt.match(/\/skip/g)) {
-                                await chat.say('🎊Bạn đã không giết ai!');
+                                await chat.say('🎊Bạn bạn không cần phải skip!');
                             } else {
-                                if (gamef.getRoom(userRoom).nguyenID == joinID && /\/vote.-?[0-9]+/g.test(chatTxt)) {
+                                if (gamef.getRoom(userRoom).nguyenID == joinID && /^\/vote\s-?[0-9]+$/.test(chatTxt)) {
                                     return;
                                 }
                                 if (gamef.getRoom(userRoom).roleDone[joinID]) {
@@ -199,7 +199,7 @@ module.exports = (gamef, bot) => {
                                 gamef.func(nightDoneCheck, bot, userRoom);
                             }
                         } else {
-                            if (gamef.getRoom(userRoom).nguyenID == joinID && /\/vote.-?[0-9]+/g.test(chatTxt)) {
+                            if (gamef.getRoom(userRoom).nguyenID == joinID && /^\/vote\s-?[0-9]+$/.test(chatTxt)) {
                                 return;
                             }
                             if (gamef.getRoom(userRoom).roleDone[joinID]) {
@@ -210,7 +210,7 @@ module.exports = (gamef, bot) => {
                         }
                     }
                 } else {// ban NGÀY, mọi người thảo luận
-                    if (!chatTxt.match(/\/vote.-?[0-9]+/g)) {
+                    if (!/^\/vote\s-?[0-9]+$/.test(chatTxt)) {
                         if (!chatTxt.match(/\/treo/g) && !chatTxt.match(/\/tha/g)) {
                             if (gamef.getRoom(userRoom).chatON || (gamef.getRoom(userRoom).deathID != -1 && gamef.getRoom(userRoom).deathID == gamef.getRoom(userRoom).getPlayer(joinID).id)) { //check xem còn bật chat không?
                                 roomChatAll(bot, gamef.getRoom(userRoom).players, joinID, '*' + user.first_name + '*: ' + chatTxt);

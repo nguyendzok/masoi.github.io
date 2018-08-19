@@ -1,5 +1,5 @@
 5:  1 tiên tri +7, 1 bảo vệ +3, 1 sói -6, 1 người hóa sói -1, 1 DÂN +1  = 4
-6:  1 tiên tri +7, 1 bảo vệ +3, 2 sói -12, 2 thợ săn +6, 2 dân +2 = 3
+6:  1 tiên tri +7, 1 bảo vệ +3, 1 sói nguyền -12, 2 thợ săn +6, 2 dân +2 = 3
 7:  1 tiên tri +7, 1 bảo vệ +3, 1 sói nguyền -12, 1 phù thủy +3, 1 người hóa sói -1, 2 dân +2 = 2
 8:  1 tiên tri +7, 1 bảo vệ +3, 2 sói -12, 1 phù thủy +3, 1 người hóa sói -1, 2 dân +2 = 2
 9:  1 tiên tri +7, 1 bảo vệ +3, 2 sói -12, 1 phù thủy +3, 1 người hóa sói -1, 1 già làng +0, 2 dân +2 = 2
@@ -7,6 +7,5 @@
 
 bug thợ săn:    thợ săn chỉ bắn khi bị cắn hoặc bị treo cổ, các cách chết khác không bắn
                 Không hỗ trợ đa thợ săn
-bug sói nguyền: kẻ bị nguyền : không cắn được
 
 Các role chỉ có 1 mà thôi: 1 PHÙ THỦY, 1 GIÀ LÀNG, 1 THẦN TÌNH YÊU (hiện đang bao gồm THỢ SĂN)

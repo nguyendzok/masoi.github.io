@@ -1,7 +1,7 @@
 const dayNotify = require('../Night/dayNotify');
 
 function callWitch(gamef, bot, userRoom, deathID, deathTxt, thereIsOneDied) {
-    const askForSaveKill = (convo, qreply = true, askTxt = `Phù thủy cứu hay không?`) => {
+    const askForSaveKill = (convo, qreply = true, askTxt = `CALL phù thủy improper way`) => {
         convo.ask(qreply ? {
             text: askTxt,
             quickReplies: ['/yes', '/no'],
@@ -76,6 +76,7 @@ function callWitch(gamef, bot, userRoom, deathID, deathTxt, thereIsOneDied) {
                     gamef.getRoom(userRoom).addSchedule(time, () => {
                         console.log(`$ ROOM ${userRoom + 1} > AUTO ROLE > WITCH`);
                         convo.say(`⏰Bạn đã ngủ quên, trời sáng mất rồi!\nBạn không còn cơ hội cứu nữa!`);
+                        gamef.getRoom(userRoom).getPlayer(gamef.getRoom(userRoom).soiNguyenID).afk(3);
                         convo.end();
                         dayNotify(gamef, bot, userRoom, false);
                     });
@@ -112,7 +113,7 @@ module.exports = (gamef, bot, userRoom) => {
 
             const askForNguyen = (convo) => {
                 convo.ask({
-                    text: `\`\`\`\n*${deathTxt}* đã CHẾT!\nBạn 30 giây để quyết định nguyền hay không?\n\`\`\``,
+                    text: `\`\`\`\n*${deathTxt}* đã CHẾT!\nBạn 30 giây để quyết định nguyền hay không?\n("/yes" hay "/no)\n\`\`\``,
                     quickReplies: ['/yes', '/no'],
                 }, async (payload, convo) => {
                     if (!payload.message || !(/(y|Y)es/g.test(payload.message.text) || /(n|N)o/g.test(payload.message.text))) {
@@ -146,6 +147,7 @@ module.exports = (gamef, bot, userRoom) => {
                     gamef.getRoom(userRoom).addSchedule(time, () => {
                         console.log(`$ ROOM ${userRoom + 1} > AUTO ROLE > SÓI NGUYỀN`);
                         convo.say(`⏰Bạn đã ngủ quên, trời sáng mất rồi!\nBạn không còn cơ hội nguyền nữa!`);
+                        gamef.getRoom(userRoom).getPlayer(gamef.getRoom(userRoom).soiNguyenID).afk(3);
                         convo.end();
                         callWitch(gamef, bot, userRoom, deathID, deathTxt, true);
                     });
