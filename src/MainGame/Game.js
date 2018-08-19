@@ -264,10 +264,6 @@ class Room {
         if (this.players[deathID].role == 2) { //người chết là bảo vệ
             this.saveID = -1;
         }
-        if (this.players[deathID].role === 3) { //người chết là thợ săn
-            this.killAction(this.fireID);
-            this.cupidKill(this.fireID);
-        }
 
         // kill action MAIN
         this.alivePlayer[this.players[deathID].joinID] = false;
@@ -276,6 +272,11 @@ class Room {
             this.wolfsCount--;
         } else {
             this.villagersCount--;
+        }
+
+        if (this.players[deathID].role === 3) { //người chết là thợ săn
+            this.killAction(this.fireID);
+            this.cupidKill(this.fireID);
         }
     }
     cupidKill(deathID) {
