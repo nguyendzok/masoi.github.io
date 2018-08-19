@@ -683,12 +683,12 @@ class Game {
         let roleListTxt = "🎲1 TIÊN TRI, 1 BẢO VỆ";
         let villagersRemain = len - 2, balance = 7 + 3;
         this.setRole(roomID, 1, 1); // 1 TIÊN TRI +7
-        this.setRole(roomID, 7, 1);  // 1 THẦN TÌNH YÊU -3
+        this.setRole(roomID, 2, 1);  // 1 BẢO VỆ +3
         if (len <= 4) { // 4 
-            roleListTxt += `, 1 SÓI, 1 THỢ SĂN (VUI LÒNG KHÔNG CHƠI GAME 4 - GAME 4 là để admin thử nghiệm và sửa lỗi)`;
-            villagersRemain -= 2; balance += -12 + 4 + villagersRemain;
+            roleListTxt += `, 1 SÓI, 1 NGƯỜI HÓA SÓI\n(VUI LÒNG KHÔNG CHƠI GAME 4 - GAME 4 là để admin thử nghiệm và sửa lỗi)\n`;
+            villagersRemain -= 2; balance += -6 - 1 + villagersRemain;
             this.setRole(roomID, -1, 1);  //1 SÓI
-            this.setRole(roomID, 3, 1);  // 1 THỢ SĂN +3
+            this.setRole(roomID, 8, 1);  // 1 NGƯỜI HÓA SÓI -1
         } else if (len == 5) { // 5 = +4 (1 DÂN)
             roleListTxt += `, 1 SÓI, 1 NGƯỜI HÓA SÓI`;
             villagersRemain -= 2; balance += -6 - 1 + villagersRemain;
