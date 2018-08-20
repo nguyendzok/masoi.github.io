@@ -104,7 +104,7 @@ module.exports = async function (gamef, bot, userRoom) {
             } else if (p.role == 3) { // Thợ săn
                 return sendImageCard(bot, p.joinID, 'https://www.facebook.com/masoigame/photos/pcb.1889279921367724/1889278518034531', 'Thợ săn')
                     .then(() => {
-                        bot.say(p.joinID, isCupidTxt + `🔫Thợ săn dậy đi! Đêm nay bạn muốn bắn ai?\n"/fire <số ID>" để ngắm bắn\n${playersList}`);
+                        bot.say(p.joinID, isCupidTxt + `🔫Thợ săn dậy đi! Đêm nay bạn muốn bắn ai?\n"/fire <số ID>" để ghim\n"/kill <số ID>" để bắn chết luôn\n${playersList}`);
                     });
             } else if (p.role == -2) { // Bán sói
                 gamef.getRoom(userRoom).roleDoneBy(p.joinID, false, true);

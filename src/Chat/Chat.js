@@ -124,17 +124,25 @@ module.exports = (gamef, bot) => {
                             }
                         }
                     } else if (userRole == 3) { // là thợ săn
-                        if (chatTxt.match(/\/fire.-?[0-9]+/g)) {//fire
+                        if (/\/fire\s-?[0-9]+/g.test(chatTxt) || /\/kill\s-?[0-9]+/g.test(chatTxt)) {//fire
+                            let fireKill = false;
+                            if (/\/kill\s-?[0-9]+/g.test(chatTxt)) {
+                                fireKill = true;
+                            }
                             let voteID = chatTxt.match(/-?[0-9]+/g)[0];
-                            if (!gamef.getRoom(userRoom).fire(joinID, voteID)) {
-                                chat.say(`\`\`\`\nBạn không thể ngắm bắn 1 người 2 đêm liên tiếp hoặc người chơi đã chết!\n\`\`\``);
+                            if (!gamef.getRoom(userRoom).fire(joinID, voteID, fireKill)) {
+                                if (!fireKill) { // bị động
+                                    chat.say(`\`\`\`\nBạn không thể ghim 1 người 2 đêm liên tiếp hoặc ghim người đã chết!\n\`\`\``);
+                                } else { // chủ động
+                                    chat.say(`\`\`\`\nBạn chỉ được giết người còn sống!\n\`\`\``);
+                                }
                             } else {
                                 if (voteID != -1) {
-                                    await chat.say(`🔫Bạn đã ngắm bắn ${gamef.getRoom(userRoom).playersTxt[voteID]}!`);
-                                    gamef.getRoom(userRoom).newLog(`🔫Thợ săn đã ngắm bắn ${gamef.getRoom(userRoom).playersTxt[voteID]}!`);
+                                    await chat.say(`🔫Bạn đã ghim ${gamef.getRoom(userRoom).playersTxt[voteID]}!`);
+                                    gamef.getRoom(userRoom).newLog(`🔫Thợ săn đã ghim ${gamef.getRoom(userRoom).playersTxt[voteID]}!`);
                                 } else {
-                                    await chat.say(`🔫Bạn đã ngắm bắn lên trời!`);
-                                    gamef.getRoom(userRoom).newLog(`🔫Thợ săn đã ngắm bắn lên trời!`)
+                                    await chat.say(`🔫Bạn đã bắn lên trời (không ghim ai)!`);
+                                    gamef.getRoom(userRoom).newLog(`🔫Thợ săn đã bắn lên trời (không ghim ai)!`)
                                 }
                                 // kiểm tra đã hết đêm chưa?
                                 gamef.func(nightDoneCheck, bot, userRoom);
