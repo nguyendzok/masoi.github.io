@@ -12,18 +12,39 @@ module.exports = async (gamef, bot, userRoom, witchSaved) => {
     let dieCount = 0;
     let dieArr = [];
 
-    let chatAllTxt = `\`\`\`\n🌞Trời sáng rồi mọi người dậy đi\n`;
+    let chatAllTxt = `\`\`\`\n🌞Trời sáng rồi mọi người dậy đi`;
 
     // THỢ SĂN
     if (gamef.getRoom(userRoom).fireKill) { // chủ động
-        gamef.getRoom(userRoom).fireKillAction();
+        gamef.getRoom(userRoom).fireKillAction((hunterID, dieIDArray, firedWolf) => {
+            dieIDArray.forEach(id => {
+                let killID = parseInt(id);
+                let deathUser = gamef.getRoom(userRoom).players[killID];
+                let deathUserTxt = `${killID}: ${deathUser.first_name}`;
+                if (hunterID != killID) { // killID không phải là thợ săn
+                    if (!firedWolf) { // không giết được sói
+                        gamef.getRoom(userRoom).newLog(`👻Thợ săn đã bắn nhầm ${gamef.roleTxt[gamef.getRoom(userRoom).getRoleByID(killID)]} *${deathUserTxt}*`);
+                    } else { //giết được sói
+                        gamef.getRoom(userRoom).newLog(`👻Thợ săn đã bắn trúng ${gamef.roleTxt[gamef.getRoom(userRoom).getRoleByID(killID)]} *${deathUserTxt}*`);
+                    }
+                } else {
+                    if (!firedWolf) { // không giết được sói
+                        gamef.getRoom(userRoom).newLog(`👻Thợ săn phải đền mạng!`);
+                    }
+                }
+                if (dieArr.indexOf(killID) == -1) {
+                    chatAllTxt += `\n👻 *${deathUserTxt}* đã CHẾT!`;
+                    dieArr.push(killID);
+                }
+            });
+        });
     }
 
     // SÓI CẮN
     if (!witchSaved && gamef.getRoom(userRoom).kill()) {
         dieCount++;
         dieArr.push(deathID);
-        chatAllTxt += `👻 *${deathTxt}* đã CHẾT!`;
+        chatAllTxt += `\n👻 *${deathTxt}* đã CHẾT!`;
         gamef.getRoom(userRoom).newLog(`👻 *${deathTxt}* là ${deathRole} đã bị SÓI cắn!`);
         console.log(`$ ROOM ${userRoom + 1} > ${deathTxt} DIED!`);
         if (gamef.getRoom(userRoom).players[deathID] && gamef.getRoom(userRoom).players[deathID].role === 3) { //người chết là thợ săn
@@ -74,7 +95,7 @@ module.exports = async (gamef, bot, userRoom, witchSaved) => {
             chatAllTxt += `\n👻 *${die2User.id}: ${die2User.first_name}* đã CHẾT!`;
             dieArr.push(die2User.id);
         }
-        gamef.getRoom(userRoom).newLog(`👻Tình yêu đã giết chết ${gamef.roleTxt[gamef.getRoom(userRoom).getRoleByID(die2User.id)]} *${die2User.id}: ${die2User.first_name}*`);
+        gamef.getRoom(userRoom).newLog(`👻Do là cặp đôi, ${gamef.roleTxt[gamef.getRoom(userRoom).getRoleByID(die2User.id)]} *${die2User.id}: ${die2User.first_name}* cũng chết theo`);
         console.log(`$ ROOM ${userRoom + 1} > ${die2User.first_name} DIED!`);
     }
 

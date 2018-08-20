@@ -388,18 +388,20 @@ class Room {
             return false;
         }
     }
-    fireKillAction() {
+    fireKillAction(callback) {
         if (this.fireID == -1 || !this.players[this.fireID] || !this.fireKill || !this.hunterID) { //không phải bắn lên trời hoặc bắn lung tung, phải là chủ động. phải còn thợ săn
-            return;
+            return false;
         }
         let fireRole = this.getRoleByID(this.fireID);
         let hunterUser = this.getPlayer(this.hunterID);
         if (fireRole > 0) { // bắn trúng dân làng (giết thợ săn => thợ săn tự ghim nạn nhân)
             this.killAction(hunterUser.id);
             this.cupidKill(hunterUser.id);
+            callback(hunterUser.id, [hunterUser.id, this.fireID], false); //id thợ săn, mảng nạn nhân: [] + bắn trúng sói hay sai : false
         } else { //chỉ giết nạn nhân
             this.killAction(this.fireID);
             this.cupidKill(this.fireID);
+            callback(hunterUser.id, [this.fireID], true);
         }
 
         // bắn xong, dù đúng hay sai bạn về dân nhé :v
@@ -723,12 +725,12 @@ class Game {
         let villagersRemain, balance;
 
         if (len <= 4) { // 4 
-            roleListTxt += `\`\`\`\nVUI LÒNG KHÔNG CHƠI GAME 4\nGAME 4 là để admin thử nghiệm và sửa lỗi\n\`\`\`
+            roleListTxt = `\`\`\`\nVUI LÒNG KHÔNG CHƠI GAME 4\nGAME 4 là để admin thử nghiệm và sửa lỗi\n\`\`\`
             \n🎲1 TIÊN TRI, 1 BẢO VỆ, 1 SÓI, 1 THỢ SĂN`;
             villagersRemain = len - 4; balance = 7 + 3 - 6 - 1 + villagersRemain;
             this.setRole(roomID, 1, 1); // 1 TIÊN TRI +7
             this.setRole(roomID, 2, 1);  // 1 BẢO VỆ +3
-            this.setRole(roomID, -1, 1);  //1 SÓI
+            this.setRole(roomID, -1, 1);  //1 SÓI -6
             this.setRole(roomID, 3, 1);  // 1 THỢ SĂN +3
         } else {
             roleListTxt = "🎲1 TIÊN TRI, 1 BẢO VỆ";
