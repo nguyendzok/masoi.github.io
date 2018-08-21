@@ -87,7 +87,7 @@ module.exports = async function (gamef, bot, userRoom) {
                 } else {
                     nguyenTxt = `🐺Sói ơi dậy đi!`;
                 }
-                return sendImageCard(bot, p.joinID, 'https://www.facebook.com/masoigame/photos/pcb.1889279921367724/1889278418034541', 'Sói nguyền')
+                return sendImageCard(bot, p.joinID, 'https://www.facebook.com/masoigame/photos/pcb.1889279921367724/1897745170521199', 'Sói nguyền')
                     .then(() => {
                         bot.say(p.joinID, isCupidTxt + nguyenTxt + `Đêm nay sói muốn cắn ai?\n"/vote <số ID>" để cắn ai đó\nVD: "/vote 1" để cắn ${gamef.getRoom(userRoom).players[1].first_name}\n👨‍👩‍👦‍👦ID CẢ LÀNG:\n${playersList}\n🐺ID TEAM SÓI:\n${wolfList}\n💩ID TEAM DÂN:\n${villagersList}`);
                     });
