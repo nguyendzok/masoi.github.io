@@ -229,8 +229,8 @@ class Room {
         if (!autoDone) { // người làm
             if (!nothingToDo) {
                 player.backToGame();
-                player.cancelSchedule();
             }
+            player.cancelSchedule();
         } else {
             if (this.isNight) {
                 player.afk(5);
