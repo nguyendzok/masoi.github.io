@@ -77,7 +77,7 @@ function callWitch(gamef, bot, userRoom, deathID, deathTxt, thereIsOneDied) {
                     gamef.getRoom(userRoom).addSchedule(time, () => {
                         console.log(`$ ROOM ${userRoom + 1} > AUTO ROLE > WITCH`);
                         convo.say(`⏰Bạn đã ngủ quên, trời sáng mất rồi!\nBạn không còn cơ hội cứu nữa!`);
-                        gamef.getRoom(userRoom).getPlayer(gamef.getRoom(userRoom).soiNguyenID).afk(3);
+                        //gamef.getRoom(userRoom).getPlayer(gamef.getRoom(userRoom).witchID).afk(3);
                         convo.end();
                         dayNotify(gamef, bot, userRoom, false);
                     });
@@ -148,7 +148,7 @@ module.exports = (gamef, bot, userRoom) => {
                     gamef.getRoom(userRoom).addSchedule(time, () => {
                         console.log(`$ ROOM ${userRoom + 1} > AUTO ROLE > SÓI NGUYỀN`);
                         convo.say(`⏰Bạn đã ngủ quên, trời sáng mất rồi!\nBạn không còn cơ hội nguyền nữa!`);
-                        gamef.getRoom(userRoom).getPlayer(gamef.getRoom(userRoom).soiNguyenID).afk(3);
+                        // gamef.getRoom(userRoom).getPlayer(gamef.getRoom(userRoom).soiNguyenID).afk(3);
                         convo.end();
                         callWitch(gamef, bot, userRoom, deathID, deathTxt, true);
                     });
