@@ -226,9 +226,11 @@ class Room {
         this.roleDone[joinID] = true;
         this.roleDoneCount++;
         let player = this.getPlayer(joinID);
-        if (!autoDone && !nothingToDo) { // người làm
-            player.backToGame();
-            player.cancelSchedule();
+        if (!autoDone) { // người làm
+            if (!nothingToDo) {
+                player.backToGame();
+                player.cancelSchedule();
+            }
         } else {
             if (this.isNight) {
                 player.afk(5);
