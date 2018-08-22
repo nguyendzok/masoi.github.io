@@ -26,6 +26,7 @@ module.exports = (bot) => {
                     type: 'nested', title: '👼Tiện ích người chơi...',
                     call_to_actions: [
                         { type: 'postback', title: '🃏Đổi tên /rename', payload: 'USER_RENAME' },
+                        { type: 'postback', title: '👤Thông tin /profile', payload: 'USER_PROFILE' },
                     ]
                 },
                 {

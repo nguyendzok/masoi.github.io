@@ -25,7 +25,7 @@ function callWitch(gamef, bot, userRoom, deathID, deathTxt, thereIsOneDied) {
                         // còn quyền giết
                         if (gamef.getRoom(userRoom).witchKillRemain) {
                             let playerListTxt = gamef.getRoom(userRoom).playersTxt.join(' / ');
-                            askForSaveKill(convo, `🔮Để dùng quyền giết: "/kill <số id>"\n${playerListTxt}\n🔮Nếu không giết ai: "/skip"`, ["skip"], witchSave);
+                            askForSaveKill(convo, `🔮Để dùng quyền giết:\n"/kill <số id>"\n${playerListTxt}\n🔮Nếu không giết ai: "/skip"`, ["/skip"], witchSave);
                         }
                     } else {
                         convo.say('```\nBạn đã hết quyền cứu\n```');
@@ -70,8 +70,8 @@ function callWitch(gamef, bot, userRoom, deathID, deathTxt, thereIsOneDied) {
                 if (time) {
                     gamef.getRoom(userRoom).addSchedule(time, () => {
                         console.log(`$ ROOM ${userRoom + 1} > AUTO ROLE > WITCH`);
-                        convo.say(`⏰Bạn đã ngủ quên, trời sáng mất rồi!\nBạn không còn cơ hội cứu nữa!`);
-                        //gamef.getRoom(userRoom).getPlayer(gamef.getRoom(userRoom).witchID).afk(3);
+                        convo.say(`⏰ Bạn đã ngủ quên (-40 uy tín)!`);
+                        gamef.getRoom(userRoom).getPlayer(gamef.getRoom(userRoom).witchID).afk(4);
                         convo.end();
                         dayNotify(gamef, bot, userRoom, false);
                     });
@@ -81,7 +81,7 @@ function callWitch(gamef, bot, userRoom, deathID, deathTxt, thereIsOneDied) {
                     askForSaveKill(convo, `🔮Bạn có cứu ${deathTxt}* không?\n"/yes" hay "/no" ?`, ["/yes", "/no"]);
                 } else if (gamef.getRoom(userRoom).witchKillRemain) {
                     let playerListTxt = gamef.getRoom(userRoom).playersTxt.join(' / ');
-                    askForSaveKill(convo, `🔮Để dùng quyền giết: "/kill <số id>"\n${playerListTxt}\n🔮Nếu không giết ai: "/skip"`, ["/skip"]);
+                    askForSaveKill(convo, `🔮Để dùng quyền giết:\n"/kill <số id>"\n${playerListTxt}\n🔮Nếu không giết ai: "/skip"`, ["/skip"]);
                 } else { // không còn quyền giết và không ai chết
                     convo.end();
                     dayNotify(gamef, bot, userRoom, false);
@@ -141,8 +141,8 @@ module.exports = (gamef, bot, userRoom) => {
                     let time = new Date(Date.now() + 30 * 1000);
                     gamef.getRoom(userRoom).addSchedule(time, () => {
                         console.log(`$ ROOM ${userRoom + 1} > AUTO ROLE > SÓI NGUYỀN`);
-                        convo.say(`⏰Bạn đã ngủ quên, trời sáng mất rồi!\nBạn không còn cơ hội nguyền nữa!`);
-                        // gamef.getRoom(userRoom).getPlayer(gamef.getRoom(userRoom).soiNguyenID).afk(3);
+                        convo.say(`⏰ Bạn chưa quyết định nguyền hay không (-30 uy tín)!`);
+                        gamef.getRoom(userRoom).getPlayer(gamef.getRoom(userRoom).soiNguyenID).afk(3);
                         convo.end();
                         callWitch(gamef, bot, userRoom, deathID, deathTxt, true);
                     });

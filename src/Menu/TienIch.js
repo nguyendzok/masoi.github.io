@@ -60,6 +60,18 @@ module.exports = (gamef, bot) => {
         });
     };
 
+    const profileCallback = (payload, chat) => {
+        let joinID = payload.sender.id;
+        let userRoom = gamef.getUserRoom(joinID);
+        if (userRoom != undefined) {
+            let user = gamef.getRoom(userRoom).getPlayer(joinID);
+            let uyTin = (60 - user.afkCount * 10);
+            chat.say(`Xin chào ${user.last_name} ${user.first_name},\nTên InGame: ${user.first_name}\nUy tín của bạn: ${uyTin}/60`);
+        } else {
+            chat.say('```\nBạn chưa tham gia phòng chơi nào!\n```');
+        }
+    };
+
     // listen VIEW_PLAYER_IN_ROOM message
     bot.on('postback:VIEW_PLAYER_IN_ROOM', infoCallback);
     bot.hear(/\/info/i, infoCallback);
@@ -67,4 +79,8 @@ module.exports = (gamef, bot) => {
     // listen USER_RENAME message
     bot.on('postback:USER_RENAME', renameCallback);
     bot.hear(/\/rename/i, renameCallback);
+
+    // listen USER_RENAME message
+    bot.on('postback:USER_PROFILE', profileCallback);
+    bot.hear(/\/profile/i, profileCallback);
 };
