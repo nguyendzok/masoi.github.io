@@ -52,12 +52,14 @@ module.exports = async function (gamef, bot, userRoom) {
         }
     });
 
+    let wolfList = gamef.getRoom(userRoom).wolfsTxt.join(' ; ');
+    let villagersList = gamef.getRoom(userRoom).villagersTxt.join(' ; ');
+    let playersList = gamef.getRoom(userRoom).playersTxt.join(' ; ');
+
     await asyncForEach(gamef.getRoom(userRoom).players, (p) => {
         if (p && gamef.getRoom(userRoom).alivePlayer[p.joinID]) {
             console.log(`$ ROOM ${userRoom + 1} > ${gamef.roleTxt[p.role]} > ${p.first_name}`);
-            let wolfList = gamef.getRoom(userRoom).wolfsTxt.join(' ; ');
-            let villagersList = gamef.getRoom(userRoom).villagersTxt.join(' ; ');
-            let playersList = gamef.getRoom(userRoom).playersTxt.join(' ; ');
+
             let isCupidTxt = ``;
 
             if (gamef.getRoom(userRoom).cupidsID.indexOf(p.joinID) != -1) {
