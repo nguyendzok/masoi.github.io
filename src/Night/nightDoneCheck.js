@@ -2,43 +2,41 @@ const dayNotify = require('../Night/dayNotify');
 const { roomChatAll } = require('../Chat/Utils');
 
 function callWitch(gamef, bot, userRoom, deathID, deathTxt, thereIsOneDied) {
-    const askForSaveKill = (convo, qreply = true, askTxt = `CALL phù thủy improper way`) => {
-        convo.ask(qreply ? {
+    const askForSaveKill = (convo, askTxt = `CALL phù thủy improper way`, qreply, witchSave) => {
+        convo.ask({
             text: askTxt,
-            quickReplies: ['/yes', '/no'],
-        } : askTxt, async (payload, convo) => {
+            quickReplies: qreply,
+        }, async (payload, convo) => {
             if (!payload.message || !(/(y|Y)es/g.test(payload.message.text) || /(n|N)o/g.test(payload.message.text) || /skip/g.test(payload.message.text) || /\/kill\s[0-9]+/g.test(payload.message.text))) {
                 convo.say(`\`\`\`\nKhông hợp lệ!\n\`\`\``);
                 askForSaveKill(convo, qreply, askTxt);
                 return;
             } else {
-                if (/(y|Y)es/g.test(payload.message.text)) { // cứu
-                    gamef.getRoom(userRoom).cancelSchedule();
+                if (/(y|Y)es/g.test(payload.message.text) || /(n|N)o/g.test(payload.message.text)) {
                     if (gamef.getRoom(userRoom).witchSaveRemain) { // còn quyền cứu
-                        gamef.getRoom(userRoom).witchUseSave();
-                        await convo.say(`🔮Bạn đã cứu *${deathTxt}* thành công!`);
-                        console.log(`$ ROOM ${userRoom + 1} > WITCH SAVE OK`);
-                        gamef.getRoom(userRoom).newLog(`🔮Phù thủy *${gamef.getRoom(userRoom).getPlayer(gamef.getRoom(userRoom).witchID).first_name}* đã cứu *${deathTxt}*!`);
-                        convo.end();
-                        dayNotify(gamef, bot, userRoom, true);
+                        let witchSave = false;
+                        if (/(y|Y)es/g.test(payload.message.text)) { // cứu
+                            witchSave = true;
+                            gamef.getRoom(userRoom).witchUseSave();
+                            await convo.say(`✔ Bạn đã cứu *${deathTxt}*!`);
+                            console.log(`$ ROOM ${userRoom + 1} > WITCH SAVE OK`);
+                            gamef.getRoom(userRoom).newLog(`🔮Phù thủy *${gamef.getRoom(userRoom).getPlayer(gamef.getRoom(userRoom).witchID).first_name}* đã cứu *${deathTxt}*!`);
+                        }
+                        // còn quyền giết
+                        if (gamef.getRoom(userRoom).witchKillRemain) {
+                            let playerListTxt = gamef.getRoom(userRoom).playersTxt.join(' / ');
+                            askForSaveKill(convo, `🔮Để dùng quyền giết: "/kill <số id>"\n${playerListTxt}\n🔮Nếu không giết ai: "/skip"`, ["skip"], witchSave);
+                        }
                     } else {
                         convo.say('```\nBạn đã hết quyền cứu\n```');
                     }
-                } else if (/(n|N)o/g.test(payload.message.text)) { // không cứu
-                    gamef.getRoom(userRoom).cancelSchedule();
-                    if (gamef.getRoom(userRoom).witchSaveRemain) { // còn quyền cứu
-                        convo.end();
-                        dayNotify(gamef, bot, userRoom, false);
-                    } else {
-                        convo.say('```\nBạn đã hết quyền cứu\n```');
-                    }
-                } else { // kill
+                } else { // kill hoặc skip
                     if (gamef.getRoom(userRoom).witchKillRemain) {
                         if (/\/kill\s[0-9]+/g.test(payload.message.text)) {  //kill
                             let voteID = payload.message.text.match(/[0-9]+/g)[0];
                             if (!gamef.getRoom(userRoom).witchKillVote(voteID)) {
                                 convo.say(`\`\`\`\nBạn không thể giết người đã chết!\n\`\`\``);
-                                askForSaveKill(convo, qreply, askTxt);
+                                askForSaveKill(convo, askTxt, qreply, witchSave);
                                 return;
                             } else {
                                 let witchKillName = gamef.getRoom(userRoom).playersTxt[voteID];
@@ -47,13 +45,8 @@ function callWitch(gamef, bot, userRoom, deathID, deathTxt, thereIsOneDied) {
                                 await convo.say(`⛔Bạn đã giết ${witchKillName}!`);
                             }
                         }
-                        // kill hoặc skip đều chạy đoạn code bên dưới:
-                        if (thereIsOneDied && gamef.getRoom(userRoom).witchSaveRemain && gamef.getRoom(userRoom).witchKillID != deathID) {
-                            askForSaveKill(convo, true, `Bạn có quyền cứu: "/yes" hay "/no" ?`);
-                        } else {
-                            gamef.getRoom(userRoom).cancelSchedule();
-                            dayNotify(gamef, bot, userRoom, false);
-                        }
+                        gamef.getRoom(userRoom).cancelSchedule();
+                        dayNotify(gamef, bot, userRoom, witchSave);
                     } else {
                         convo.say('```\nBạn đã hết quyền giết\n```');
                     }
@@ -67,11 +60,11 @@ function callWitch(gamef, bot, userRoom, deathID, deathTxt, thereIsOneDied) {
             let time = undefined;
             if (gamef.getRoom(userRoom).witchSaveRemain || gamef.getRoom(userRoom).witchKillRemain) {
                 if (thereIsOneDied) {
-                    await convo.say(`\`\`\`\n*${deathTxt}* đã CHẾT!\nBạn có 45 giây để quyết định\n\`\`\``);
-                    time = new Date(Date.now() + 45 * 1000);
+                    await convo.say(`\`\`\`\n👻 *${deathTxt}* đã CHẾT!\n⏰ Bạn có 60 giây\n\`\`\``);
+                    time = new Date(Date.now() + 60 * 1000);
                 } else if (gamef.getRoom(userRoom).witchKillRemain) {
-                    await convo.say(`\`\`\`\nĐêm qua không ai chết!\nBạn có 30 giây để quyết định\n\`\`\``);
-                    time = new Date(Date.now() + 30 * 1000);
+                    await convo.say(`\`\`\`\n😇 Đêm qua không ai chết!\n⏰ Bạn có 45 giây\n\`\`\``);
+                    time = new Date(Date.now() + 45 * 1000);
                 }
                 if (time) {
                     gamef.getRoom(userRoom).addSchedule(time, () => {
@@ -83,11 +76,11 @@ function callWitch(gamef, bot, userRoom, deathID, deathTxt, thereIsOneDied) {
                     });
                 }
 
-                if (gamef.getRoom(userRoom).witchKillRemain) {
+                if (thereIsOneDied && gamef.getRoom(userRoom).witchSaveRemain && gamef.getRoom(userRoom).witchKillID != deathID) {
+                    askForSaveKill(convo, `🔮Bạn có cứu ${deathTxt}* không?\n"/yes" hay "/no" ?`, ["yes", "no"]);
+                } else if (gamef.getRoom(userRoom).witchKillRemain) {
                     let playerListTxt = gamef.getRoom(userRoom).playersTxt.join(' / ');
-                    askForSaveKill(convo, false, `Để dùng quyền giết: "/kill <số id>"\nNếu không giết ai: "/skip"\n${playerListTxt}`);
-                } else if (thereIsOneDied) {
-                    askForSaveKill(convo, true, `Bạn có quyền cứu: "/yes" hay "/no" ?`);
+                    askForSaveKill(convo, `🔮Để dùng quyền giết: "/kill <số id>"\n${playerListTxt}\n🔮Nếu không giết ai: "/skip"`, ["skip"]);
                 } else { // không còn quyền giết và không ai chết
                     convo.end();
                     dayNotify(gamef, bot, userRoom, false);
@@ -114,7 +107,7 @@ module.exports = (gamef, bot, userRoom) => {
 
             const askForNguyen = (convo) => {
                 convo.ask({
-                    text: `\`\`\`\n*${deathTxt}* đã CHẾT!\nBạn 30 giây để quyết định nguyền hay không?\n("/yes" hay "/no)\n\`\`\``,
+                    text: `\`\`\`\n👻 *${deathTxt}* đã CHẾT!\n⏰ Bạn có 30 giây để nguyền hay không?\n("/yes" hay "/no)\n\`\`\``,
                     quickReplies: ['/yes', '/no'],
                 }, async (payload, convo) => {
                     if (!payload.message || !(/(y|Y)es/g.test(payload.message.text) || /(n|N)o/g.test(payload.message.text))) {

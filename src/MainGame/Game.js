@@ -731,7 +731,7 @@ class Game {
             \n🎲1 TIÊN TRI, 1 BẢO VỆ, 1 SÓI, 1 THỢ SĂN`;
             villagersRemain = len - 4; balance = 7 + 3 - 6 - 1 + villagersRemain;
             this.setRole(roomID, 1, 1); // 1 TIÊN TRI +7
-            this.setRole(roomID, 2, 1);  // 1 BẢO VỆ +3
+            this.setRole(roomID, 5, 1);  // 1 PHÙ THỦY +4
             this.setRole(roomID, -1, 1);  //1 SÓI -6
             this.setRole(roomID, 3, 1);  // 1 THỢ SĂN +3
         } else {
