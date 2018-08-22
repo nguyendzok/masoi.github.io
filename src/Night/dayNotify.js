@@ -144,7 +144,8 @@ module.exports = async (gamef, bot, userRoom, witchSaved) => {
     }
 
     let aliveLeft = gamef.getRoom(userRoom).aliveCount();
-    chatAllTxt += `\n⏰Mọi người có ${(aliveLeft <= 8 ? aliveLeft : 9)*40/60} phút thảo luận!`;
+    let timeLeft = (aliveLeft <= 8 ? aliveLeft : 9) * 40 / 60;
+    chatAllTxt += `\n⏰Mọi người có ${Math.floor(timeLeft)} phút ${(timeLeft - Math.floor(timeLeft)) * 60} giây thảo luận!`;
 
     chatAllTxt += `\n\`\`\``;
     roomChatAll(bot, gamef.getRoom(userRoom).players, 0, chatAllTxt);
