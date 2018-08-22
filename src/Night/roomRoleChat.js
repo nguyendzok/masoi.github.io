@@ -1,4 +1,5 @@
 const { asyncForEach, roomChatAll, sendImageCard } = require('../Chat/Utils');
+const gameIsNotEndCheck = require('../MainGame/gameIsNotEndCheck');
 
 module.exports = async function (gamef, bot, userRoom) {
 
@@ -8,6 +9,7 @@ module.exports = async function (gamef, bot, userRoom) {
             gamef.getRoom(userRoom).killAction(p.id);
             roomChatAll(bot, gamef.getRoom(userRoom).players, 0, `\`\`\`\n *${p.first_name}* đã bị giết (uy tín < 0)\n\`\`\``);
             gamef.getRoom(userRoom).newLog(`*${p.first_name}* đã bị giết (uy tín < 0)`);
+            gameIsNotEndCheck(gamef, bot, userRoom, () => { });
             return;
         }
 
