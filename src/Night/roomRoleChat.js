@@ -7,8 +7,8 @@ module.exports = async function (gamef, bot, userRoom) {
     gamef.getRoom(userRoom).players.forEach((p, index, players) => {
         if (p && p.afkCount >= 6) {
             gamef.getRoom(userRoom).killAction(p.id);
-            roomChatAll(bot, gamef.getRoom(userRoom).players, 0, `\`\`\`\n *${p.first_name}* đã bị giết (uy tín < 0)\n\`\`\``);
-            gamef.getRoom(userRoom).newLog(`*${p.first_name}* đã bị giết (uy tín < 0)`);
+            roomChatAll(bot, gamef.getRoom(userRoom).players, 0, `\`\`\`\n👻 *${p.first_name}* đã bị giết (uy tín < 0)\n\`\`\``);
+            gamef.getRoom(userRoom).newLog(`👻 *${p.first_name}* đã bị giết (uy tín < 0)`);
             gameIsNotEndCheck(gamef, bot, userRoom, () => { });
             return;
         }
@@ -151,7 +151,10 @@ module.exports = async function (gamef, bot, userRoom) {
                     });
             }
         } else {
-            return bot.say(p.joinID, "👻Đêm nay bạn đã chết =))");
+            return sendImageCard(bot, p.joinID, 'https://www.facebook.com/masoigame/photos/pcb.1889279921367724/1898943877067995', 'Bạn đã chết')
+                .then(() => {
+                    bot.say(p.joinID, `👻Đêm nay bạn đã chết =))\n👨‍👩‍👦‍👦ID CẢ LÀNG:\n${playersList}`);
+                });
         }
     })
 }
