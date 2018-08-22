@@ -39,7 +39,7 @@ function callWitch(gamef, bot, userRoom, deathID, deathTxt, thereIsOneDied) {
                                 askForSaveKill(convo, askTxt, qreply, witchSave);
                                 return;
                             } else {
-                                // let witchKillName = gamef.getRoom(userRoom).playersTxt[voteID];
+                                let witchKillName = gamef.getRoom(userRoom).playersTxt[voteID];
                                 // console.log(`$ ROOM ${userRoom + 1} > WITCH KILL: ${witchKillName}`);
                                 // gamef.getRoom(userRoom).newLog(`⛔Phù thủy ${gamef.getRoom(userRoom).getPlayer(gamef.getRoom(userRoom).witchID).first_name} đã giết ${witchKillName}!`)
                                 await convo.say(`⛔Bạn đã giết ${witchKillName}!`);
