@@ -42,7 +42,7 @@ module.exports = (gamef, bot) => {
                 leaveRole = user.role;
                 chat.say(`\`\`\`\nBạn đã tự sát!\n\`\`\``);
                 roomChatAll(bot, gamef.getRoom(userRoom).players, joinID, `\`\`\`\n${user.first_name} đã tự sát với vai trò là: ${gamef.roleTxt[leaveRole]}\n\`\`\``);
-                gamef.getRoom(userRoom).newLog(`\`\`\`\n${user.first_name} đã tự sát với vai trò là: ${gamef.roleTxt[leaveRole]}\n\`\`\``);
+                gamef.getRoom(userRoom).newLog(`${user.first_name} đã tự sát với vai trò là: ${gamef.roleTxt[leaveRole]}`);
                 if (gamef.getRoom(userRoom).isNight) {
                     gamef.getRoom(userRoom).roleIsDone((isDone) => {
                         if (isDone) {

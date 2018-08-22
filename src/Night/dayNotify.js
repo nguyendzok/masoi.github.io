@@ -140,7 +140,7 @@ module.exports = async (gamef, bot, userRoom, witchSaved) => {
     if (dieCount == 0) {
         console.log(`$ ROOM ${userRoom + 1} > NOBODY DIED!`);
         gamef.getRoom(userRoom).newLog(`${deathID != -1 ? `👻 *${deathTxt}* bị cắn nhưng không chết!\n` : `🎊Sói không thống nhất được số vote!\n`}🎊Đêm hôm đấy không ai chết cả!`);
-        chatAllTxt += `🎊Đêm hôm qua không ai chết cả!`;
+        chatAllTxt += `\n🎊Đêm hôm qua không ai chết cả!`;
     }
 
     let aliveLeft = gamef.getRoom(userRoom).aliveCount();

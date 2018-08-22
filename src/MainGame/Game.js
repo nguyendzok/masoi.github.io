@@ -380,7 +380,8 @@ class Room {
                 return false;
             }
         }
-        if (!this.roleDone[joinID] && this.fireID != voteID && this.players[voteID] && this.alivePlayer[this.players[voteID].joinID]) {
+        if (!this.roleDone[joinID] && this.players[voteID] && this.alivePlayer[this.players[voteID].joinID] && (fireKill || (!fireKill && this.fireID != voteID))) {
+            // chủ động hoặc (bị động + ghim người khác đêm trước) 
             this.fireID = voteID;
             this.fireKill = fireKill;
             this.hunterID = joinID;

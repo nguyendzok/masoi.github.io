@@ -139,7 +139,7 @@ module.exports = (gamef, bot) => {
                             } else {
                                 if (voteID != -1) {
                                     await chat.say(`🔫Bạn đã ghim ${gamef.getRoom(userRoom).playersTxt[voteID]}!`);
-                                    gamef.getRoom(userRoom).newLog(`🔫Thợ săn đã ghim ${gamef.getRoom(userRoom).playersTxt[voteID]}!`);
+                                    gamef.getRoom(userRoom).newLog(`🔫Thợ săn đã ghim *${gamef.getRoom(userRoom).playersTxt[voteID]}* !`);
                                 } else {
                                     await chat.say(`🔫Bạn đã bắn lên trời (không ghim ai)!`);
                                     gamef.getRoom(userRoom).newLog(`🔫Thợ săn đã bắn lên trời (không ghim ai)!`)

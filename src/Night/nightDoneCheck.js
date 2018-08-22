@@ -39,13 +39,14 @@ function callWitch(gamef, bot, userRoom, deathID, deathTxt, thereIsOneDied) {
                                 askForSaveKill(convo, askTxt, qreply, witchSave);
                                 return;
                             } else {
-                                let witchKillName = gamef.getRoom(userRoom).playersTxt[voteID];
-                                console.log(`$ ROOM ${userRoom + 1} > WITCH KILL: ${witchKillName}`);
-                                gamef.getRoom(userRoom).newLog(`⛔Phù thủy ${gamef.getRoom(userRoom).getPlayer(gamef.getRoom(userRoom).witchID).first_name} đã giết ${witchKillName}!`)
+                                // let witchKillName = gamef.getRoom(userRoom).playersTxt[voteID];
+                                // console.log(`$ ROOM ${userRoom + 1} > WITCH KILL: ${witchKillName}`);
+                                // gamef.getRoom(userRoom).newLog(`⛔Phù thủy ${gamef.getRoom(userRoom).getPlayer(gamef.getRoom(userRoom).witchID).first_name} đã giết ${witchKillName}!`)
                                 await convo.say(`⛔Bạn đã giết ${witchKillName}!`);
                             }
                         }
                         gamef.getRoom(userRoom).cancelSchedule();
+                        convo.end();
                         dayNotify(gamef, bot, userRoom, witchSave);
                     } else {
                         convo.say('```\nBạn đã hết quyền giết\n```');
@@ -77,10 +78,10 @@ function callWitch(gamef, bot, userRoom, deathID, deathTxt, thereIsOneDied) {
                 }
 
                 if (thereIsOneDied && gamef.getRoom(userRoom).witchSaveRemain && gamef.getRoom(userRoom).witchKillID != deathID) {
-                    askForSaveKill(convo, `🔮Bạn có cứu ${deathTxt}* không?\n"/yes" hay "/no" ?`, ["yes", "no"]);
+                    askForSaveKill(convo, `🔮Bạn có cứu ${deathTxt}* không?\n"/yes" hay "/no" ?`, ["/yes", "/no"]);
                 } else if (gamef.getRoom(userRoom).witchKillRemain) {
                     let playerListTxt = gamef.getRoom(userRoom).playersTxt.join(' / ');
-                    askForSaveKill(convo, `🔮Để dùng quyền giết: "/kill <số id>"\n${playerListTxt}\n🔮Nếu không giết ai: "/skip"`, ["skip"]);
+                    askForSaveKill(convo, `🔮Để dùng quyền giết: "/kill <số id>"\n${playerListTxt}\n🔮Nếu không giết ai: "/skip"`, ["/skip"]);
                 } else { // không còn quyền giết và không ai chết
                     convo.end();
                     dayNotify(gamef, bot, userRoom, false);
