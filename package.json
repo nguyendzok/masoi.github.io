@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "forward": "lt --port 3000 --subdomain masoibot",
+    "forward": "lt --port 3000 --subdomain masoibot2",
     "start": "node index.js"
   },
   "author": "Phạm Ngọc Duy",

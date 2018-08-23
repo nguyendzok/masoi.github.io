@@ -1,15 +1,4 @@
 module.exports = (bot) => {
-    // bot config
-    bot.setGreetingText("Chào mừng bạn đến với Phạm Ngọc Duy GAME bot, hãy bắt đầu trò chơi :3")
-    bot.setGetStartedButton((payload, chat) => {
-        chat.say('🐺MA SÓI GAME').then(() => {
-            chat.say({
-                text: `Chào mừng bạn, để bắt đầu hãy chat 'help' hoặc 'trợ giúp' để được hướng dẫn cách chơi!'`,
-                quickReplies: ['help', 'trợ giúp'],
-            });
-        })
-
-    });
     const actionButtons = [
         {
             type: 'nested', title: '🎮Chơi...',
@@ -17,6 +6,13 @@ module.exports = (bot) => {
                 { type: 'postback', title: '🌝Tham gia phòng /join', payload: 'JOIN_ROOM' },
                 { type: 'postback', title: '🌟Sẵn sàng! /ready', payload: 'READY_ROOM' },
                 { type: 'postback', title: '🌚Rời phòng/Tự sát /leave', payload: 'LEAVE_ROOM' },
+            ]
+        },
+        {
+            type: 'nested', title: '💡Tính năng/Trợ giúp...',
+            call_to_actions: [
+                { type: 'postback', title: '👑Easy Vote /evote', payload: 'VOTE' },
+                { type: 'postback', title: '💡Trợ giúp /help', payload: 'HELP' },
             ]
         },
         {
@@ -39,7 +35,6 @@ module.exports = (bot) => {
                 { type: 'postback', title: '👑ADMIN COMMAND /admin', payload: 'ADMIN_COMMAND' },
             ]
         },
-        { type: 'postback', title: '💡Trợ giúp /help', payload: 'HELP' },
     ];
     bot.setPersistentMenu(actionButtons, false);
 };

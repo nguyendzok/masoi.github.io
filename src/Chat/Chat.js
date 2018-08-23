@@ -227,17 +227,25 @@ module.exports = (gamef, bot) => {
                                 chat.say('```\nĐã hết thời gian thảo luận!\nNếu chưa rõ cách chơi, chat "trợ giúp"\n```');
                             }
                         } else {  //VOTE YES?NO
-                            if (gamef.getRoom(userRoom).deathID != -1) {
+                            if (gamef.getRoom(userRoom).deathID != -1 && !gamef.getRoom(userRoom).roleDone[joinID]) {
                                 if (chatTxt.match(/\/treo/g)) { //vote treo cổ
                                     gamef.getRoom(userRoom).killOrSaveVote(joinID, true);
                                     await chat.say(`*👎Bạn đã vote treo! (${gamef.getRoom(userRoom).saveOrKill})*`);
-                                    roomChatAll(bot, gamef.getRoom(userRoom).players, joinID, `*👎${user.first_name} đã vote treo! (${gamef.getRoom(userRoom).saveOrKill})*`);
+                                    roomChatAll(bot, gamef.getRoom(userRoom).players, joinID, {
+                                        text: `*👎${user.first_name} đã vote treo! (${gamef.getRoom(userRoom).saveOrKill})*`,
+                                        quickReplies: ["/treo", "/tha"],
+                                    });
                                 } else { //vote tha
                                     gamef.getRoom(userRoom).killOrSaveVote(joinID, false);
                                     await chat.say(`*👍Bạn đã vote tha! (${gamef.getRoom(userRoom).saveOrKill})*`);
-                                    roomChatAll(bot, gamef.getRoom(userRoom).players, joinID, `*👍${user.first_name} đã vote tha! (${gamef.getRoom(userRoom).saveOrKill})*`);
+                                    roomChatAll(bot, gamef.getRoom(userRoom).players, joinID, {
+                                        text: `*👍${user.first_name} đã vote tha! (${gamef.getRoom(userRoom).saveOrKill})*`,
+                                        quickReplies: ["/treo", "/tha"],
+                                    });
                                 }
                                 gamef.func(yesNoVoteCheck, bot, userRoom);
+                            } else {
+                                chat.say('```\nBạn đã bỏ phiếu rồi!\n```');
                             }
                         }
                     } else {

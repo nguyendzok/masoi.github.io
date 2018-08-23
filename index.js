@@ -24,6 +24,8 @@ const leaveRoom = require('./src/Room/Leave');
 const newRoom = require('./src/Room/New');
 const chatAndVote = require('./src/Chat/Chat');
 const adminCMD = require('./src/Menu/Admin');
+const vote = require('./src/GameAction/Vote');
+const train = require('./src/Menu/Training');
 
 const gamef = new Game();
 const bot = new BootBot({
@@ -31,12 +33,25 @@ const bot = new BootBot({
   verifyToken: process.env.VERIFY_TOKEN,
   appSecret: process.env.APP_SECRET
 })
+// bot config
+bot.setGreetingText("Chào mừng bạn đến với Phạm Ngọc Duy GAME bot, hãy bắt đầu trò chơi :3")
+bot.setGetStartedButton((payload, chat) => {
+  chat.say('🐺MA SÓI GAME').then(() => {
+    chat.say({
+      text: `Chào mừng bạn, để bắt đầu hãy chat 'trợ giúp' để được hướng dẫn cách sử dụng bot!'`,
+      quickReplies: ['trợ giúp'],
+    });
+  })
+
+});
 
 // **** BOT MODULE ****
 // setup GreetingText / GetStartedButton / PersistentMenu
 bot.module(botSetup);
 // help
 bot.module(menuHelp);
+
+bot.module(train);
 // handle menu > tiện ích khi chơi
 gamef.module(menuTienIch, bot);
 // handle admin
@@ -53,5 +68,7 @@ gamef.module(leaveRoom, bot);
 gamef.module(newRoom, bot);
 // chat and vote
 gamef.module(chatAndVote, bot);
+
+gamef.module(vote, bot);
 
 bot.start(process.env.PORT || 3000);

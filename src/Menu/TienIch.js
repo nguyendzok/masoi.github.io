@@ -74,13 +74,13 @@ module.exports = (gamef, bot) => {
 
     // listen VIEW_PLAYER_IN_ROOM message
     bot.on('postback:VIEW_PLAYER_IN_ROOM', infoCallback);
-    bot.hear(/\/info/i, infoCallback);
+    bot.hear(/^\/info$/, infoCallback);
 
     // listen USER_RENAME message
     bot.on('postback:USER_RENAME', renameCallback);
-    bot.hear(/\/rename/i, renameCallback);
+    bot.hear(/^\/rename$/, renameCallback);
 
     // listen USER_RENAME message
     bot.on('postback:USER_PROFILE', profileCallback);
-    bot.hear(/\/profile/i, profileCallback);
+    bot.hear(/^\/profile$/, profileCallback);
 };

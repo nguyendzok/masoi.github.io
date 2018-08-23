@@ -4,18 +4,17 @@ const gameIsNotEndCheck = require('../MainGame/gameIsNotEndCheck');
 module.exports = async function (gamef, bot, userRoom) {
 
     // đếm giờ ban đêm
-    gamef.getRoom(userRoom).players.forEach((p, index, players) => {
+    gamef.getRoom(userRoom).players.every((p, index, players) => {
         if (p && p.afkCount >= 6) {
             gamef.getRoom(userRoom).killAction(p.id);
             roomChatAll(bot, gamef.getRoom(userRoom).players, 0, `\`\`\`\n👻 *${p.first_name}* đã bị giết (uy tín < 0)\n\`\`\``);
             gamef.getRoom(userRoom).newLog(`👻 *${p.first_name}* đã bị giết (uy tín < 0)`);
-            gameIsNotEndCheck(gamef, bot, userRoom, () => { });
-            return;
+            return gameIsNotEndCheck(gamef, bot, userRoom, () => { });
         }
 
         if (p && gamef.getRoom(userRoom).alivePlayer[p.joinID]) {
             if (p.role == -2 || p.role == 4 || p.role == 6 || p.role == 5) { //BÁN SÓI / DÂN / GIÀ LÀNG / PHÙ THỦY
-                return;
+                return true;
             }
             if (p.role == -1 || p.role == -3) { // SÓI có 1 phút 30 giây
                 let time = new Date(Date.now() + 60 * 1000);
