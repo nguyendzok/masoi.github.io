@@ -16,7 +16,7 @@ module.exports = (gamef, bot) => {
 
         const askRoom = (convo) => {
             convo.ask({
-                text: enableGreetingTxt ? 'MA SÓI BOT BETA\n👥: phòng chờ đông người\n👤: phòng chờ\n🎮: phòng đang chơi\n\nDanh sách phòng chơi:' : 'Chọn phòng:',
+                text: enableGreetingTxt ? 'MA SÓI BOT BETA\n🚫: phòng quá tải\n🔥: phòng hot\n👥: phòng đủ người\n👤: phòng ít người\n🎮: phòng đang chơi\n\nDanh sách phòng chơi:' : 'Chọn phòng:',
                 quickReplies: roomListView,
             }, (payload, convo) => {
                 if (payload.message && payload.message.text.match(/\<|\>/g)) {
@@ -41,6 +41,11 @@ module.exports = (gamef, bot) => {
                 if (gamef.getRoom(roomID).ingame) {
                     convo.say(`\`\`\`\nPhòng đã vào chơi rồi! Bạn sẽ được thông báo khi trò chơi kết thúc!\n\`\`\``);
                     gamef.getRoom(roomID).subscribe(joinID);
+                    convo.end();
+                    return;
+                } if (gamef.getRoom(roomID).players.length >= 11) {
+                    convo.say(`\`\`\`\nPhòng chơi đã quá tải, vui lòng chơi phòng chơi khác!\n\`\`\``);
+                    console.log(`$ ROOM ${roomID + 1} > ROOM TOO CROWDED  ...`)
                     convo.end();
                     return;
                 } else {

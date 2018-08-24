@@ -661,7 +661,11 @@ class Game {
             let r = this.room[i];
             if (!r.ingame) {
                 if (r.players.length > 0) {
-                    if (r.players.length >= 4) {
+                    if (r.players.length >= 11) {
+                        roomListView.push('🚫' + (r.id + 1).toString());
+                    } else if (r.players.length >= 7) {
+                        roomListView.push('🔥' + (r.id + 1).toString());
+                    } else if (r.players.length >= 4) {
                         roomListView.push('👥' + (r.id + 1).toString());
                     } else {
                         roomListView.push('👤' + (r.id + 1).toString());
@@ -724,7 +728,7 @@ class Game {
         });
         var setupTxt = 'SETUP GAME\n';
         setupArr.forEach((setup) => {
-            if (setup[1] > 0) {
+            if (setup[1] > 0 && setup[0] != 4) {
                 this.setRole(roomID, setup[0], setup[1]);
                 setupTxt += setup[1] + " " + this.roleTxt[setup[0]] + "\n";
             }
@@ -737,7 +741,6 @@ class Game {
         console.log(`$ ROOM ${roomID + 1} > RANDOM ROLE FOR ${this.room[roomID].players.length} PLAYERS`);
 
         let len = this.room[roomID].players.length;
-
         let roleListTxt, balance;
         let setup;
 
@@ -749,19 +752,38 @@ class Game {
                 setup = { "1": 1, "2": 1, "3": 0, "4": 1, "5": 0, "6": 0, "7": 0, "8": 1, "-3": 0, "-2": 0, "-1": 1 };
                 balance = 4;
             } else if (len == 6) {
-
+                if (this.trueFalseRandom()) {
+                    setup = { "1": 1, "2": 1, "3": 1, "4": 2, "5": 0, "6": 0, "7": 0, "8": 0, "-3": 1, "-2": 0, "-1": 0 }
+                    balance = 3;
+                } else {
+                    setup = { "1": 1, "2": 1, "3": 0, "4": 2, "5": 0, "6": 0, "7": 0, "8": 1, "-3": 0, "-2": 0, "-1": 1 };
+                    balance = 5;
+                }
             } else if (len == 7) {
-
+                if (this.trueFalseRandom()) {
+                    setup = { "1": 1, "2": 1, "3": 0, "4": 2, "5": 1, "6": 0, "7": 0, "8": 1, "-3": 1, "-2": 0, "-1": 0 };
+                    balance = 3;
+                } else {
+                    setup = { "1": 1, "2": 1, "3": 0, "4": 1, "5": 1, "6": 0, "7": 0, "8": 1, "-3": 0, "-2": 0, "-1": 2 };
+                    balance = 2;
+                }
             } else if (len == 8) {
-
+                setup = { "1": 1, "2": 1, "3": 0, "4": 2, "5": 1, "6": 0, "7": 0, "8": 1, "-3": 0, "-2": 0, "-1": 2 };
+                balance = 3;
             } else if (len == 9) {
-
+                setup = { "1": 1, "2": 1, "3": 0, "4": 2, "5": 1, "6": 1, "7": 0, "8": 1, "-3": 0, "-2": 0, "-1": 2 };
+                balance = 1;
             } else if (len == 10) {
-
-            } else if (len <= 12) {
-
-            } else {
-
+                if (this.trueFalseRandom()) {
+                    setup = { "1": 1, "2": 1, "3": 1, "4": 2, "5": 1, "6": 0, "7": 1, "8": 0, "-3": 0, "-2": 1, "-1": 2 };
+                    balance = 1;
+                } else {
+                    setup = { "1": 1, "2": 1, "3": 1, "4": 3, "5": 1, "6": 0, "7": 0, "8": 0, "-3": 1, "-2": 1, "-1": 1 };
+                    balance = -1;
+                }
+            } else { // 11
+                setup = { "1": 1, "2": 1, "3": 1, "4": 2, "5": 1, "6": 1, "7": 1, "8": 0, "-3": 0, "-2": 1, "-1": 2 };
+                balance = -1;
             }
         }
         roleListTxt = this.convertAndSetup(roomID, setup);

@@ -41,3 +41,6 @@ $('#soi').change(() => {
 $('.co-chuc-nang').change(() => {
     changed();
 });
+
+$('#tienTri').click();
+$('#baoVe').click();
