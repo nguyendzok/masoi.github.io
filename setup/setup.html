@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Setup Game Quản trò Ma sói Bot</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
+        crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
+        crossorigin="anonymous"></script>
+    <!-- custom -->
+    <link rel="stylesheet" type="text/css" media="screen" href="setup.css" />
+</head>
+
+<body>
+    <div style="display: flex; align-items: center; justify-content: center; height: 100%;">
+        <div class="center-center">
+            <h3>Setup Game Quản trò Ma sói Bot</h3>
+            <label for="can-bang">CÂN BẰNG: 0</label>
+            <input type="range" class="custom-range" min="-10" max="10" step="1" id="can-bang" value="0">
+            <div class="row">
+                <div class="col-6">
+                    <label for="dan">DÂN: 0</label>
+                    <input type="range" class="custom-range" min="0" max="4" step="1" id="dan" value="0">
+                    <div class="custom-control custom-checkbox">
+                        <input type="checkbox" class="custom-control-input dan co-chuc-nang" id="tienTri" value="7" name="TIÊN TRI" roleID="1">
+                        <label class="custom-control-label" for="tienTri">[+7] Tiên tri</label>
+                    </div>
+                    <div class="custom-control custom-checkbox">
+                        <input type="checkbox" class="custom-control-input dan co-chuc-nang" id="baoVe" value="3" name="BẢO VỆ" roleID="2">
+                        <label class="custom-control-label" for="baoVe">[+3] Bảo vệ</label>
+                    </div>
+                    <div class="custom-control custom-checkbox">
+                        <input type="checkbox" class="custom-control-input dan co-chuc-nang" id="thoSan" value="3" name="THỢ SĂN" roleID="3">
+                        <label class="custom-control-label" for="thoSan">[+3] Thợ săn</label>
+                    </div>
+                    <div class="custom-control custom-checkbox">
+                        <input type="checkbox" class="custom-control-input dan co-chuc-nang" id="phuThuy" value="4" name="PHÙ THỦY" roleID="5">
+                        <label class="custom-control-label" for="phuThuy">[+4] Phù Thủy</label>
+                    </div>
+                    <div class="custom-control custom-checkbox">
+                        <input type="checkbox" class="custom-control-input dan co-chuc-nang" id="giaLang" value="-2" name="GIÀ LÀNG" roleID="6">
+                        <label class="custom-control-label" for="giaLang">[-2] Già Làng</label>
+                    </div>
+                </div>
+                <div class="col-6">
+                    <label for="soi">SÓI: 0</label>
+                    <input type="range" class="custom-range" min="0" max="4" step="1" id="soi" value="0">
+                    <div class="custom-control custom-checkbox">
+                        <input type="checkbox" class="custom-control-input soi co-chuc-nang" id="soiNguyen" value="-12" name="SÓI NGUYỀN" roleID="-3">
+                        <label class="custom-control-label" for="soiNguyen">[-12] Sói nguyền</label>
+                    </div>
+                    <div class="custom-control custom-checkbox">
+                        <input type="checkbox" class="custom-control-input soi co-chuc-nang" id="banSoi" value="-3" name="BÁN SÓI" roleID="-2">
+                        <label class="custom-control-label" for="banSoi">[ -3] Bán sói</label>
+                    </div>
+                    <div class="custom-control custom-checkbox">
+                        <input type="checkbox" class="custom-control-input dan co-chuc-nang" id="nguoiHoaSoi" value="-1" name="NGƯỜI HÓA SÓI" roleID="8">
+                        <label class="custom-control-label" for="nguoiHoaSoi">[ -1] Người hóa sói</label>
+                    </div>
+                    <div class="custom-control custom-checkbox">
+                        <input type="checkbox" class="custom-control-input dan co-chuc-nang" id="cupid" value="-3" name="CUPID" roleID="7">
+                        <label class="custom-control-label" for="cupid">[ -3] CUPID</label>
+                    </div>
+                </div>
+            </div>
+            <h1 id="setup-total" class="text-center">0</h1>
+            <div id="setup-result" class="text-center"></div>
+            <div id="setup-code" class="text-center"></div>
+        </div>
+    </div>
+
+</body>
+<script src="setup.js"></script>
+
+</html>
