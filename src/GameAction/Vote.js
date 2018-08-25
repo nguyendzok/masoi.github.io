@@ -53,9 +53,13 @@ module.exports = (gamef, bot) => {
                     }
                 } else { // BAN NGÀY
                     if (gamef.getRoom(userRoom).isMorning) { // giai đoạn nói chuyện và /vote
-                        voteConvo(chat, playerListTxt, `Bạn muốn treo cổ ai?`, (convo, voteID) => {
-                            dayVote(gamef, bot, convo, user, userRoom, joinID, voteID);
-                        });
+                        if (!gamef.getRoom(userRoom).roleDone[joinID]) {
+                            voteConvo(chat, playerListTxt, `Bạn muốn treo cổ ai?`, (convo, voteID) => {
+                                dayVote(gamef, bot, convo, user, userRoom, joinID, voteID);
+                            });
+                        } else {
+                            chat.say(`Bạn đã vote rồi!`);
+                        }
                     } else { // giai đoạn /treo /tha
                         chat.say(`Tính năng này chưa được hỗ trợ! `);
                     }

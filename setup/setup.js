@@ -75,7 +75,6 @@ if (setupObjectString !== null && setupObjectString !== "") {
     $('#tienTri').click();
     $('#baoVe').click();
 }
-
 function currentSetup(len) {
     this.random = (min, max) => {
         return Math.floor(Math.random() * max) + min;
@@ -157,7 +156,7 @@ $('#random').click(() => {
     let playersCount = $('#playersCount').val();
     let setup = currentSetup(playersCount);
     let setupString = JSON.stringify(setup);
-    $('#set').html(`<a href='?setup=${setupString}&players=${$('select').val()}'>\>\>\>Nhấn vào để xem SETUP cho ${playersCount} người tiếp theo: ${setupString}</a>`);
+    $('#set').html(`<a href='?setup=${setupString}&players=${$('select').val()}'>\>\>\>${setupString}</a>`);
 })
 
 let playersCountString = getParameterByName('players');

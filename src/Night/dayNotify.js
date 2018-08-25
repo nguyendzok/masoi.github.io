@@ -144,7 +144,7 @@ module.exports = async (gamef, bot, userRoom, witchSaved) => {
     }
 
     let aliveLeft = gamef.getRoom(userRoom).aliveCount();
-    let secondLeft = (aliveLeft <= 8 ? aliveLeft : 9) * 40 - 60;
+    let secondLeft = (aliveLeft <= 8 ? aliveLeft : 9) * 40;
     if (secondLeft <= 0) {
         secondLeft = 30;
     }
@@ -155,7 +155,7 @@ module.exports = async (gamef, bot, userRoom, witchSaved) => {
 
     gameIsNotEndCheck(gamef, bot, userRoom, () => {
         gamef.getRoom(userRoom).dayNightSwitch();
-        let time = new Date(Date.now() + (aliveLeft <= 8 ? aliveLeft : 9) * 40 * 1000);
+        let time = new Date(Date.now() + ((aliveLeft <= 8 ? aliveLeft : 9) * 40 - 60) * 1000);
         gamef.getRoom(userRoom).addSchedule(time, () => {
             roomChatAll(bot, gamef.getRoom(userRoom).players, 0, `\`\`\`\n⏰CÒN 1 PHÚT THẢO LUẬN\nCác bạn nên cân nhắc kĩ, tránh lan man, nhanh chóng tìm ra kẻ đáng nghi nhất!\n\`\`\``);
             console.log(`$ ROOM ${userRoom + 1} > 1 MINUTE REMAINING`);
