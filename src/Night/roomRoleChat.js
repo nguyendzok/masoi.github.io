@@ -5,7 +5,7 @@ module.exports = async function (gamef, bot, userRoom) {
     let wolfList = gamef.getRoom(userRoom).wolfsTxt.join(' ; ');
     let villagersList = gamef.getRoom(userRoom).villagersTxt.join(' ; ');
     let playersList = gamef.getRoom(userRoom).playersTxt.join(' ; ');
-    let gameIsNotEnd = false;
+    let gameIsNotEnd = true;
 
     // đếm giờ ban đêm
     gamef.getRoom(userRoom).players.every((p, index, players) => {
