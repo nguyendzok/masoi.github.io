@@ -49,6 +49,7 @@ module.exports = async function (gamef, bot, userRoom) {
                 });
             }
         }
+        return true;
     });
 
     let wolfList = gamef.getRoom(userRoom).wolfsTxt.join(' ; ');
