@@ -10,7 +10,7 @@ class Player {
         this.ready = false;
         this.role = 4; // -1: SÓI / 4: DÂN / 1: tiên tri / 2: bảo vệ
         this.timerSchedule = null; // đếm giờ
-        this.convo = null; //convo
+        this.convoTimer = null; //convo
         this.afkCount = 0;
     }
     getReady() {
@@ -28,15 +28,6 @@ class Player {
     cancelSchedule() {
         if (this.timerSchedule) {
             this.timerSchedule.cancel();
-        }
-    }
-    setConvo(convo) {
-        this.endConvo();
-        this.convo = convo;
-    }
-    endConvo() {
-        if (this.convo) {
-            this.convo.end();
         }
     }
     afk(afkLever = 2) {

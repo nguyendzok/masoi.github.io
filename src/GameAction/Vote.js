@@ -42,8 +42,6 @@ module.exports = (gamef, bot) => {
                         })
                     } else if (userRole == 1) { // là tiên tri
                         voteConvo(chat, playerListTxt, `Tiên tri muốn soi ai?`, (convo, voteID) => {
-                            user.setConvo(convo);
-                            user.endConvo();
                             seerAction(gamef, bot, convo, user, userRoom, joinID, voteID);
                         });
                     } else if (userRole == 2) { // là bảo vệ
@@ -63,7 +61,7 @@ module.exports = (gamef, bot) => {
                             chat.say(`Bạn đã vote rồi!`);
                         }
                     } else { // giai đoạn /treo /tha
-                        chat.say(`Không hỗ trợ !`);
+                        chat.say(`Tính năng này chưa được hỗ trợ! Vui lòng nhắn đúng cú pháp để thực hiện chức năng của mình`);
                     }
                 }
             } else {

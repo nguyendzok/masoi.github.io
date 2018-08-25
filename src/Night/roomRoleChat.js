@@ -8,7 +8,7 @@ module.exports = async function (gamef, bot, userRoom) {
     let gameIsNotEnd = true;
 
     // giết người afk
-    gamef.getRoom(userRoom).players.every((p) => {
+    gamef.getRoom(userRoom).players.forEach((p) => {
         if (p && p.afkCount >= 6) {
             gamef.getRoom(userRoom).killAction(p.id);
             roomChatAll(bot, gamef.getRoom(userRoom).players, 0, `\`\`\`\n👻 *${p.first_name}* đã bị giết (uy tín < 0)\n\`\`\``);
