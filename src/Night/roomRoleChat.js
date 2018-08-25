@@ -13,10 +13,9 @@ module.exports = async function (gamef, bot, userRoom) {
             gamef.getRoom(userRoom).killAction(p.id);
             roomChatAll(bot, gamef.getRoom(userRoom).players, 0, `\`\`\`\n👻 *${p.first_name}* đã bị giết (uy tín < 0)\n\`\`\``);
             gamef.getRoom(userRoom).newLog(`👻 *${p.first_name}* đã bị giết (uy tín < 0)`);
-            gameIsNotEnd = gameIsNotEndCheck(gamef, bot, userRoom, () => { });
-            return gameIsNotEnd;
         }
     });
+    gameIsNotEnd = gameIsNotEndCheck(gamef, bot, userRoom, () => { });
     // đếm giờ ban đêm
     gameIsNotEnd ? gamef.getRoom(userRoom).players.every((p, index, players) => {
         if (p && gamef.getRoom(userRoom).alivePlayer[p.joinID]) {
