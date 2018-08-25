@@ -29,7 +29,7 @@ module.exports = (gamef, bot) => {
                 let userRole = gamef.getRoom(userRoom).getRole(joinID);
                 let counter = 0;
                 let playerListTxt = gamef.getRoom(userRoom).playersTxt.filter((e) => {
-                    if (counter < 11 && e[0] != '💀') {
+                    if (counter < 11 && e[0] != '💀'[0]) {
                         counter++;
                         return true;
                     }
