@@ -5,6 +5,7 @@ module.exports = async function (gamef, bot, userRoom) {
     let wolfList = gamef.getRoom(userRoom).wolfsTxt.join(' ; ');
     let villagersList = gamef.getRoom(userRoom).villagersTxt.join(' ; ');
     let playersList = gamef.getRoom(userRoom).playersTxt.join(' ; ');
+    let gameIsEnd = true;
 
     // đếm giờ ban đêm
     gamef.getRoom(userRoom).players.every((p, index, players) => {
@@ -12,7 +13,7 @@ module.exports = async function (gamef, bot, userRoom) {
             gamef.getRoom(userRoom).killAction(p.id);
             roomChatAll(bot, gamef.getRoom(userRoom).players, 0, `\`\`\`\n👻 *${p.first_name}* đã bị giết (uy tín < 0)\n\`\`\``);
             gamef.getRoom(userRoom).newLog(`👻 *${p.first_name}* đã bị giết (uy tín < 0)`);
-            return gameIsNotEndCheck(gamef, bot, userRoom, () => { });
+            return gameIsNotEndCheck(gamef, bot, userRoom, () => { gameIsEnd = false; });
         }
 
         if (p && gamef.getRoom(userRoom).alivePlayer[p.joinID]) {
@@ -29,6 +30,7 @@ module.exports = async function (gamef, bot, userRoom) {
                     });
                     console.log(`$ ROOM ${userRoom + 1} > TIMER > WOLF > 30 SECONDS REMAINING`);
                     players[index].addSchedule(time, () => {
+                        players[index].endConvo();
                         console.log(`$ ROOM ${userRoom + 1} > AUTO ROLE > WOLF`);
                         bot.say(p.joinID, '```\n⏰Bạn đã ngủ quên mà không cắn ai! (-50 uy tín)\n```');
                         gamef.getRoom(userRoom).autoRole(p.joinID, p.role);
@@ -50,6 +52,7 @@ module.exports = async function (gamef, bot, userRoom) {
                     console.log(`$ ROOM ${userRoom + 1} > TIMER > 20 SECONDS REMAINING`);
                     let time = new Date(Date.now() + 20 * 1000);
                     players[index].addSchedule(time, () => {
+                        players[index].endConvo();
                         bot.say(p.joinID, '```\n⏰Hết giờ! Bạn đã mất quyền năng! (-50 uy tín)\n```');
                         gamef.getRoom(userRoom).autoRole(p.joinID, p.role);
                         console.log(`$ ROOM ${userRoom + 1} > AUTO ROLE > ${p.first_name} > ${p.role}`);
@@ -61,7 +64,7 @@ module.exports = async function (gamef, bot, userRoom) {
         return true;
     });
 
-    await asyncForEach(gamef.getRoom(userRoom).players, (p) => {
+    !gameIsEnd ? await asyncForEach(gamef.getRoom(userRoom).players, (p) => {
         if (p && gamef.getRoom(userRoom).alivePlayer[p.joinID]) {
             console.log(`$ ROOM ${userRoom + 1} > ${gamef.roleTxt[p.role]} > ${p.first_name}`);
 
@@ -163,6 +166,6 @@ module.exports = async function (gamef, bot, userRoom) {
                     bot.say(p.joinID, `👻Đêm nay bạn đã chết =))\n👨‍👩‍👦‍👦ID CẢ LÀNG:\n${playersList}`);
                 });
         }
-    })
+    }) : null;
 }
 const nightDoneCheck = require('../Night/nightDoneCheck');

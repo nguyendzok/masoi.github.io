@@ -29,7 +29,7 @@ module.exports = (gamef, bot) => {
                 let userRole = gamef.getRoom(userRoom).getRole(joinID);
                 let counter = 0;
                 let playerListTxt = gamef.getRoom(userRoom).playersTxt.filter((e) => {
-                    if (counter < 11 && e[0] != '💀'[0]) {
+                    if (counter <= 11 && e[0] != '💀'[0]) {
                         counter++;
                         return true;
                     }
@@ -38,30 +38,34 @@ module.exports = (gamef, bot) => {
                 if (gamef.getRoom(userRoom).isNight) { // ban đêm
                     if (userRole == -1 || userRole == -3) {// là SÓI / SÓI NGUYỀN
                         voteConvo(chat, playerListTxt, `Sói muốn cắn ai?`, (convo, voteID) => {
+                            user.setConvo(convo);
                             wolfVote(gamef, bot, convo, userRoom, joinID, voteID);
                         })
                     } else if (userRole == 1) { // là tiên tri
                         voteConvo(chat, playerListTxt, `Tiên tri muốn soi ai?`, (convo, voteID) => {
+                            user.setConvo(convo);
                             seerAction(gamef, bot, convo, user, userRoom, joinID, voteID);
                         });
                     } else if (userRole == 2) { // là bảo vệ
                         voteConvo(chat, playerListTxt, `Bảo vệ muốn bảo vệ ai?`, (convo, voteID) => {
+                            user.setConvo(convo);
                             saveAction(gamef, bot, convo, userRoom, joinID, voteID);
                         });
                     } else {
-                        chat.say(`Tính năng này chưa được hỗ trợ! `);
+                        chat.say(`Tính năng này chưa được hỗ trợ! Vui lòng nhắn đúng cú pháp để thực hiện chức năng của mình`);
                     }
                 } else { // BAN NGÀY
                     if (gamef.getRoom(userRoom).isMorning) { // giai đoạn nói chuyện và /vote
                         if (!gamef.getRoom(userRoom).roleDone[joinID]) {
                             voteConvo(chat, playerListTxt, `Bạn muốn treo cổ ai?`, (convo, voteID) => {
+                                user.setConvo(convo);
                                 dayVote(gamef, bot, convo, user, userRoom, joinID, voteID);
                             });
                         } else {
                             chat.say(`Bạn đã vote rồi!`);
                         }
                     } else { // giai đoạn /treo /tha
-                        chat.say(`Tính năng này chưa được hỗ trợ! `);
+                        chat.say(`Không hỗ trợ !`);
                     }
                 }
             } else {
