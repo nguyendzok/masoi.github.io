@@ -2,6 +2,9 @@ const { asyncForEach, roomChatAll, sendImageCard } = require('../Chat/Utils');
 const gameIsNotEndCheck = require('../MainGame/gameIsNotEndCheck');
 
 module.exports = async function (gamef, bot, userRoom) {
+    let wolfList = gamef.getRoom(userRoom).wolfsTxt.join(' ; ');
+    let villagersList = gamef.getRoom(userRoom).villagersTxt.join(' ; ');
+    let playersList = gamef.getRoom(userRoom).playersTxt.join(' ; ');
 
     // đếm giờ ban đêm
     gamef.getRoom(userRoom).players.every((p, index, players) => {
@@ -20,7 +23,10 @@ module.exports = async function (gamef, bot, userRoom) {
                 let time = new Date(Date.now() + 60 * 1000);
                 players[index].addSchedule(time, () => {
                     let time = new Date(Date.now() + 30 * 1000);
-                    bot.say(p.joinID, `\`\`\`\n⏰Trời sắp sáng rồi! Còn 30 giây...\n\`\`\``);
+                    bot.say(p.joinID, {
+                        text: `⏰Hết giờ! Còn 30 giây để vote...`,
+                        quickReplies: ["/action", "/evote"],
+                    });
                     console.log(`$ ROOM ${userRoom + 1} > TIMER > WOLF > 30 SECONDS REMAINING`);
                     players[index].addSchedule(time, () => {
                         console.log(`$ ROOM ${userRoom + 1} > AUTO ROLE > WOLF`);
@@ -31,15 +37,18 @@ module.exports = async function (gamef, bot, userRoom) {
                 });
             } else {
                 let time;
-                if (p.role == 7) { // CUPID có 35 giây
+                if (p.role == 7) { // CUPID có 40 giây
                     time = new Date(Date.now() + 20 * 1000);
-                } else { // còn lại: Tiên tri, bảo vệ, thợ săn, phù thủy có 60 giây
-                    time = new Date(Date.now() + 45 * 1000);
+                } else { // còn lại: Tiên tri, bảo vệ, thợ săn, phù thủy có 1 phút
+                    time = new Date(Date.now() + 40 * 1000);
                 }
                 players[index].addSchedule(time, () => {
-                    bot.say(p.joinID, `⏰Bạn còn 15 giây để thực hiện...`);
-                    console.log(`$ ROOM ${userRoom + 1} > TIMER > 15 SECONDS REMAINING`);
-                    let time = new Date(Date.now() + 15 * 1000);
+                    bot.say(p.joinID, {
+                        text: `⏰Bạn còn 20 giây để thực hiện...`,
+                        quickReplies: ["/action", "/evote"],
+                    });
+                    console.log(`$ ROOM ${userRoom + 1} > TIMER > 20 SECONDS REMAINING`);
+                    let time = new Date(Date.now() + 20 * 1000);
                     players[index].addSchedule(time, () => {
                         bot.say(p.joinID, '```\n⏰Hết giờ! Bạn đã mất quyền năng! (-50 uy tín)\n```');
                         gamef.getRoom(userRoom).autoRole(p.joinID, p.role);
@@ -51,10 +60,6 @@ module.exports = async function (gamef, bot, userRoom) {
         }
         return true;
     });
-
-    let wolfList = gamef.getRoom(userRoom).wolfsTxt.join(' ; ');
-    let villagersList = gamef.getRoom(userRoom).villagersTxt.join(' ; ');
-    let playersList = gamef.getRoom(userRoom).playersTxt.join(' ; ');
 
     await asyncForEach(gamef.getRoom(userRoom).players, (p) => {
         if (p && gamef.getRoom(userRoom).alivePlayer[p.joinID]) {
