@@ -7,8 +7,8 @@ module.exports = async function (gamef, bot, userRoom) {
     let playersList = gamef.getRoom(userRoom).playersTxt.join(' ; ');
     let gameIsNotEnd = true;
 
-    // đếm giờ ban đêm
-    gamef.getRoom(userRoom).players.every((p, index, players) => {
+    // giết người afk
+    gamef.getRoom(userRoom).players.every((p) => {
         if (p && p.afkCount >= 6) {
             gamef.getRoom(userRoom).killAction(p.id);
             roomChatAll(bot, gamef.getRoom(userRoom).players, 0, `\`\`\`\n👻 *${p.first_name}* đã bị giết (uy tín < 0)\n\`\`\``);
@@ -16,7 +16,9 @@ module.exports = async function (gamef, bot, userRoom) {
             gameIsNotEnd = gameIsNotEndCheck(gamef, bot, userRoom, () => { });
             return gameIsNotEnd;
         }
-
+    });
+    // đếm giờ ban đêm
+    gameIsNotEnd ? gamef.getRoom(userRoom).players.every((p, index, players) => {
         if (p && gamef.getRoom(userRoom).alivePlayer[p.joinID]) {
             if (p.role == -2 || p.role == 4 || p.role == 6 || p.role == 5) { //BÁN SÓI / DÂN / GIÀ LÀNG / PHÙ THỦY
                 return true;
@@ -63,7 +65,7 @@ module.exports = async function (gamef, bot, userRoom) {
             }
         }
         return true;
-    });
+    }) : null;
 
     gameIsNotEnd ? await asyncForEach(gamef.getRoom(userRoom).players, (p) => {
         if (p && gamef.getRoom(userRoom).alivePlayer[p.joinID]) {

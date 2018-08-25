@@ -38,17 +38,16 @@ module.exports = (gamef, bot) => {
                 if (gamef.getRoom(userRoom).isNight) { // ban đêm
                     if (userRole == -1 || userRole == -3) {// là SÓI / SÓI NGUYỀN
                         voteConvo(chat, playerListTxt, `Sói muốn cắn ai?`, (convo, voteID) => {
-                            user.setConvo(convo);
                             wolfVote(gamef, bot, convo, userRoom, joinID, voteID);
                         })
                     } else if (userRole == 1) { // là tiên tri
                         voteConvo(chat, playerListTxt, `Tiên tri muốn soi ai?`, (convo, voteID) => {
                             user.setConvo(convo);
+                            user.endConvo();
                             seerAction(gamef, bot, convo, user, userRoom, joinID, voteID);
                         });
                     } else if (userRole == 2) { // là bảo vệ
                         voteConvo(chat, playerListTxt, `Bảo vệ muốn bảo vệ ai?`, (convo, voteID) => {
-                            user.setConvo(convo);
                             saveAction(gamef, bot, convo, userRoom, joinID, voteID);
                         });
                     } else {
@@ -58,7 +57,6 @@ module.exports = (gamef, bot) => {
                     if (gamef.getRoom(userRoom).isMorning) { // giai đoạn nói chuyện và /vote
                         if (!gamef.getRoom(userRoom).roleDone[joinID]) {
                             voteConvo(chat, playerListTxt, `Bạn muốn treo cổ ai?`, (convo, voteID) => {
-                                user.setConvo(convo);
                                 dayVote(gamef, bot, convo, user, userRoom, joinID, voteID);
                             });
                         } else {
