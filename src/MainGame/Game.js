@@ -308,6 +308,7 @@ class Room {
         if (this.deathID != -1 && this.players[this.deathID]) {
             if (!this.isNight || (this.isNight && this.deathID != this.saveID)) { // là ban ngày hoặc ban đêm bảo vệ sai
                 if (this.players[this.deathID].role === -2 && this.isNight) { //là BÁN SÓI
+                    this.wolfsID.push(this.players[this.deathID].joinID);
                     this.wolfsCount++;
                     this.villagersCount--;
                     return false;
