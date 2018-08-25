@@ -5,7 +5,7 @@ module.exports = async function (gamef, bot, userRoom) {
     let wolfList = gamef.getRoom(userRoom).wolfsTxt.join(' ; ');
     let villagersList = gamef.getRoom(userRoom).villagersTxt.join(' ; ');
     let playersList = gamef.getRoom(userRoom).playersTxt.join(' ; ');
-    let gameIsEnd = true;
+    let gameIsNotEnd = false;
 
     // đếm giờ ban đêm
     gamef.getRoom(userRoom).players.every((p, index, players) => {
@@ -13,7 +13,8 @@ module.exports = async function (gamef, bot, userRoom) {
             gamef.getRoom(userRoom).killAction(p.id);
             roomChatAll(bot, gamef.getRoom(userRoom).players, 0, `\`\`\`\n👻 *${p.first_name}* đã bị giết (uy tín < 0)\n\`\`\``);
             gamef.getRoom(userRoom).newLog(`👻 *${p.first_name}* đã bị giết (uy tín < 0)`);
-            return gameIsNotEndCheck(gamef, bot, userRoom, () => { gameIsEnd = false; });
+            gameIsNotEnd = gameIsNotEndCheck(gamef, bot, userRoom, () => { });
+            return gameIsNotEnd;
         }
 
         if (p && gamef.getRoom(userRoom).alivePlayer[p.joinID]) {
@@ -64,7 +65,7 @@ module.exports = async function (gamef, bot, userRoom) {
         return true;
     });
 
-    !gameIsEnd ? await asyncForEach(gamef.getRoom(userRoom).players, (p) => {
+    gameIsNotEnd ? await asyncForEach(gamef.getRoom(userRoom).players, (p) => {
         if (p && gamef.getRoom(userRoom).alivePlayer[p.joinID]) {
             console.log(`$ ROOM ${userRoom + 1} > ${gamef.roleTxt[p.role]} > ${p.first_name}`);
 
