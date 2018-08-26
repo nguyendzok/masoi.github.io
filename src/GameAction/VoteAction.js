@@ -43,6 +43,25 @@ var saveAction = async (gamef, bot, chat, userRoom, joinID, voteID) => {
         gamef.func(nightDoneCheck, bot, userRoom);
     }
 }
+var fireAction = async (gamef, bot, chat, userRoom, joinID, voteID, fireKill) => {
+    if (!gamef.getRoom(userRoom).fire(joinID, voteID, fireKill)) {
+        if (!fireKill) { // bị động
+            chat.say(`\`\`\`\nBạn không thể ghim 1 người 2 đêm liên tiếp hoặc ghim người đã chết!\n\`\`\``);
+        } else { // chủ động
+            chat.say(`\`\`\`\nBạn chỉ được giết người còn sống!\n\`\`\``);
+        }
+    } else {
+        if (voteID != -1) {
+            await chat.say(`🔫Bạn đã ghim ${gamef.getRoom(userRoom).playersTxt[voteID]}!`);
+            gamef.getRoom(userRoom).newLog(`🔫Thợ săn đã ghim *${gamef.getRoom(userRoom).playersTxt[voteID]}* !`);
+        } else {
+            await chat.say(`🔫Bạn đã bắn lên trời (không ghim ai)!`);
+            gamef.getRoom(userRoom).newLog(`🔫Thợ săn đã bắn lên trời (không ghim ai)!`)
+        }
+        // kiểm tra đã hết đêm chưa?
+        gamef.func(nightDoneCheck, bot, userRoom);
+    }
+}
 
 var dayVote = async (gamef, bot, chat, user, userRoom, joinID, voteID) => {
     if (gamef.getRoom(userRoom).vote(joinID, voteID)) {
@@ -65,5 +84,6 @@ module.exports = {
     wolfVote: wolfVote,
     seerAction: seerAction,
     saveAction: saveAction,
+    fireAction: fireAction,
     dayVote: dayVote,
 };

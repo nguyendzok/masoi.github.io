@@ -54,7 +54,7 @@ module.exports = (gamef, bot) => {
                     }
 
                     if (userRole == -1 || userRole == -3) {// là SÓI / SÓI NGUYỀN
-                        if (!/^\/vote\s-?[0-9]+$/.test(chatTxt) && !/[0-9]:.+/g.test(chatTxt)) {
+                        if (!/^\/vote\s-?[0-9]+$/.test(chatTxt) && !/[0-9]:.+|-1/g.test(chatTxt)) {
                             if (gamef.getRoom(userRoom).chatON) {
                                 roomWolfChatAll(bot, gamef.getRoom(userRoom).wolfsID, joinID, '*' + user.first_name + '*(sói): ' + chatTxt);
                                 bot.sendAction(joinID, 'mark_seen');
@@ -225,7 +225,7 @@ module.exports = (gamef, bot) => {
                         }
                     }
                 } else {// ban NGÀY, mọi người thảo luận
-                    if (!/^\/vote\s-?[0-9]+$/.test(chatTxt) && !/[0-9]:.+/g.test(chatTxt)) {
+                    if (!/^\/vote\s-?[0-9]+$/.test(chatTxt) && !/[0-9]:.+|-1/g.test(chatTxt)) {
                         if (!chatTxt.match(/\/treo/g) && !chatTxt.match(/\/tha/g)) {
                             if (gamef.getRoom(userRoom).chatON || (gamef.getRoom(userRoom).deathID != -1 && gamef.getRoom(userRoom).deathID == gamef.getRoom(userRoom).getPlayer(joinID).id)) { //check xem còn bật chat không?
                                 roomChatAll(bot, gamef.getRoom(userRoom).players, joinID, '*' + user.first_name + '*: ' + chatTxt);
