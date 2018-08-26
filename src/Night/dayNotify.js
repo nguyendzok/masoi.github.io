@@ -106,6 +106,7 @@ module.exports = async (gamef, bot, userRoom, witchSaved) => {
             let halfWolfTxt = gamef.getRoom(userRoom).players[deathID].first_name;
             await bot.say(halfWolfjoinID, `\`\`\`\nBạn đã bị sói cắn!\nTừ giờ bạn là 🐺SÓI!\n\`\`\``);
             gamef.getRoom(userRoom).players[deathID].setRole(-1);
+            gamef.getRoom(userRoom).playersRole[deathID] = -1;
             gamef.getRoom(userRoom).newLog(`🐺BÁN SÓI *${halfWolfTxt}* bị cắn và trở thành 🐺SÓI`);
             console.log(`$ ROOM ${userRoom + 1} > HALF WOLF!`);
         }
