@@ -2,29 +2,36 @@ const { roomChatAll } = require('../Chat/Utils');
 const { wolfVote, seerAction, saveAction, fireAction, dayVote } = require('./VoteAction');
 
 module.exports = (gamef, bot) => {
+    const startConvo = (convo, askItem) => {
+        convo.ask(askItem.qreply ? {
+            text: askItem.txt,
+            quickReplies: askItem.qreply,
+        } : askItem.txt, (payload, convo) => {
+            let resTxt = payload.message ? payload.message.text : undefined;
+            if (resTxt) {
+                let result = askItem.callback(convo, index, resTxt);
+                if (ret) {
+                    convo.set(`data[${index}]`, result);
+                } else {
+                    convo.say(`Thao tác sai! Vui lòng thử lại!`);
+                    convo.end();
+                }
+            } else {
+                convo.say(`Vui lòng thử lại!`);
+                convo.end();
+            }
+        })
+    }
     const voteConvo = (chat, askSeq) => {
         chat.conversation((convo) => {
-            askSeq.reduce((promise, askItem, index) => {
-                return promise.then(() => convo.ask(askItem.qreply ? {
-                    text: askItem.txt,
-                    quickReplies: askItem.qreply,
-                } : askItem.txt, (payload, convo) => {
-                    let resTxt = payload.message ? payload.message.text : undefined;
-                    if (resTxt) {
-                        let result = askItem.callback(convo, index, resTxt);
-                        if (ret) {
-                            convo.set(`data[${index}]`, result);
-                        } else {
-                            convo.say(`Vui lòng thử lại!`);
-                            convo.end();
-                        }
-                    } else {
-                        convo.say(`Vui lòng thử lại!`);
-                        convo.end();
-                    }
-                }));
-            }, Promise.resolve());
-            convo.end();
+            let len = askSeq.length;
+
+            // askSeq.reduce((promise, askItem, index) => {
+            //     return promise.then(() => 
+
+            // );
+            // }, Promise.resolve());
+            // convo.end();
         });
     }
     const voteCallback = (payload, chat) => {
