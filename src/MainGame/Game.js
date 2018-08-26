@@ -506,7 +506,7 @@ class Room {
         console.log("$ ROOM " + (this.id + 1) + " > GAME CHECK: " + this.wolfsCount + ' SÓI/' + this.villagersCount + ' DÂN');
         if (this.cupidTeam && this.wolfsCount + this.villagersCount == 2 && this.wolfsCount > 0) {
             callback(3);
-        } else if (this.wolfsCount > this.villagersCount) {
+        } else if (this.wolfsCount >= this.villagersCount) {
             //SÓI THẮNG
             callback(-1);
         } else if (this.wolfsCount === 0) {

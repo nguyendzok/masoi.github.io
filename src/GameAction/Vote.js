@@ -8,15 +8,16 @@ module.exports = (gamef, bot) => {
                 text: askTxt,
                 quickReplies: playerList,
             }, (payload, convo) => {
-                let resTxt = payload.message ? payload.message.text.match(/[0-9]+/g) : undefined;
-                if (resTxt && resTxt[0]) {
-                    let voteID = resTxt[0];
-                    actionCallback(convo, voteID);
-                    convo.end();
-                } else {
-                    convo.say(`Vui lòng thử lại!`);
-                    convo.end();
-                }
+                // let resTxt = payload.message ? payload.message.text.match(/[0-9]+/g) : undefined;
+                // if (resTxt && resTxt[0]) {
+                //     let voteID = resTxt[0];
+                //     actionCallback(convo, voteID);
+                //     convo.end();
+                // } else {
+                //     convo.say(`Vui lòng thử lại!`);
+                //     convo.end();
+                // }
+                convo.end();
             });
         });
     }
