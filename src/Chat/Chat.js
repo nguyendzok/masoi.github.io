@@ -218,13 +218,16 @@ module.exports = (gamef, bot) => {
                         }
                     }
                 } else {// ban NGÀY, mọi người thảo luận
-                    if (!/^\/vote\s-?[0-9]+$/.test(chatTxt)) {
+                    if (!/^\/vote\s-?[0-9]+$/.test(chatTxt) && !/[0-9]:.+/g.test(chatTxt)) {
                         if (!chatTxt.match(/\/treo/g) && !chatTxt.match(/\/tha/g)) {
                             if (gamef.getRoom(userRoom).chatON || (gamef.getRoom(userRoom).deathID != -1 && gamef.getRoom(userRoom).deathID == gamef.getRoom(userRoom).getPlayer(joinID).id)) { //check xem còn bật chat không?
                                 roomChatAll(bot, gamef.getRoom(userRoom).players, joinID, '*' + user.first_name + '*: ' + chatTxt);
                                 bot.sendAction(joinID, 'mark_seen');
                             } else {
-                                chat.say('```\nĐã hết thời gian thảo luận!\nNếu chưa rõ cách chơi, chat "trợ giúp"\n```');
+                                chat.say({
+                                    text: '```\nĐã hết thời gian thảo luận!\nĐể vote bây giờ, chọn "/action"\n```',
+                                    quickReplies: ["/action", "help"],
+                                });
                             }
                         } else {  //VOTE YES?NO
                             if (gamef.getRoom(userRoom).deathID != -1 && !gamef.getRoom(userRoom).roleDone[joinID]) {
@@ -261,7 +264,7 @@ module.exports = (gamef, bot) => {
                                 roomChatAll(bot, gamef.getRoom(userRoom).players, joinID, `*✊${user.first_name} đã vote treo cổ ${voteKill} (${gamef.getRoom(userRoom).voteList[voteID]} phiếu)*`);
                             }
                         } else {
-                            chat.say('```\nBạn chỉ được vote MỘT lần MỘT người còn sống!\n```');
+                            chat.say('```\nKhông hợp lệ vì bạn đã vote lần 2 hoặc vote sai người!\n```');
                         }
                         // kiểm tra đã VOTE XONG chưa?
                         gamef.func(dayVoteCheck, bot, userRoom);
