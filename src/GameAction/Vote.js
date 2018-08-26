@@ -4,9 +4,8 @@ const { wolfVote, seerAction, saveAction, fireAction, dayVote } = require('./Vot
 module.exports = (gamef, bot) => {
     const voteConvo = (chat, askSeq) => {
         chat.conversation((convo) => {
-            let len = askSeq.length;
-            askSeq.forEach((askItem, index) => {
-                convo.ask(askItem.qreply ? {
+            askSeq.reduce((promise, askItem, index) => {
+                return promise.then(() => convo.ask(askItem.qreply ? {
                     text: askItem.txt,
                     quickReplies: askItem.qreply,
                 } : askItem.txt, (payload, convo) => {
@@ -23,8 +22,8 @@ module.exports = (gamef, bot) => {
                         convo.say(`Vui lòng thử lại!`);
                         convo.end();
                     }
-                });
-            });
+                }));
+            }, Promise.resolve());
             convo.end();
         });
     }
