@@ -161,18 +161,11 @@ module.exports = async (gamef, bot, userRoom, witchSaved) => {
             console.log(`$ ROOM ${userRoom + 1} > 1 MINUTE REMAINING`);
             let time = new Date(Date.now() + 1 * 60 * 1000);
             gamef.getRoom(userRoom).addSchedule(time, () => {
-                let counter = 0;
-                let playerListTxt = gamef.getRoom(userRoom).playersTxt.filter((e) => {
-                    if (counter < 11 && e[0] != '💀'[0]) {
-                        counter++;
-                        return true;
-                    }
-                    return false;
-                });
-                let playersInRoomTxt = playerListTxt.join(' / ');
+                let playerList = gamef.getRoom(userRoom).getAlivePlayerList();
+                let playersInRoomTxt = playerList.join(' / ');
                 roomChatAll(bot, gamef.getRoom(userRoom).players, 0, {
                     text: `\`\`\`\n⏰Hết giờ! Mọi người có 1 PHÚT để vote!\n"/vote <số id>" để treo cổ 1 người\n${playersInRoomTxt}\nBạn muốn treo cổ ai?\n\`\`\``,
-                    quickReplies: playerListTxt,
+                    quickReplies: playerList,
                 });
                 gamef.getRoom(userRoom).chatOFF();
                 console.log(`$ ROOM ${userRoom + 1} > END OF DISCUSSION!`);

@@ -506,7 +506,7 @@ class Room {
         console.log("$ ROOM " + (this.id + 1) + " > GAME CHECK: " + this.wolfsCount + ' SÓI/' + this.villagersCount + ' DÂN');
         if (this.cupidTeam && this.wolfsCount + this.villagersCount == 2 && this.wolfsCount > 0) {
             callback(3);
-        } else if (this.wolfsCount >= this.villagersCount) {
+        } else if (this.wolfsCount > this.villagersCount) {
             //SÓI THẮNG
             callback(-1);
         } else if (this.wolfsCount === 0) {
@@ -600,6 +600,39 @@ class Room {
             this.subscriberList.push(joinID);
         }
         console.log(`$ ROOM ${this.id + 1} > SUBSCRIBER ${this.subscriberList.length} > ${joinID}`);
+    }
+    getAlivePlayerList() {
+        let counter = 0;
+        let ret = this.playersTxt.filter((e) => {
+            if (counter < 11 && e[0] != '💀'[0]) {
+                counter++;
+                return true;
+            }
+            return false;
+        });
+        return ret;
+    }
+    getAliveWolfList() {
+        let counter = 0;
+        let ret = this.wolfsTxt.filter((e) => {
+            if (counter < 11 && e[0] != '💀'[0]) {
+                counter++;
+                return true;
+            }
+            return false;
+        });
+        return ret;
+    }
+    getAliveVillagerList() {
+        let counter = 0;
+        let ret = this.villagersTxt.filter((e) => {
+            if (counter < 11 && e[0] != '💀'[0]) {
+                counter++;
+                return true;
+            }
+            return false;
+        });
+        return ret;
     }
 }
 

@@ -54,22 +54,29 @@ module.exports = (gamef, bot) => {
                     }
 
                     if (userRole == -1 || userRole == -3) {// là SÓI / SÓI NGUYỀN
-                        if (!/^\/vote\s-?[0-9]+$/.test(chatTxt)) {
+                        if (!/^\/vote\s-?[0-9]+$/.test(chatTxt) && !/[0-9]:.+/g.test(chatTxt)) {
                             if (gamef.getRoom(userRoom).chatON) {
                                 roomWolfChatAll(bot, gamef.getRoom(userRoom).wolfsID, joinID, '*' + user.first_name + '*(sói): ' + chatTxt);
                                 bot.sendAction(joinID, 'mark_seen');
                             }
                         } else {// SÓI VOTE
                             let voteID = chatTxt.match(/-?[0-9]+/g)[0];
+                            let villagerList = gamef.getRoom(userRoom).getAliveVillagerList();
                             //vote
                             if (gamef.getRoom(userRoom).vote(joinID, voteID)) {
                                 if (voteID == -1) { //ăn chay (phiếu trống)
                                     await chat.say(`🍴Bạn đã vote ăn chay!`);
-                                    roomWolfChatAll(bot, gamef.getRoom(userRoom).wolfsID, joinID, '🍴' + user.first_name + ' đã vote ăn chay!');
+                                    roomWolfChatAll(bot, gamef.getRoom(userRoom).wolfsID, joinID, {
+                                        text: '🍴' + user.first_name + ' đã vote ăn chay!',
+                                        quickReplies: villagerList,
+                                    });
                                 } else {
                                     let voteKill = gamef.getRoom(userRoom).playersTxt[voteID];
                                     await chat.say(`🍗Bạn đã vote cắn ${voteKill}`);
-                                    roomWolfChatAll(bot, gamef.getRoom(userRoom).wolfsID, joinID, '🍗' + user.first_name + ' đã vote cắn ' + voteKill);
+                                    roomWolfChatAll(bot, gamef.getRoom(userRoom).wolfsID, joinID, {
+                                        text: '🍗' + user.first_name + ' đã vote cắn ' + voteKill,
+                                        quickReplies: villagerList,
+                                    });
                                 }
                             } else {
                                 chat.say("```\nBạn không thể thực hiện vote 2 lần hoặc vote người chơi đã chết!\n```");
@@ -79,7 +86,7 @@ module.exports = (gamef, bot) => {
 
                         }
                     } else if (userRole == 1) { // là tiên tri
-                        if (chatTxt.match(/\/see.[0-9]+/g)) {//see
+                        if (chatTxt.match(/\/see.[0-9]+/g) || /[0-9]:.+/g.test(chatTxt)) {//see
                             let voteID = chatTxt.match(/[0-9]+/g)[0];
                             gamef.getRoom(userRoom).see(joinID, voteID, async (role) => {
                                 await chat.say(`${voteID} là ${(role == -1) ? '🐺SÓI' : role == 1 ? '🔍TIÊN TRI, Bạn đùa tớ à :v' : '💩PHE DÂN'}`);
@@ -104,7 +111,7 @@ module.exports = (gamef, bot) => {
                             }
                         }
                     } else if (userRole == 2) { // là bảo vệ
-                        if (chatTxt.match(/\/save.[0-9]+/g)) {//save
+                        if (chatTxt.match(/\/save.[0-9]+/g) || /[0-9]:.+/g.test(chatTxt)) {//save
                             let voteID = chatTxt.match(/[0-9]+/g)[0];
                             if (!gamef.getRoom(userRoom).save(joinID, voteID)) {
                                 chat.say(`\`\`\`\nBạn không thể bảo vệ 1 người 2 đêm liên tiếp hoặc bảo vệ người chơi đã chết!\n\`\`\``);
@@ -254,14 +261,21 @@ module.exports = (gamef, bot) => {
                     } else {
                         // VOTE TREO CỔ
                         let voteID = chatTxt.match(/-?[0-9]+/g)[0];
+                        let playerList = gamef.getRoom(userRoom).getAlivePlayerList();
                         if (gamef.getRoom(userRoom).vote(joinID, voteID)) {
                             if (voteID == -1) {
                                 await chat.say(`*✊Bạn đã từ chối bỏ phiếu!*`);
-                                roomChatAll(bot, gamef.getRoom(userRoom).players, joinID, `*✊${user.first_name} đã từ chối bỏ phiếu*`);
+                                roomChatAll(bot, gamef.getRoom(userRoom).players, joinID, {
+                                    text: `*✊${user.first_name} đã từ chối bỏ phiếu*`,
+                                    quickReplies: playerList,
+                                });
                             } else {
                                 let voteKill = gamef.getRoom(userRoom).playersTxt[voteID];
                                 await chat.say(`*✊Bạn đã vote treo cổ ${voteKill} (${gamef.getRoom(userRoom).voteList[voteID]} phiếu)*`);
-                                roomChatAll(bot, gamef.getRoom(userRoom).players, joinID, `*✊${user.first_name} đã vote treo cổ ${voteKill} (${gamef.getRoom(userRoom).voteList[voteID]} phiếu)*`);
+                                roomChatAll(bot, gamef.getRoom(userRoom).players, joinID, {
+                                    text: `*✊${user.first_name} đã vote treo cổ ${voteKill} (${gamef.getRoom(userRoom).voteList[voteID]} phiếu)*`,
+                                    quickReplies: playerList,
+                                });
                             }
                         } else {
                             chat.say('```\nKhông hợp lệ vì bạn đã vote lần 2 hoặc vote sai người!\n```');
