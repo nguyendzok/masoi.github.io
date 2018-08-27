@@ -10,7 +10,7 @@ module.exports = (gamef, bot) => {
             let resTxt = payload.message ? payload.message.text : undefined;
             if (resTxt) {
                 let result = askItem.callback(convo, index, resTxt);
-                if (ret) {
+                if (result) {
                     convo.set(`data[${index}]`, result);
                     if (index + 1 < askSeq.length) {
                         startConvo(convo, askSeq[index + 1], index + 1, askSeq);
