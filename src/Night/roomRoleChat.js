@@ -125,7 +125,10 @@ module.exports = async function (gamef, bot, userRoom) {
             } else if (p.role == 3) { // Thợ săn
                 return sendImageCard(bot, p.joinID, 'https://www.facebook.com/masoigame/photos/pcb.1889279921367724/1889278518034531', 'Thợ săn')
                     .then(() => {
-                        bot.say(p.joinID, preTxt + `🔫Thợ săn dậy đi! Đêm nay bạn muốn bắn ai?\n"/fire <số ID>" để ghim\n"/kill <số ID>" để bắn chết luôn\n${playersListTxt}`);
+                        bot.say(p.joinID, {
+                            text: preTxt + `🔫Thợ săn dậy đi! Đêm nay bạn muốn bắn ai?\n"/fire <số ID>" để ghim\n"/kill <số ID>" để bắn chết luôn\n${playersListTxt}`,
+                            quickReplies: ["/action"],
+                        });
                     });
             } else if (p.role == -2) { // Bán sói
                 gamef.getRoom(userRoom).roleDoneBy(p.joinID, false, true);
@@ -154,7 +157,10 @@ module.exports = async function (gamef, bot, userRoom) {
             } else if (p.role == 7) { // THẦN TÌNH YÊU
                 return sendImageCard(bot, p.joinID, 'https://www.facebook.com/masoigame/photos/pcb.1889279921367724/1889278324701217', 'Thần tình yêu')
                     .then(() => {
-                        bot.say(p.joinID, preTxt + `👼Bạn là THẦN TÌNH YÊU!\n/cupid <id1> <id2> để ghép đôi\n${playersListTxt}`);
+                        bot.say(p.joinID, {
+                            text: preTxt + `👼Bạn là THẦN TÌNH YÊU!\n/cupid <id1> <id2> để ghép đôi\n${playersListTxt}`,
+                            quickReplies: ["/action"],
+                        });
                     });
             } else if (p.role == 8) { // NGƯỜI HÓA SÓI
                 gamef.getRoom(userRoom).roleDoneBy(p.joinID, false, true);

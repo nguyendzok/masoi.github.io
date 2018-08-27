@@ -55,7 +55,7 @@ module.exports = (gamef, bot) => {
                     }
 
                     if (userRole == -1 || userRole == -3) {// là SÓI / SÓI NGUYỀN
-                        if (!/^\/vote\s-?[0-9]+$/.test(chatTxt) && !/[0-9]:.+|-1/g.test(chatTxt)) {
+                        if (!/^\/vote\s-?[0-9]+$/.test(chatTxt) && !/[0-9]+:.+|-1/g.test(chatTxt)) {
                             if (gamef.getRoom(userRoom).chatON) {
                                 roomWolfChatAll(bot, gamef.getRoom(userRoom).wolfsID, joinID, '*' + user.first_name + '*(sói): ' + chatTxt);
                                 bot.sendAction(joinID, 'mark_seen');
@@ -87,7 +87,7 @@ module.exports = (gamef, bot) => {
 
                         }
                     } else if (userRole == 1) { // là tiên tri
-                        if (chatTxt.match(/\/see.[0-9]+/g) || /[0-9]:.+/g.test(chatTxt)) {//see
+                        if (chatTxt.match(/\/see.[0-9]+/g) || /[0-9]+:.+/g.test(chatTxt)) {//see
                             let voteID = chatTxt.match(/[0-9]+/g)[0];
                             gamef.getRoom(userRoom).see(joinID, voteID, async (role) => {
                                 await chat.say(`${voteID} là ${(role == -1) ? '🐺SÓI' : role == 1 ? '🔍TIÊN TRI, Bạn đùa tớ à :v' : '💩PHE DÂN'}`);
@@ -112,7 +112,7 @@ module.exports = (gamef, bot) => {
                             }
                         }
                     } else if (userRole == 2) { // là bảo vệ
-                        if (chatTxt.match(/\/save.[0-9]+/g) || /[0-9]:.+/g.test(chatTxt)) {//save
+                        if (chatTxt.match(/\/save.[0-9]+/g) || /[0-9]+:.+/g.test(chatTxt)) {//save
                             let voteID = chatTxt.match(/[0-9]+/g)[0];
                             if (!gamef.getRoom(userRoom).save(joinID, voteID)) {
                                 chat.say(`\`\`\`\nBạn không thể bảo vệ 1 người 2 đêm liên tiếp hoặc bảo vệ người chơi đã chết!\n\`\`\``);
@@ -229,7 +229,7 @@ module.exports = (gamef, bot) => {
                         gamef.func(nightDoneCheck, bot, userRoom);
                     }
                 } else {// ban NGÀY, mọi người thảo luận
-                    if (!/^\/vote\s-?[0-9]+$/.test(chatTxt) && !/[0-9]:.+|-1/g.test(chatTxt)) {
+                    if (!/^\/vote\s-?[0-9]+$/.test(chatTxt) && !/[0-9]+:.+|-1/g.test(chatTxt)) {
                         if (!chatTxt.match(/\/treo/g) && !chatTxt.match(/\/tha/g)) {
                             if (gamef.getRoom(userRoom).chatON || (gamef.getRoom(userRoom).deathID != -1 && gamef.getRoom(userRoom).deathID == gamef.getRoom(userRoom).getPlayer(joinID).id)) { //check xem còn bật chat không?
                                 roomChatAll(bot, gamef.getRoom(userRoom).players, joinID, '*' + user.first_name + '*: ' + chatTxt);

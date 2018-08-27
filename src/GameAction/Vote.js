@@ -1,5 +1,5 @@
 const { roomChatAll } = require('../Chat/Utils');
-const { wolfVote, seerAction, saveAction, fireAction, dayVote } = require('./VoteAction');
+const { wolfVote, seerAction, saveAction, fireAction, cupidAction, dayVote } = require('./VoteAction');
 
 module.exports = (gamef, bot) => {
     const startConvo = (convo, askItem, index, askSeq) => {
@@ -53,25 +53,16 @@ module.exports = (gamef, bot) => {
                             text: `Sói muốn cắn ai?`,
                             quickReplies: playerList,
                         });
-                        // voteConvo(chat, playerList, `Sói muốn cắn ai?`, (convo, voteID) => {
-                        //     wolfVote(gamef, bot, convo, userRoom, joinID, voteID);
-                        // })
                     } else if (userRole == 1) { // là tiên tri
                         chat.say({
                             text: `Tiên tri muốn soi ai?`,
                             quickReplies: playerList,
                         });
-                        // voteConvo(chat, playerList, `Tiên tri muốn soi ai?`, (convo, voteID) => {
-                        //     seerAction(gamef, bot, convo, user, userRoom, joinID, voteID);
-                        // });
                     } else if (userRole == 2) { // là bảo vệ
                         chat.say({
                             text: `Bảo vệ muốn bảo vệ ai?`,
                             quickReplies: playerList,
                         });
-                        // voteConvo(chat, playerList, `Bảo vệ muốn bảo vệ ai?`, (convo, voteID) => {
-                        //     saveAction(gamef, bot, convo, userRoom, joinID, voteID);
-                        // });
                     } else if (userRole == 3) { // là thợ săn
                         voteConvo(chat, [{
                             txt: "Bạn muốn ghim hãy bắn chết luôn?",
@@ -91,7 +82,7 @@ module.exports = (gamef, bot) => {
                             callback: (convo, index, resTxt) => {
                                 let type = convo.get(`data[${index - 1}]`);
                                 let voteID;
-                                if (/[0-9]:.+|-1/g.test(resTxt)) {
+                                if (/[0-9]+:.+|-1/g.test(resTxt)) {
                                     voteID = resTxt.match(/-?[0-9]+/g)[0];
                                 } else {
                                     return null;
@@ -107,6 +98,35 @@ module.exports = (gamef, bot) => {
                                 }
                             }
                         }])
+                    } else if (userRole == 7) { // là thần tình yêu
+                        voteConvo(chat, [{
+                            txt: "Chọn người thứ nhất:",
+                            qreply: playerList,
+                            callback: (convo, index, resTxt) => {
+                                if (/[0-9]+:.+/g.test(resTxt)) {
+                                    return resTxt.match(/[0-9]+/g)[0];
+                                } else {
+                                    return null;
+                                }
+                            }
+                        }, {
+                            txt: "Chọn người thứ hai:",
+                            qreply: playerList,
+                            callback: (convo, index, resTxt) => {
+                                let user1ID = convo.get(`data[${index - 1}]`);
+                                if (!user1ID) {
+                                    return null;
+                                }
+                                let user2ID;
+                                if (/[0-9]+:.+|-1/g.test(resTxt)) {
+                                    user2ID = resTxt.match(/[0-9]+/g)[0];
+                                    cupidAction(gamef, bot, chat, userRoom, joinID, user1ID, user2ID);
+                                } else {
+                                    return null;
+                                }
+
+                            }
+                        }])
                     } else {
                         chat.say(`Tính năng này chưa được hỗ trợ! Vui lòng nhắn đúng cú pháp để thực hiện chức năng của mình`);
                     }
@@ -117,9 +137,6 @@ module.exports = (gamef, bot) => {
                                 text: `Bạn muốn treo cổ ai?`,
                                 quickReplies: playerList,
                             });
-                            // voteConvo(chat, playerList, `Bạn muốn treo cổ ai?`, (convo, voteID) => {
-                            //     dayVote(gamef, bot, convo, user, userRoom, joinID, voteID);
-                            // });
                         } else {
                             chat.say(`Bạn đã vote rồi!`);
                         }

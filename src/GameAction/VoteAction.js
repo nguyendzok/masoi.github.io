@@ -62,6 +62,26 @@ var fireAction = async (gamef, bot, chat, userRoom, joinID, voteID, fireKill) =>
         gamef.func(nightDoneCheck, bot, userRoom);
     }
 }
+var cupidAction = async (gamef, bot, chat, userRoom, joinID, voteID1, voteID2) => {
+    if (!gamef.getRoom(userRoom).cupid(joinID, voteID1, voteID2)) {
+        chat.say(`\`\`\`\nBạn chỉ được ghép đôi (1 lần duy nhất) 2 người tồn tại!\n\`\`\``);
+    } else {
+        await chat.say(`👼Bạn đã ghép cặp ${gamef.getRoom(userRoom).playersTxt[voteID1]} với ${gamef.getRoom(userRoom).playersTxt[voteID2]}!\nBạn đã hoàn thành nhiệm vụ và trở thành DÂN!`);
+        gamef.getRoom(userRoom).newLog(`👼CUPID đã ghép cặp *${gamef.getRoom(userRoom).playersTxt[voteID1]}* với *${gamef.getRoom(userRoom).playersTxt[voteID2]}* !`)
+        let user1 = gamef.getRoom(userRoom).players[voteID1];
+        let user2 = gamef.getRoom(userRoom).players[voteID2];
+        let thirdParty = ``;
+        if (gamef.getRoom(userRoom).cupidTeam) {
+            thirdParty = `👼Bạn giờ thuộc phe thứ 3 CẶP ĐÔI`;
+        }
+        bot.say(user1.joinID, `\`\`\`\n${thirdParty}\n👼Bạn đã bị ghép đôi với ${user2.first_name}\n/p <nội dung> để chat riêng\n\`\`\``);
+        bot.say(user2.joinID, `\`\`\`\n${thirdParty}\n👼Bạn đã bị ghép đôi với ${user1.first_name}\n/p <nội dung> để chat riêng\n\`\`\``);
+
+        roomChatAll(bot, gamef.getRoom(userRoom).players, joinID, '```\n👼Thần tình yêu đã ghép đôi thành công\n```');
+        // kiểm tra đã hết đêm chưa?
+        gamef.func(nightDoneCheck, bot, userRoom);
+    }
+}
 
 var dayVote = async (gamef, bot, chat, user, userRoom, joinID, voteID) => {
     if (gamef.getRoom(userRoom).vote(joinID, voteID)) {
@@ -85,5 +105,6 @@ module.exports = {
     seerAction: seerAction,
     saveAction: saveAction,
     fireAction: fireAction,
+    cupidAction: cupidAction,
     dayVote: dayVote,
 };
