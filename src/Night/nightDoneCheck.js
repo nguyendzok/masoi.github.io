@@ -1,5 +1,6 @@
 const dayNotify = require('../Night/dayNotify');
 const { roomChatAll } = require('../Chat/Utils');
+const { witchAction } = require('../GameAction/VoteAction');
 
 function callWitch(gamef, bot, userRoom, deathID, deathTxt, thereIsOneDied) {
     const askForSaveKill = (convo, askTxt = `CALL phù thủy improper way`, qreply, witchSave) => {
@@ -35,7 +36,13 @@ function callWitch(gamef, bot, userRoom, deathID, deathTxt, thereIsOneDied) {
                     }
                 } else { // kill hoặc skip
                     if (gamef.getRoom(userRoom).witchKillRemain) {
-                        if (/\/kill\s[0-9]+/g.test(payload.message.text)) {  //kill
+                        if (/^\/action$/.test(payload.message.text)) {
+                            let playerList = gamef.getRoom(userRoom).getAlivePlayerList();
+                            // convo.say(`Tính năng này chưa sẵn sàng vui lòng gõ lệnh /kill <id> hoặc /skip`);
+                            askForSaveKill(convo, `Bạn muốn giết ai?`, playerList, witchSave);
+                            return;
+                        }
+                        if (/\/kill\s[0-9]+/g.test(payload.message.text) || /[0-9]+:.+/g.test(payload.message.text)) {  //kill
                             let voteID = payload.message.text.match(/[0-9]+/g)[0];
                             if (!gamef.getRoom(userRoom).witchKillVote(voteID)) {
                                 convo.say(`\`\`\`\nBạn không thể giết người đã chết!\n\`\`\``);

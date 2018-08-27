@@ -83,6 +83,17 @@ var cupidAction = async (gamef, bot, chat, userRoom, joinID, voteID1, voteID2) =
     }
 }
 
+var witchAction = async (gamef, bot, chat, userRoom, voteID) => {
+    if (!gamef.getRoom(userRoom).witchKillVote(voteID)) {
+        chat.say(`\`\`\`\nBạn không thể giết người chơi đã chết!\n\`\`\``);
+    } else {
+        await chat.say(`⛔Bạn đã giết ${gamef.getRoom(userRoom).playersTxt[voteID]}!`);
+        // gamef.getRoom(userRoom).newLog(`⛔Phù thủy ${gamef.getRoom(userRoom).getPlayer(gamef.getRoom(userRoom).witchID).first_name} đã giết *${gamef.getRoom(userRoom).playersTxt[voteID]}* !`)
+        // kiểm tra đã hết đêm chưa?
+        gamef.func(nightDoneCheck, bot, userRoom);
+    }
+}
+
 var dayVote = async (gamef, bot, chat, user, userRoom, joinID, voteID) => {
     if (gamef.getRoom(userRoom).vote(joinID, voteID)) {
         if (voteID == -1) {
@@ -106,5 +117,6 @@ module.exports = {
     saveAction: saveAction,
     fireAction: fireAction,
     cupidAction: cupidAction,
+    witchAction: witchAction,
     dayVote: dayVote,
 };
