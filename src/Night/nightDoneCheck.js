@@ -8,7 +8,7 @@ function callWitch(gamef, bot, userRoom, deathID, deathTxt, thereIsOneDied) {
             text: askTxt,
             quickReplies: qreply,
         }, async (payload, convo) => {
-            if (!payload.message || !(/(y|Y)es/g.test(payload.message.text) || /(n|N)o/g.test(payload.message.text) || /skip/g.test(payload.message.text) || /\/kill\s[0-9]+/g.test(payload.message.text))) {
+            if (!payload.message || !(/(y|Y)es/g.test(payload.message.text) || /(n|N)o/g.test(payload.message.text) || /skip/g.test(payload.message.text) || /\/kill\s[0-9]+/g.test(payload.message.text) || /^\/action$/.test(payload.message.text) || /[0-9]+:.+/g.test(payload.message.text))) {
                 convo.say(`\`\`\`\nKhông hợp lệ!\n\`\`\``);
                 askForSaveKill(convo, askTxt, qreply, witchSave);
                 return;
