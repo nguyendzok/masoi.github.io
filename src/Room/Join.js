@@ -64,12 +64,16 @@ module.exports = (gamef, bot) => {
                     // let playerListView = gamef.getRoomPlayerView(roomID, 0, 3);
                     playerListView = [];
                     playerListView.unshift({
-                        title: `Phòng ${roomID + 1}`,
+                        title: `MA SÓI BOT\nPhòng ${roomID + 1}`,
                         image_url: `https://scontent.fhan5-5.fna.fbcdn.net/v/t1.0-9/37812890_1872137736415276_2253761986674294784_n.png?_nc_cat=0&oh=c66c9db1a9e5d72edb88931cadeff204&oe=5C07D275`,
                         subtitle: `🌟${gamef.getRoom(roomID).readyCount}/👥${gamef.getRoom(roomID).players.length}`,
                         buttons: [
                             { type: 'postback', title: '🌚Thoát', payload: 'LEAVE_ROOM' }
                         ]
+                    });
+                    playerListView.unshift({
+                        title: `👥Tổng số người chơi: ${gamef.getRoom(roomID).players.length}`,
+                        subtitle: `🌟Sẵn sàng: ${gamef.getRoom(roomID).readyCount}/${gamef.getRoom(roomID).players.length}`,
                     });
                     let simplePlayerListView = undefined;
                     // if (gamef.getRoom(roomID).players.length > 3) {
