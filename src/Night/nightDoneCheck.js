@@ -1,6 +1,5 @@
 const dayNotify = require('../Night/dayNotify');
 const { roomChatAll } = require('../Chat/Utils');
-const { witchAction } = require('../GameAction/VoteAction');
 
 function callWitch(gamef, bot, userRoom, deathID, deathTxt, thereIsOneDied) {
     const askForSaveKill = (convo, askTxt = `CALL phù thủy improper way`, qreply, witchSave) => {
