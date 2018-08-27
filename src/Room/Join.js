@@ -71,7 +71,7 @@ module.exports = (gamef, bot) => {
                             { type: 'postback', title: '🌚Thoát', payload: 'LEAVE_ROOM' }
                         ]
                     });
-                    playerListView.unshift({
+                    playerListView.push({
                         title: `👥Tổng số người chơi: ${gamef.getRoom(roomID).players.length}`,
                         subtitle: `🌟Sẵn sàng: ${gamef.getRoom(roomID).readyCount}/${gamef.getRoom(roomID).players.length}`,
                     });
