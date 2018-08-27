@@ -735,7 +735,7 @@ class Game {
         // }
         playerListView.push({
             title: `TEAM ${len}`,
-            subtitle: this.getSimpleRoomPlayerView(roomID),
+            subtitle: this.getSimpleRoomPlayerView(roomID).join('\n'),
         });
         return playerListView;
     }
