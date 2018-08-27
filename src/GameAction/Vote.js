@@ -2,7 +2,7 @@ const { roomChatAll } = require('../Chat/Utils');
 const { wolfVote, seerAction, saveAction, fireAction, dayVote } = require('./VoteAction');
 
 module.exports = (gamef, bot) => {
-    const startConvo = (convo, askItem) => {
+    const startConvo = (convo, askItem, index, askSeq) => {
         convo.ask(askItem.qreply ? {
             text: askItem.txt,
             quickReplies: askItem.qreply,
@@ -12,6 +12,9 @@ module.exports = (gamef, bot) => {
                 let result = askItem.callback(convo, index, resTxt);
                 if (ret) {
                     convo.set(`data[${index}]`, result);
+                    if (index + 1 < askSeq.length) {
+                        startConvo(convo, askSeq[index + 1], index + 1, askSeq);
+                    }
                 } else {
                     convo.say(`Thao tác sai! Vui lòng thử lại!`);
                     convo.end();
@@ -25,6 +28,8 @@ module.exports = (gamef, bot) => {
     const voteConvo = (chat, askSeq) => {
         chat.conversation((convo) => {
             let len = askSeq.length;
+            if (len <= 0) return;
+            startConvo(convo, askSeq[0], 0, askSeq)
 
             // askSeq.reduce((promise, askItem, index) => {
             //     return promise.then(() => 
