@@ -15,7 +15,10 @@ module.exports = (gamef, bot) => {
                 // get UserName and sendGlobalMessage to ROOM
                 user = gamef.getRoom(userRoom).getPlayer(joinID);
                 const start = async () => {
-                    await roomChatAll(bot, gamef.getRoom(userRoom).players, 0, `${user.first_name} đã sẵn sàng! (${gamef.getRoom(userRoom).readyCount}/${gamef.getRoom(userRoom).players.length})`);
+                    await roomChatAll(bot, gamef.getRoom(userRoom).players, 0, {
+                        text: `${user.first_name} đã sẵn sàng! (${gamef.getRoom(userRoom).readyCount}/${gamef.getRoom(userRoom).players.length})`,
+                        quickReplies: ["/ready"],
+                    });
                     gamef.gameIsReady(userRoom, async (gameReady) => {
                         if (gameReady && !gamef.getRoom(userRoom).ingame) {
                             console.log(`$ ROOM ${userRoom + 1} > GAME_START`);
