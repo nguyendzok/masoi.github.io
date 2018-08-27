@@ -25,7 +25,7 @@ function callWitch(gamef, bot, userRoom, deathID, deathTxt, thereIsOneDied) {
                         // còn quyền giết
                         if (gamef.getRoom(userRoom).witchKillRemain) {
                             let playerListTxt = gamef.getRoom(userRoom).playersTxt.join(' / ');
-                            askForSaveKill(convo, `🔮Để dùng quyền giết:\n"/kill <số id>"\n${playerListTxt}\n🔮Nếu không giết ai: "/skip"`, ["/skip"], witchSaved);
+                            askForSaveKill(convo, `🔮Để dùng quyền giết:\n"/kill <số id>"\n${playerListTxt}\n🔮Nếu không giết ai: "/skip"`, ["/action", "/skip"], witchSaved);
                         } else {
                             convo.end();
                             dayNotify(gamef, bot, userRoom, witchSaved);

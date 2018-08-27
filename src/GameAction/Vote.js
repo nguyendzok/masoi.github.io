@@ -98,6 +98,11 @@ module.exports = (gamef, bot) => {
                                 }
                             }
                         }])
+                    } else if (userRole == 5) { // là phù thủy
+                        chat.say({
+                            text: `Bạn muốn giết ai?`,
+                            quickReplies: playerList,
+                        });
                     } else if (userRole == 7) { // là thần tình yêu
                         voteConvo(chat, [{
                             txt: "Chọn người thứ nhất:",
@@ -121,6 +126,7 @@ module.exports = (gamef, bot) => {
                                 if (/[0-9]+:.+|-1/g.test(resTxt)) {
                                     user2ID = resTxt.match(/[0-9]+/g)[0];
                                     cupidAction(gamef, bot, chat, userRoom, joinID, user1ID, user2ID);
+                                    return true;
                                 } else {
                                     return null;
                                 }

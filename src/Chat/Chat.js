@@ -167,7 +167,7 @@ module.exports = (gamef, bot) => {
                         }
                     } else if (userRole == 5) { // là phù thủy
                         if (gamef.getRoom(userRoom).witchKillRemain) {
-                            if (chatTxt.match(/\/kill.[0-9]+/g)) {// giết
+                            if (chatTxt.match(/\/kill.[0-9]+/g) || /[0-9]+:.+/g.test(chatTxt)) {// giết
                                 let voteID = chatTxt.match(/[0-9]+/g)[0];
                                 if (!gamef.getRoom(userRoom).witchKillVote(voteID)) {
                                     chat.say(`\`\`\`\nBạn không thể giết người chơi đã chết!\n\`\`\``);

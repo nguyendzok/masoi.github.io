@@ -29,7 +29,10 @@ module.exports = async function (gamef, bot, userRoom) {
                 let time = new Date(Date.now() + 60 * 1000);
                 players[index].addSchedule(time, () => {
                     let time = new Date(Date.now() + 30 * 1000);
-                    bot.say(p.joinID, `⏰Hết giờ! Còn 30 giây để vote...`);
+                    bot.say(p.joinID, {
+                        text: `⏰Hết giờ! Còn 30 giây để vote...`,
+                        quickReplies: ["/action"],
+                    });
                     console.log(`$ ROOM ${userRoom + 1} > TIMER > WOLF > 30 SECONDS REMAINING`);
                     players[index].addSchedule(time, () => {
                         console.log(`$ ROOM ${userRoom + 1} > AUTO ROLE > WOLF`);
@@ -46,7 +49,10 @@ module.exports = async function (gamef, bot, userRoom) {
                     time = new Date(Date.now() + 40 * 1000);
                 }
                 players[index].addSchedule(time, () => {
-                    bot.say(p.joinID, `⏰Bạn còn 20 giây để thực hiện...`);
+                    bot.say(p.joinID, {
+                        text: `⏰Bạn còn 20 giây để thực hiện...`,
+                        quickReplies: ["/action"],
+                    });
                     console.log(`$ ROOM ${userRoom + 1} > TIMER > 20 SECONDS REMAINING`);
                     let time = new Date(Date.now() + 20 * 1000);
                     players[index].addSchedule(time, () => {
