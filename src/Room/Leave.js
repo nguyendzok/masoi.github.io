@@ -23,7 +23,7 @@ module.exports = (gamef, bot) => {
                 // }, `${user.first_name} đã rời phòng chơi!`]);
 
                 let roomView = gamef.getSimpleRoomPlayerView(userRoom);
-                roomChatAll(bot, gamef.getRoom(userRoom).players, 0, `${roomView.join(`\n`)}\n${user.first_name} đã rời phòng chơi!`);
+                roomChatAll(bot, gamef.getRoom(userRoom).players, 0, `🌚${roomView.join(`\n`)}\n${user.first_name} đã rời phòng chơi!`);
 
                 gamef.gameIsReady(userRoom, async (gameReady) => {
                     if (gameReady && !gamef.getRoom(userRoom).ingame) {
@@ -67,7 +67,7 @@ module.exports = (gamef, bot) => {
                 gamef.setUserRoom(joinID, undefined);
 
                 chat.say(`\`\`\`\nBạn đã rời phòng chơi ${userRoom + 1}!\n\`\`\``);
-                roomChatAll(bot, gamef.getRoom(userRoom).players, joinID, `\`\`\`\n${user.first_name} đã rời phòng chơi!\n\`\`\``);
+                roomChatAll(bot, gamef.getRoom(userRoom).players, joinID, `\`\`\`\n🌚${user.first_name} đã rời phòng chơi!\n\`\`\``);
             }
             console.log(`$ ROOM ${userRoom + 1} > LEAVE > ${joinID} : ${user.first_name}`);
         } else {

@@ -16,7 +16,7 @@ module.exports = (gamef, bot) => {
                 user = gamef.getRoom(userRoom).getPlayer(joinID);
                 const start = async () => {
                     await roomChatAll(bot, gamef.getRoom(userRoom).players, 0, {
-                        text: `${user.first_name} đã sẵn sàng! (${gamef.getRoom(userRoom).readyCount}/${gamef.getRoom(userRoom).players.length})`,
+                        text: `🌟${user.first_name} đã sẵn sàng! (${gamef.getRoom(userRoom).readyCount}/${gamef.getRoom(userRoom).players.length})`,
                         quickReplies: ["/ready"],
                     });
                     gamef.gameIsReady(userRoom, async (gameReady) => {
@@ -33,7 +33,7 @@ module.exports = (gamef, bot) => {
                 }
                 start();
             } else {
-                chat.say("```\nBạn đã sẵn sàng rồi!\n```");
+                chat.say("```\n🌟Bạn đã sẵn sàng rồi!\n```");
             }
         } else {
             chat.say("```\nBạn chưa tham gia phòng nào!\n```");

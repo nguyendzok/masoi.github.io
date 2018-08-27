@@ -725,14 +725,18 @@ class Game {
     getRoomPlayerView(roomID, start = 0, limit = 20) {
         let playerListView = [], len = this.room[roomID].players.length;
         // create message
-        for (let i = start; (i < len && (i - start) < limit); i++) {
-            let m = this.room[roomID].players[i];
-            playerListView.push({
-                title: "" + (m.id + 1) + ": " + m.first_name,
-                image_url: m.avatar,
-                subtitle: `Họ & Tên: ${m.last_name + " " + m.first_name}\nMã số: ${m.id}\n${m.ready ? '🌟Đã sẵn sàng' : '💤Chưa sẵn sàng'}`,
-            });
-        }
+        // for (let i = start; (i < len && (i - start) < limit); i++) {
+        //     let m = this.room[roomID].players[i];
+        // playerListView.push({
+        //     title: "" + (m.id + 1) + ": " + m.first_name,
+        //     image_url: m.avatar,
+        //     subtitle: `Họ & Tên: ${m.last_name + " " + m.first_name}\nMã số: ${m.id}\n${m.ready ? '🌟Đã sẵn sàng' : '💤Chưa sẵn sàng'}`,
+        // });
+        // }
+        playerListView.push({
+            title: `TEAM ${len}`,
+            subtitle: this.getSimpleRoomPlayerView(roomID),
+        });
         return playerListView;
     }
     getSimpleRoomPlayerView(roomID, start = 0, limit = 20) {
