@@ -42,7 +42,10 @@ module.exports = (gamef, bot) => {
                             if (gamef.getRoom(userRoom).wolfsCount == 1) { // còn một mình kẻ bị sói nguyền
                                 let voteID = chatTxt.match(/[0-9]+/g)[0];
                                 if (gamef.getRoom(userRoom).justVote(voteID)) {
-                                    chat.say('```\n✔Bạn đã cắn ' + gamef.getRoom(userRoom).playersTxt[voteID] + '\n```');
+                                    chat.say({
+                                        text: '```\n✔Bạn đã cắn ' + gamef.getRoom(userRoom).playersTxt[voteID] + '\n```',
+                                        quickReplies: ["/evote"],
+                                    });
                                     if (userRole == 4 || userRole == -2 || userRole == 5 || userRole == 6 || userRole == 8) {// là DÂN, BÁN SÓI, PHÙ THỦY, GIÀ LÀNG, NGƯỜI HÓA SÓI
                                         gamef.getRoom(userRoom).roleDoneBy(joinID);
                                     }
@@ -176,10 +179,7 @@ module.exports = (gamef, bot) => {
                                 if (!gamef.getRoom(userRoom).witchKillVote(voteID)) {
                                     chat.say(`\`\`\`\nBạn không thể giết người chơi đã chết!\n\`\`\``);
                                 } else {
-                                    await chat.say({
-                                        text: `✔ Bạn đã giết ${gamef.getRoom(userRoom).playersTxt[voteID]}!`,
-                                        quickReplies: ["/evote"],
-                                    });
+                                    await chat.say(`✔ Bạn đã giết ${gamef.getRoom(userRoom).playersTxt[voteID]}!`);
                                     // gamef.getRoom(userRoom).newLog(`✔ Phù thủy ${gamef.getRoom(userRoom).getPlayer(gamef.getRoom(userRoom).witchID).first_name} đã giết *${gamef.getRoom(userRoom).playersTxt[voteID]}* !`)
                                     // kiểm tra đã hết đêm chưa?
                                     gamef.func(nightDoneCheck, bot, userRoom);

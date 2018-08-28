@@ -174,7 +174,10 @@ module.exports = async function (gamef, bot, userRoom) {
                 autoRoleDone ? gamef.getRoom(userRoom).roleDoneBy(p.joinID, false, true) : false;
                 return sendImageCard(bot, p.joinID, 'https://www.facebook.com/masoigame/photos/pcb.1889279921367724/1889278464701203', 'Phù thủy')
                     .then(() => {
-                        bot.say(p.joinID, preTxt + sayTxt);
+                        bot.say(p.joinID, {
+                            text: preTxt + sayTxt,
+                            quickReplies: ["/evote"],
+                        });
                     });
             } else if (p.role == 6) { // GIÀ LÀNG
                 autoRoleDone ? gamef.getRoom(userRoom).roleDoneBy(p.joinID, false, true) : false;
