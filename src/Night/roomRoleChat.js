@@ -22,7 +22,7 @@ module.exports = async function (gamef, bot, userRoom) {
     // đếm giờ ban đêm
     gameIsNotEnd ? gamef.getRoom(userRoom).players.every((p, index, players) => {
         if (p && gamef.getRoom(userRoom).alivePlayer[p.joinID]) {
-            if (p.role == -2 || p.role == 4 || p.role == 6 || p.role == 5) { //BÁN SÓI / DÂN / GIÀ LÀNG / PHÙ THỦY
+            if (p.role == -2 || p.role == 4 || p.role == 6 || p.role == 5 || p.role == 8) { //BÁN SÓI / DÂN / GIÀ LÀNG / PHÙ THỦY / NGƯỜI HÓA SÓI
                 if (gamef.getRoom(userRoom).nguyenID == p.joinID && gamef.getRoom(userRoom).wolfsCount == 1) { // kẻ bị nguyền là con sói cuối
                     // chạy tiếp đoạn code dưới :v
                 } else {
@@ -30,7 +30,7 @@ module.exports = async function (gamef, bot, userRoom) {
                 }
             }
 
-            if (p.role == -1 || p.role == -3 || (gamef.getRoom(userRoom).nguyenID == p.joinID && gamef.getRoom(userRoom).wolfsCount == 1)) { // SÓI có 1 phút 30 giây
+            if (p.role == -1 || p.role == -3) { // SÓI có 1 phút 30 giây
                 let time = new Date(Date.now() + 60 * 1000);
                 players[index].addSchedule(time, () => {
                     let time = new Date(Date.now() + 30 * 1000);
