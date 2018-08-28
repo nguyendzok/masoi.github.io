@@ -1,4 +1,4 @@
-var schedule = require('node-schedule');
+﻿var schedule = require('node-schedule');
 class Player {
     constructor(p) {
         this.id = p.id;
@@ -309,6 +309,7 @@ class Room {
             if (!this.isNight || (this.isNight && this.deathID != this.saveID)) { // là ban ngày hoặc ban đêm bảo vệ sai
                 if (this.players[this.deathID].role === -2 && this.isNight) { //là BÁN SÓI
                     this.wolfsID.push(this.players[this.deathID].joinID);
+                    this.wolfsTxt.push(this.players[this.deathID].first_name);
                     this.wolfsCount++;
                     this.villagersCount--;
                     return false;
@@ -582,9 +583,10 @@ class Room {
         if (!this.nguyenID) {
             return false;
         }
-        this.wolfsID.push(this.nguyenID);
         let nguyenUser = this.getPlayer(this.nguyenID);
         if (nguyenUser.role > 0) {
+            this.wolfsID.push(this.nguyenID);
+            this.wolfsTxt.push(this.players[nguyenUser].first_name);
             this.villagersCount--;
             this.wolfsCount++;
         }
@@ -788,7 +790,7 @@ class Game {
         let setup;
 
         if (len <= 4) {
-            setup = { "1": 1, "2": 0, "3": 0, "4": 0, "5": 1, "6": 0, "7": 1, "8": 0, "-3": 0, "-2": 0, "-1": 1 }; balance = 2;
+            setup = { "1": 0, "2": 1, "3": 0, "4": 1, "5": 1, "6": 0, "7": 0, "8": 0, "-3": 1, "-2": 0, "-1": 0 }; balance = -4;
         } else {
             if (len == 5) {
                 switch (this.random(1, 2)) {
