@@ -586,7 +586,7 @@ class Room {
         let nguyenUser = this.getPlayer(this.nguyenID);
         if (nguyenUser.role > 0) {
             this.wolfsID.push(this.nguyenID);
-            this.wolfsTxt.push(this.players[nguyenUser].first_name);
+            this.wolfsTxt.push(nguyenUser.first_name);
             this.villagersCount--;
             this.wolfsCount++;
         }
