@@ -24,7 +24,21 @@ module.exports = async function (gamef, bot, userRoom) {
         if (p && gamef.getRoom(userRoom).alivePlayer[p.joinID]) {
             if (p.role == -2 || p.role == 4 || p.role == 6 || p.role == 5 || p.role == 8) { //BÁN SÓI / DÂN / GIÀ LÀNG / PHÙ THỦY / NGƯỜI HÓA SÓI
                 if (gamef.getRoom(userRoom).nguyenID == p.joinID && gamef.getRoom(userRoom).wolfsCount == 1) { // kẻ bị nguyền là con sói cuối
-                    // chạy tiếp đoạn code dưới :v
+                    let time = new Date(Date.now() + 30 * 1000);
+                    players[index].addSchedule(time, () => {
+                        let time = new Date(Date.now() + 30 * 1000);
+                        bot.say(p.joinID, {
+                            text: `⏰Hết giờ! Còn 30 giây để vote...`,
+                            quickReplies: ["/evote"],
+                        });
+                        console.log(`$ ROOM ${userRoom + 1} > TIMER > WOLF > 30 SECONDS REMAINING`);
+                        players[index].addSchedule(time, () => {
+                            console.log(`$ ROOM ${userRoom + 1} > AUTO ROLE > WOLF`);
+                            bot.say(p.joinID, '```\n⏰Bạn đã ngủ quên mà không cắn ai! (-50 uy tín)\n```');
+                            gamef.getRoom(userRoom).roleDoneBy(p.joinID, true);
+                            gamef.func(nightDoneCheck, bot, userRoom);
+                        });
+                    });
                 } else {
                     return true;
                 }
@@ -36,7 +50,7 @@ module.exports = async function (gamef, bot, userRoom) {
                     let time = new Date(Date.now() + 30 * 1000);
                     bot.say(p.joinID, {
                         text: `⏰Hết giờ! Còn 30 giây để vote...`,
-                        quickReplies: ["/action"],
+                        quickReplies: ["/evote"],
                     });
                     console.log(`$ ROOM ${userRoom + 1} > TIMER > WOLF > 30 SECONDS REMAINING`);
                     players[index].addSchedule(time, () => {
@@ -56,7 +70,7 @@ module.exports = async function (gamef, bot, userRoom) {
                 players[index].addSchedule(time, () => {
                     bot.say(p.joinID, {
                         text: `⏰Bạn còn 20 giây để thực hiện...`,
-                        quickReplies: ["/action"],
+                        quickReplies: ["/evote"],
                     });
                     console.log(`$ ROOM ${userRoom + 1} > TIMER > 20 SECONDS REMAINING`);
                     let time = new Date(Date.now() + 20 * 1000);
@@ -124,7 +138,7 @@ module.exports = async function (gamef, bot, userRoom) {
                     .then(() => {
                         bot.say(p.joinID, {
                             text: preTxt + `🔍Tiên tri dậy đi! Tiên tri muốn kiểm tra ai?\n"/see <số ID>" để kiểm tra\n${playersListTxt}`,
-                            quickReplies: playerList,
+                            quickReplies: ["/evote"],
                         });
                     });
             } else if (p.role == 2) { // Bảo vệ
@@ -132,7 +146,7 @@ module.exports = async function (gamef, bot, userRoom) {
                     .then(() => {
                         bot.say(p.joinID, {
                             text: preTxt + `🗿Bảo vệ dậy đi! Đêm nay bạn muốn bảo vệ ai?\n"/save <số ID>" để bảo vệ\n${playersListTxt}`,
-                            quickReplies: playerList,
+                            quickReplies: ["/evote"],
                         });
                     });
             } else if (p.role == 3) { // Thợ săn
@@ -140,7 +154,7 @@ module.exports = async function (gamef, bot, userRoom) {
                     .then(() => {
                         bot.say(p.joinID, {
                             text: preTxt + `🔫Thợ săn dậy đi! Đêm nay bạn muốn bắn ai?\n"/fire <số ID>" để ghim\n"/kill <số ID>" để bắn chết luôn\n${playersListTxt}`,
-                            quickReplies: ["/action"],
+                            quickReplies: ["/evote"],
                         });
                     });
             } else if (p.role == -2) { // Bán sói
@@ -172,7 +186,7 @@ module.exports = async function (gamef, bot, userRoom) {
                     .then(() => {
                         bot.say(p.joinID, {
                             text: preTxt + `👼Bạn là THẦN TÌNH YÊU!\n/cupid <id1> <id2> để ghép đôi\n${playersListTxt}`,
-                            quickReplies: ["/action"],
+                            quickReplies: ["/evote"],
                         });
                     });
             } else if (p.role == 8) { // NGƯỜI HÓA SÓI

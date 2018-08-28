@@ -7,7 +7,7 @@ function callWitch(gamef, bot, userRoom, deathID, deathTxt, thereIsOneDied) {
             text: askTxt,
             quickReplies: qreply,
         }, async (payload, convo) => {
-            if (!payload.message || !(/(y|Y)es/g.test(payload.message.text) || /(n|N)o/g.test(payload.message.text) || /skip/g.test(payload.message.text) || /\/kill\s[0-9]+/g.test(payload.message.text) || /^\/action$/.test(payload.message.text) || /[0-9]+:.+/g.test(payload.message.text))) {
+            if (!payload.message || !(/(y|Y)es/g.test(payload.message.text) || /(n|N)o/g.test(payload.message.text) || /skip/g.test(payload.message.text) || /\/kill\s[0-9]+/g.test(payload.message.text) || /^\/evote$/.test(payload.message.text) || /[0-9]+:.+/g.test(payload.message.text))) {
                 convo.say(`\`\`\`\nKhông hợp lệ!\n\`\`\``);
                 askForSaveKill(convo, askTxt, qreply, witchSave);
                 return;
@@ -25,7 +25,7 @@ function callWitch(gamef, bot, userRoom, deathID, deathTxt, thereIsOneDied) {
                         // còn quyền giết
                         if (gamef.getRoom(userRoom).witchKillRemain) {
                             let playerListTxt = gamef.getRoom(userRoom).playersTxt.join(' / ');
-                            askForSaveKill(convo, `🔮Để dùng quyền giết:\n"/kill <số id>"\n${playerListTxt}\n🔮Nếu không giết ai: "/skip"`, ["/action", "/skip"], witchSaved);
+                            askForSaveKill(convo, `🔮Để dùng quyền giết:\n"/kill <số id>"\n${playerListTxt}\n🔮Nếu không giết ai: "/skip"`, ["/evote", "/skip"], witchSaved);
                         } else {
                             convo.end();
                             dayNotify(gamef, bot, userRoom, witchSaved);
@@ -35,7 +35,7 @@ function callWitch(gamef, bot, userRoom, deathID, deathTxt, thereIsOneDied) {
                     }
                 } else { // kill hoặc skip
                     if (gamef.getRoom(userRoom).witchKillRemain) {
-                        if (/^\/action$/.test(payload.message.text)) {
+                        if (/^\/evote$/.test(payload.message.text)) {
                             let playerList = gamef.getRoom(userRoom).getAlivePlayerList();
                             // convo.say(`Tính năng này chưa sẵn sàng vui lòng gõ lệnh /kill <id> hoặc /skip`);
                             askForSaveKill(convo, `Bạn muốn giết ai?`, playerList, witchSave);

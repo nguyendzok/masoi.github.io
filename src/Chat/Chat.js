@@ -176,7 +176,10 @@ module.exports = (gamef, bot) => {
                                 if (!gamef.getRoom(userRoom).witchKillVote(voteID)) {
                                     chat.say(`\`\`\`\nBạn không thể giết người chơi đã chết!\n\`\`\``);
                                 } else {
-                                    await chat.say(`✔ Bạn đã giết ${gamef.getRoom(userRoom).playersTxt[voteID]}!`);
+                                    await chat.say({
+                                        text: `✔ Bạn đã giết ${gamef.getRoom(userRoom).playersTxt[voteID]}!`,
+                                        quickReplies: ["/evote"],
+                                    });
                                     // gamef.getRoom(userRoom).newLog(`✔ Phù thủy ${gamef.getRoom(userRoom).getPlayer(gamef.getRoom(userRoom).witchID).first_name} đã giết *${gamef.getRoom(userRoom).playersTxt[voteID]}* !`)
                                     // kiểm tra đã hết đêm chưa?
                                     gamef.func(nightDoneCheck, bot, userRoom);
@@ -237,8 +240,8 @@ module.exports = (gamef, bot) => {
                                 bot.sendAction(joinID, 'mark_seen');
                             } else {
                                 chat.say({
-                                    text: '```\nĐã hết thời gian thảo luận!\nĐể vote bây giờ, chọn "/action"\n```',
-                                    quickReplies: ["/action", "help"],
+                                    text: '```\nĐã hết thời gian thảo luận!\nĐể vote bây giờ, chọn "/evote"\n```',
+                                    quickReplies: ["/evote", "help"],
                                 });
                             }
                         } else {  //VOTE YES?NO

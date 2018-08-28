@@ -168,5 +168,5 @@ module.exports = (gamef, bot) => {
 
     // listen USER_RENAME message
     bot.on('postback:VOTE', voteCallback);
-    bot.hear([/\/evote/g, /\/action/g], voteCallback);
+    bot.hear([/\/evote/g, /\/evote/g], voteCallback);
 };
