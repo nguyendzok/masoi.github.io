@@ -309,7 +309,7 @@ class Room {
             if (!this.isNight || (this.isNight && this.deathID != this.saveID)) { // là ban ngày hoặc ban đêm bảo vệ sai
                 if (this.players[this.deathID].role === -2 && this.isNight) { //là BÁN SÓI
                     this.wolfsID.push(this.players[this.deathID].joinID);
-                    this.wolfsTxt.push(this.players[this.deathID].first_name);
+                    this.wolfsTxt.push(this.playersTxt[this.deathID]);
                     this.wolfsCount++;
                     this.villagersCount--;
                     return false;
@@ -586,7 +586,7 @@ class Room {
         let nguyenUser = this.getPlayer(this.nguyenID);
         if (nguyenUser.role > 0) {
             this.wolfsID.push(this.nguyenID);
-            this.wolfsTxt.push(nguyenUser.first_name);
+            this.wolfsTxt.push(this.playersTxt[nguyenUser.id]);
             this.villagersCount--;
             this.wolfsCount++;
         }

@@ -46,6 +46,9 @@ module.exports = (gamef, bot) => {
                                 } else {
                                     chat.say('```\nBạn chỉ có thể cắn người còn sống!\n```');
                                 }
+                                if (userRole == 4 || userRole == -2 || userRole == 5 || userRole == 6 || userRole == 8) {// là DÂN, BÁN SÓI, PHÙ THỦY, GIÀ LÀNG, NGƯỜI HÓA SÓI
+                                    gamef.getRoom(userRoom).roleDoneBy(joinID);
+                                }
                                 // kiểm tra đã VOTE xong chưa?
                                 gamef.func(nightDoneCheck, bot, userRoom);
                             } else {
