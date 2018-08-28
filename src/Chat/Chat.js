@@ -38,22 +38,23 @@ module.exports = (gamef, bot) => {
                             let newChatTxt = chatTxt.match(/(?<=\/p\s).*/g)
                             bot.sendAction(joinID, 'mark_seen');
                             return roomWolfChatAll(bot, gamef.getRoom(userRoom).wolfsID, joinID, '*' + user.first_name + '* (kẻ phản bội): ' + newChatTxt);
-                        } else if (/^\/vote\s-?[0-9]+$/.test(chatTxt)) {
+                        } else if (Object.keys(gamef.getRoom(userRoom).voteList).length == 0 && (/^\/vote\s[0-9]+$/.test(chatTxt) || /[0-9]+:.+/g.test(chatTxt))) {
                             if (gamef.getRoom(userRoom).wolfsCount == 1) { // còn một mình kẻ bị sói nguyền
-                                let voteID = chatTxt.match(/-?[0-9]+/g)[0];
+                                let voteID = chatTxt.match(/[0-9]+/g)[0];
                                 if (gamef.getRoom(userRoom).justVote(voteID)) {
                                     chat.say('```\nBạn đã cắn ' + gamef.getRoom(userRoom).playersTxt[voteID] + '\n```');
+                                    if (userRole == 4 || userRole == -2 || userRole == 5 || userRole == 6 || userRole == 8) {// là DÂN, BÁN SÓI, PHÙ THỦY, GIÀ LÀNG, NGƯỜI HÓA SÓI
+                                        gamef.getRoom(userRoom).roleDoneBy(joinID);
+                                    }
+                                    // kiểm tra đã VOTE xong chưa?
+                                    gamef.func(nightDoneCheck, bot, userRoom);
                                 } else {
-                                    chat.say('```\nBạn chỉ có thể cắn người còn sống!\n```');
+                                    chat.say('```\nBạn chỉ có thể cắn 1 LẦN 1 người còn sống!\n```');
                                 }
-                                if (userRole == 4 || userRole == -2 || userRole == 5 || userRole == 6 || userRole == 8) {// là DÂN, BÁN SÓI, PHÙ THỦY, GIÀ LÀNG, NGƯỜI HÓA SÓI
-                                    gamef.getRoom(userRoom).roleDoneBy(joinID);
-                                }
-                                // kiểm tra đã VOTE xong chưa?
-                                gamef.func(nightDoneCheck, bot, userRoom);
                             } else {
                                 chat.say('```\nBạn chỉ có thể cắn khi là con sói cuối cùng còn sống sót!\n```');
                             }
+                            return true;
                         }
                     }
 

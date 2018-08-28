@@ -48,7 +48,12 @@ module.exports = (gamef, bot) => {
                 let userRole = gamef.getRoom(userRoom).getRole(joinID);
                 let playerList = gamef.getRoom(userRoom).getAlivePlayerList();
                 if (gamef.getRoom(userRoom).isNight) { // ban đêm
-                    if (userRole == -1 || userRole == -3) {// là SÓI / SÓI NGUYỀN
+                    if (gamef.getRoom(userRoom).nguyenID == p.joinID && gamef.getRoom(userRoom).wolfsCount == 1 && Object.keys(gamef.getRoom(userRoom).voteList).length == 0) { // kẻ bị sói nguyền
+                        chat.say({
+                            text: `Bạn phải chọn người muốn cắn trước!\nSói cuối cùng muốn cắn ai?`,
+                            quickReplies: playerList,
+                        });
+                    } else if (userRole == -1 || userRole == -3) {// là SÓI / SÓI NGUYỀN
                         chat.say({
                             text: `Sói muốn cắn ai?`,
                             quickReplies: playerList,
@@ -134,7 +139,7 @@ module.exports = (gamef, bot) => {
                             }
                         }])
                     } else {
-                        chat.say(`Tính năng này chưa được hỗ trợ! Vui lòng nhắn đúng cú pháp để thực hiện chức năng của mình`);
+                        chat.say(`Bạn không có chức năng gì để thực hiện!`);
                     }
                 } else { // BAN NGÀY
                     if (gamef.getRoom(userRoom).isMorning) { // giai đoạn nói chuyện và /vote
@@ -147,7 +152,10 @@ module.exports = (gamef, bot) => {
                             chat.say(`Bạn đã vote rồi!`);
                         }
                     } else { // giai đoạn /treo /tha
-                        chat.say(`Tính năng này chưa được hỗ trợ! Vui lòng nhắn đúng cú pháp để thực hiện chức năng của mình`);
+                        chat.say({
+                            text: `Treo hay tha?`,
+                            quickReplies: ["/treo", "/tha"],
+                        });
                     }
                 }
             } else {

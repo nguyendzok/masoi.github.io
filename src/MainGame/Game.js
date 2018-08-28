@@ -563,7 +563,7 @@ class Room {
         }
     }
     justVote(voteID) {
-        if (this.players[voteID] && this.alivePlayer[this.players[voteID].joinID]) {
+        if (this.players[voteID] && this.alivePlayer[this.players[voteID].joinID] && Object.keys(this.voteList).length == 0) {
             this.voteList[voteID] = 1;
             console.log('>>> JUST VOTE! (kẻ bị sói nguyền)');
             return true;
