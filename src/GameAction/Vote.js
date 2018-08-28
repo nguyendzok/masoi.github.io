@@ -48,7 +48,7 @@ module.exports = (gamef, bot) => {
                 let userRole = gamef.getRoom(userRoom).getRole(joinID);
                 let playerList = gamef.getRoom(userRoom).getAlivePlayerList();
                 if (gamef.getRoom(userRoom).isNight) { // ban đêm
-                    if (gamef.getRoom(userRoom).nguyenID == p.joinID && gamef.getRoom(userRoom).wolfsCount == 1 && Object.keys(gamef.getRoom(userRoom).voteList).length == 0) { // kẻ bị sói nguyền
+                    if (gamef.getRoom(userRoom).nguyenID == joinID && gamef.getRoom(userRoom).wolfsCount == 1 && Object.keys(gamef.getRoom(userRoom).voteList).length == 0) { // kẻ bị sói nguyền
                         chat.say({
                             text: `Bạn phải chọn người muốn cắn trước!\nSói cuối cùng muốn cắn ai?`,
                             quickReplies: playerList,
