@@ -23,6 +23,7 @@ class Player {
         this.role = role;
     }
     addSchedule(time, callback) {
+        // this.cancelSchedule();
         this.timerSchedule = schedule.scheduleJob(time, callback);
     }
     cancelSchedule() {
@@ -197,6 +198,7 @@ class Room {
         }
     }
     addSchedule(time, callback) {
+        // this.cancelSchedule();
         this.timerSchedule = schedule.scheduleJob(time, callback);
     }
     cancelSchedule() {

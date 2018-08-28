@@ -27,6 +27,7 @@ function callWitch(gamef, bot, userRoom, deathID, deathTxt, thereIsOneDied) {
                             let playerListTxt = gamef.getRoom(userRoom).playersTxt.join(' / ');
                             askForSaveKill(convo, `🔮Để dùng quyền giết:\n"/kill <số id>"\n${playerListTxt}\n🔮Nếu không giết ai: "/skip"`, ["/evote", "/skip"], witchSaved);
                         } else {
+                            gamef.getRoom(userRoom).cancelSchedule();
                             convo.end();
                             dayNotify(gamef, bot, userRoom, witchSaved);
                         }
@@ -93,6 +94,7 @@ function callWitch(gamef, bot, userRoom, deathID, deathTxt, thereIsOneDied) {
                     let playerListTxt = gamef.getRoom(userRoom).playersTxt.join(' / ');
                     askForSaveKill(convo, `🔮Để dùng quyền giết:\n"/kill <số id>"\n${playerListTxt}\n🔮Nếu không giết ai: "/skip"`, ["/skip"], false);
                 } else { // không còn quyền giết và không ai chết
+                    // gamef.getRoom(userRoom).cancelSchedule();
                     convo.end();
                     dayNotify(gamef, bot, userRoom, false);
                 }
@@ -129,7 +131,7 @@ module.exports = (gamef, bot, userRoom) => {
                         gamef.getRoom(userRoom).cancelSchedule();
                         if (/(y|Y)es/g.test(payload.message.text)) { // nguyền, trời sáng luôn
                             gamef.getRoom(userRoom).nguyen(deathID);
-                            convo.say(`Bạn đã nguyền thành công!`);
+                            convo.say(`✔ Bạn đã nguyền thành công!`);
                             convo.end();
                             dayNotify(gamef, bot, userRoom, false);
                         } else { // không nguyền, hỏi phù thủy cứu
