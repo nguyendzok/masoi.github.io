@@ -28,7 +28,7 @@ module.exports = async function (gamef, bot, userRoom) {
                     players[index].addSchedule(time, () => {
                         let time = new Date(Date.now() + 30 * 1000);
                         bot.say(p.joinID, {
-                            text: `⏰Hết giờ! Còn 30 giây để vote...`,
+                            text: `⏰Hết giờ! Còn 30 giây để cắn...`,
                             quickReplies: ["/evote"],
                         });
                         console.log(`$ ROOM ${userRoom + 1} > TIMER > WOLF > 30 SECONDS REMAINING`);
@@ -39,6 +39,7 @@ module.exports = async function (gamef, bot, userRoom) {
                             gamef.func(nightDoneCheck, bot, userRoom);
                         });
                     });
+                    return true;
                 } else {
                     return true;
                 }
