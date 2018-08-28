@@ -42,7 +42,7 @@ module.exports = (gamef, bot) => {
                             if (gamef.getRoom(userRoom).wolfsCount == 1) { // còn một mình kẻ bị sói nguyền
                                 let voteID = chatTxt.match(/[0-9]+/g)[0];
                                 if (gamef.getRoom(userRoom).justVote(voteID)) {
-                                    chat.say('```\nBạn đã cắn ' + gamef.getRoom(userRoom).playersTxt[voteID] + '\n```');
+                                    chat.say('```\n✔Bạn đã cắn ' + gamef.getRoom(userRoom).playersTxt[voteID] + '\n```');
                                     if (userRole == 4 || userRole == -2 || userRole == 5 || userRole == 6 || userRole == 8) {// là DÂN, BÁN SÓI, PHÙ THỦY, GIÀ LÀNG, NGƯỜI HÓA SÓI
                                         gamef.getRoom(userRoom).roleDoneBy(joinID);
                                     }
@@ -72,7 +72,7 @@ module.exports = (gamef, bot) => {
                                 if (voteID == -1) { //ăn chay (phiếu trống)
                                     await chat.say(`🍴Bạn đã vote ăn chay!`);
                                     roomWolfChatAll(bot, gamef.getRoom(userRoom).wolfsID, joinID, {
-                                        text: '🍴' + user.first_name + ' đã vote ăn chay!',
+                                        text: '✔' + user.first_name + ' đã vote ăn chay!',
                                         quickReplies: villagerList,
                                     });
                                 } else {
@@ -94,7 +94,7 @@ module.exports = (gamef, bot) => {
                         if (chatTxt.match(/\/see.[0-9]+/g) || /[0-9]+:.+/g.test(chatTxt)) {//see
                             let voteID = chatTxt.match(/[0-9]+/g)[0];
                             gamef.getRoom(userRoom).see(joinID, voteID, async (role) => {
-                                await chat.say(`${voteID} là ${(role == -1) ? '🐺SÓI' : role == 1 ? '🔍TIÊN TRI, Bạn đùa tớ à :v' : '💩PHE DÂN'}`);
+                                await chat.say(`✔ ${voteID} là ${(role == -1) ? '🐺SÓI' : role == 1 ? '🔍TIÊN TRI, Bạn đùa tớ à :v' : '💩PHE DÂN'}`);
                                 if (gamef.getRoom(userRoom).oldManID != undefined && gamef.getRoom(userRoom).oldManLive <= 0) { // già làng chết
                                     gamef.getRoom(userRoom).newLog(`🔍${user.first_name} soi *${gamef.getRoom(userRoom).playersTxt[voteID]}* ra 💩AUTO DÂN`);
                                 } else {
@@ -121,7 +121,7 @@ module.exports = (gamef, bot) => {
                             if (!gamef.getRoom(userRoom).save(joinID, voteID)) {
                                 chat.say(`\`\`\`\nBạn không thể bảo vệ 1 người 2 đêm liên tiếp hoặc bảo vệ người chơi đã chết!\n\`\`\``);
                             } else {
-                                await chat.say(`🗿Bạn đã bảo vệ ${gamef.getRoom(userRoom).playersTxt[voteID]}!`);
+                                await chat.say(`✔Bạn đã bảo vệ ${gamef.getRoom(userRoom).playersTxt[voteID]}!`);
                                 // kiểm tra đã hết đêm chưa?
                                 gamef.func(nightDoneCheck, bot, userRoom);
                             }
@@ -150,10 +150,10 @@ module.exports = (gamef, bot) => {
                                 }
                             } else {
                                 if (voteID != -1) {
-                                    await chat.say(`🔫Bạn đã ghim ${gamef.getRoom(userRoom).playersTxt[voteID]}!`);
+                                    await chat.say(`✔ Bạn đã ghim ${gamef.getRoom(userRoom).playersTxt[voteID]}!`);
                                     gamef.getRoom(userRoom).newLog(`🔫Thợ săn đã ghim *${gamef.getRoom(userRoom).playersTxt[voteID]}* !`);
                                 } else {
-                                    await chat.say(`🔫Bạn đã bắn lên trời (không ghim ai)!`);
+                                    await chat.say(`✔ Bạn đã bắn lên trời (không ghim ai)!`);
                                     gamef.getRoom(userRoom).newLog(`🔫Thợ săn đã bắn lên trời (không ghim ai)!`)
                                 }
                                 // kiểm tra đã hết đêm chưa?
@@ -176,13 +176,13 @@ module.exports = (gamef, bot) => {
                                 if (!gamef.getRoom(userRoom).witchKillVote(voteID)) {
                                     chat.say(`\`\`\`\nBạn không thể giết người chơi đã chết!\n\`\`\``);
                                 } else {
-                                    await chat.say(`⛔Bạn đã giết ${gamef.getRoom(userRoom).playersTxt[voteID]}!`);
-                                    // gamef.getRoom(userRoom).newLog(`⛔Phù thủy ${gamef.getRoom(userRoom).getPlayer(gamef.getRoom(userRoom).witchID).first_name} đã giết *${gamef.getRoom(userRoom).playersTxt[voteID]}* !`)
+                                    await chat.say(`✔ Bạn đã giết ${gamef.getRoom(userRoom).playersTxt[voteID]}!`);
+                                    // gamef.getRoom(userRoom).newLog(`✔ Phù thủy ${gamef.getRoom(userRoom).getPlayer(gamef.getRoom(userRoom).witchID).first_name} đã giết *${gamef.getRoom(userRoom).playersTxt[voteID]}* !`)
                                     // kiểm tra đã hết đêm chưa?
                                     gamef.func(nightDoneCheck, bot, userRoom);
                                 }
                             } else if (chatTxt.match(/\/skip/g)) {
-                                await chat.say('🎊Bạn bạn không cần phải skip!');
+                                await chat.say('✔ Bạn bạn không cần phải skip!');
                             } else {
                                 if (gamef.getRoom(userRoom).nguyenID == joinID && /^\/vote\s-?[0-9]+$/.test(chatTxt)) {
                                     return;
@@ -203,7 +203,7 @@ module.exports = (gamef, bot) => {
                             if (!gamef.getRoom(userRoom).cupid(joinID, voteID1, voteID2)) {
                                 chat.say(`\`\`\`\nBạn chỉ được ghép đôi (1 lần duy nhất) 2 người tồn tại!\n\`\`\``);
                             } else {
-                                await chat.say(`👼Bạn đã ghép cặp ${gamef.getRoom(userRoom).playersTxt[voteID1]} với ${gamef.getRoom(userRoom).playersTxt[voteID2]}!\nBạn đã hoàn thành nhiệm vụ và trở thành DÂN!`);
+                                await chat.say(`✔ Bạn đã ghép cặp ${gamef.getRoom(userRoom).playersTxt[voteID1]} với ${gamef.getRoom(userRoom).playersTxt[voteID2]}!\nBạn đã hoàn thành nhiệm vụ và trở thành DÂN!`);
                                 gamef.getRoom(userRoom).newLog(`👼CUPID đã ghép cặp *${gamef.getRoom(userRoom).playersTxt[voteID1]}* với *${gamef.getRoom(userRoom).playersTxt[voteID2]}* !`)
                                 let user1 = gamef.getRoom(userRoom).players[voteID1];
                                 let user2 = gamef.getRoom(userRoom).players[voteID2];
