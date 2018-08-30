@@ -13,11 +13,13 @@ module.exports = (gamef, bot, dbclient) => {
                     dbclient.connect();
                     dbclient.query(chatTxt, (err, res) => {
                         if (err) throw err;
+                        let retStr = '==> Trả về:\n';
                         for (let row of res.rows) {
                             console.log(JSON.stringify(row));
-                            convo.say(`==> Trả về:\n{JSON.stringify(row)}`);
+                            retStr += JSON.stringify(row) + `\n`;
                         }
                         dbclient.end();
+                        convo.say(retStr);
                     });
                 }
             });
