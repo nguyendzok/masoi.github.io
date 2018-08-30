@@ -131,6 +131,8 @@ class Room {
         this.roleDone = [];
         this.voteList = [];
 
+        this.thienSuWin = undefined;
+
         this.witchID = undefined;
         this.witchSaveRemain = true;
         this.witchKillRemain = true;

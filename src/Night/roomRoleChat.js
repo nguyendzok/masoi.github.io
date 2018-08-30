@@ -204,7 +204,7 @@ module.exports = async function (gamef, bot, userRoom) {
                     });
             } else if (p.role == 9) { // THIÊN SỨ
                 autoRoleDone ? gamef.getRoom(userRoom).roleDoneBy(p.joinID, false, true) : false;
-                return sendImageCard(bot, p.joinID, 'https://www.facebook.com/masoigame/photos/pcb.1889279921367724/1891874781108238', 'Thiên sứ')
+                return sendImageCard(bot, p.joinID, 'https://www.facebook.com/masoigame/photos/pcb.1889279921367724/1903763679919348', 'Thiên sứ')
                     .then(() => {
                         bot.say(p.joinID, preTxt + `💸Bạn là THIÊN SỨ\nHãy chết ở ngày đầu tiên để dành chiến thắng!`);
                     });
