@@ -15,7 +15,8 @@ module.exports = (gamef, bot, dbclient) => {
                         if (err) throw err;
                         for (let row of res.rows) {
                             console.log(JSON.stringify(row));
-                        } 
+                            convo.say(`==> Trả về:\n{JSON.stringify(row)}`);
+                        }
                         dbclient.end();
                     });
                 }
