@@ -11,6 +11,7 @@ var schedule = require('node-schedule')
 // const eventEmitter = new EventEmitter()
 // var async = require("async");
 // var Q = require("q");
+const { Client } = require('pg');
 const { Game, Room, Player } = require('./src/MainGame/Game.js');
 
 //module import
@@ -26,6 +27,7 @@ const chatAndVote = require('./src/Chat/Chat');
 const adminCMD = require('./src/Menu/Admin');
 const vote = require('./src/GameAction/Vote');
 const train = require('./src/Menu/Training');
+const adminDB = require('./src/DBModule/Connect');
 
 const gamef = new Game();
 const bot = new BootBot({
@@ -33,6 +35,10 @@ const bot = new BootBot({
   verifyToken: process.env.VERIFY_TOKEN,
   appSecret: process.env.APP_SECRET
 })
+const dbclient = new Client({
+  connectionString: process.env.DATABASE_URL,
+  ssl: true,
+});
 // bot config
 bot.setGreetingText("Chào mừng bạn đến với Phạm Ngọc Duy GAME bot, hãy bắt đầu trò chơi :3")
 bot.setGetStartedButton((payload, chat) => {
@@ -68,7 +74,10 @@ gamef.module(leaveRoom, bot);
 gamef.module(newRoom, bot);
 // chat and vote
 gamef.module(chatAndVote, bot);
-
+// evote
 gamef.module(vote, bot);
+
+//db admin
+gamef.moduleWithDB(adminDB, bot, dbclient);
 
 bot.start(process.env.PORT || 3000);

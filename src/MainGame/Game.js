@@ -914,6 +914,9 @@ class Game {
     module(factory, bot) {
         return factory.apply(this, [this, bot]);
     }
+    moduleWithDB(factory, bot, dbclient) {
+        return factory.apply(this, [this, bot, dbclient]);
+    }
     func(factory, bot, roomID) {
         return factory.apply(this, [this, bot, roomID]);
     }
