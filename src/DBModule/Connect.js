@@ -10,6 +10,10 @@ module.exports = (gamef, bot, dbclient) => {
                     return;
                 } else {
                     const chatTxt = payload.message.text;
+                    if (/\/quit/g.test(chatTxt)) {
+                        convo.end();
+                        return;
+                    }
                     dbclient.connect();
                     dbclient.query(chatTxt, (err, res) => {
                         if (err) throw err;
@@ -19,7 +23,7 @@ module.exports = (gamef, bot, dbclient) => {
                             retStr += JSON.stringify(row) + `\n`;
                         }
                         dbclient.end();
-                        convo.say(retStr);
+                        convo.say(retStr).then(() => askCMD(convo));
                     });
                 }
             });
