@@ -17,17 +17,20 @@ module.exports = (gamef, bot, dbclientFromIndex) => {
                         convo.end();
                         return;
                     }
-                    dbClient.query(chatTxt, (err, res) => {
-                        if (err) {
-                            console.log(err);
-                        }
-                        let retStr = '==> Trả về:\n';
-                        for (let row of res.rows) {
-                            console.log(JSON.stringify(row));
-                            retStr += JSON.stringify(row) + `\n`;
-                        }
-                        convo.say(retStr).then(() => askCMD(convo, dbClient));
-                    });
+                    try {
+                        dbClient.query(chatTxt, (err, res) => {
+                            if (err) throw err;
+                            let retStr = '==> Trả về:\n';
+                            for (let row of res.rows) {
+                                console.log(JSON.stringify(row));
+                                retStr += JSON.stringify(row) + `\n`;
+                            }
+                            convo.say(retStr).then(() => askCMD(convo, dbClient));
+                        });
+                    } catch (err) {
+                        console.log(err);
+                    }
+
                 }
             });
         }
