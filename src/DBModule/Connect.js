@@ -11,10 +11,10 @@ module.exports = (gamef, bot, dbclient) => {
                 } else {
                     const chatTxt = payload.message.text;
                     if (/\/quit/g.test(chatTxt)) {
+                        dbclient.end();
                         convo.end();
                         return;
                     }
-                    dbclient.connect();
                     dbclient.query(chatTxt, (err, res) => {
                         if (err) throw err;
                         let retStr = '==> Trả về:\n';
@@ -22,7 +22,6 @@ module.exports = (gamef, bot, dbclient) => {
                             console.log(JSON.stringify(row));
                             retStr += JSON.stringify(row) + `\n`;
                         }
-                        dbclient.end();
                         done();
                         convo.say(retStr).then(() => askCMD(convo));
                     });
@@ -30,6 +29,7 @@ module.exports = (gamef, bot, dbclient) => {
             });
         }
         if (['2643770348982136'].indexOf(joinID) != -1) {
+            dbclient.connect();
             console.log(`ADMIN ${joinID} (2643: DUY)!`);
             chat.conversation((convo) => {
                 askCMD(convo);
