@@ -72,12 +72,16 @@ class Room {
         this.voteList = [];
         this.alivePlayer = [];
 
+        //thiên sứ
+        this.thienSuWin = undefined;
+
         // phù thủy
         this.witchID = undefined;
         this.witchSaveRemain = true;
         this.witchKillRemain = true;
         this.witchKillID = undefined;
 
+        //sói nguyền
         this.soiNguyen = false;
         this.soiNguyenID = undefined;
         this.nguyenID = undefined;
@@ -266,6 +270,9 @@ class Room {
             this.roleDoneCount--;
         } else {
             this.players[deathID].cancelSchedule();
+        }
+        if (this.players[deathID].role == 9) { //người chết là thiên sứ
+            this.thienSuWin = true;
         }
         if (this.players[deathID].role == 5) { //người chết là phù thủy
             this.witchID = undefined;
@@ -507,7 +514,11 @@ class Room {
     }
     gameIsEnd(callback) {
         console.log("$ ROOM " + (this.id + 1) + " > GAME CHECK: " + this.wolfsCount + ' SÓI/' + this.villagersCount + ' DÂN');
-        if (this.cupidTeam && this.wolfsCount + this.villagersCount == 2 && this.wolfsCount > 0) {
+        if (this.thienSuWin) {
+            // thiên sứ thắng
+            callback(9);
+        } else if (this.cupidTeam && this.wolfsCount + this.villagersCount == 2 && this.wolfsCount > 0) {
+            // cặp đôi thắng
             callback(3);
         } else if (this.wolfsCount >= this.villagersCount) {
             //SÓI THẮNG
@@ -669,6 +680,7 @@ class Game {
         this.roleTxt[6] = '👴GIÀ LÀNG';
         this.roleTxt[7] = '👼THẦN TÌNH YÊU';
         this.roleTxt[8] = '😸NGƯỜI HÓA SÓI';
+        this.roleTxt[9] = '💸THIÊN SỨ';
     }
     getUserRoom(joinID) {
         return this.userRoom[joinID];
@@ -792,7 +804,7 @@ class Game {
         let setup;
 
         if (len <= 4) {
-            setup = { "1": 0, "2": 1, "3": 0, "4": 1, "5": 1, "6": 0, "7": 0, "8": 0, "-3": 1, "-2": 0, "-1": 0 }; balance = -4;
+            setup = { "1": 1, "2": 0, "3": 0, "4": 1, "5": 0, "6": 0, "7": 0, "8": 0, "9": 1, "-3": 0, "-2": 0, "-1": 1 }; balance = 3;
         } else {
             if (len == 5) {
                 switch (this.random(1, 2)) {

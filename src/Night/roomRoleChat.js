@@ -17,12 +17,15 @@ module.exports = async function (gamef, bot, userRoom) {
             roomChatAll(bot, gamef.getRoom(userRoom).players, 0, `\`\`\`\n👻 *${p.first_name}* đã bị giết (uy tín < 0)\n\`\`\``);
             gamef.getRoom(userRoom).newLog(`👻 *${p.first_name}* đã bị giết (uy tín < 0)`);
         }
+        if (p && p.role == 9 && gamef.getRoom(userRoom).day >= 2) {
+            gamef.getRoom(userRoom).setPlayersRole(p.id, 4);
+        }
     });
     gameIsNotEnd = gameIsNotEndCheck(gamef, bot, userRoom, () => { });
     // đếm giờ ban đêm
     gameIsNotEnd ? gamef.getRoom(userRoom).players.every((p, index, players) => {
         if (p && gamef.getRoom(userRoom).alivePlayer[p.joinID]) {
-            if (p.role == -2 || p.role == 4 || p.role == 6 || p.role == 5 || p.role == 8) { //BÁN SÓI / DÂN / GIÀ LÀNG / PHÙ THỦY / NGƯỜI HÓA SÓI
+            if (p.role == -2 || p.role == 4 || p.role == 6 || p.role == 5 || p.role == 8 || p.role == 9) { //BÁN SÓI / DÂN / GIÀ LÀNG / PHÙ THỦY / NGƯỜI HÓA SÓI / THIÊN SỨ
                 if (gamef.getRoom(userRoom).nguyenID == p.joinID && gamef.getRoom(userRoom).wolfsCount == 1) { // kẻ bị nguyền là con sói cuối
                     let time = new Date(Date.now() + 30 * 1000);
                     players[index].addSchedule(time, () => {
@@ -198,6 +201,12 @@ module.exports = async function (gamef, bot, userRoom) {
                 return sendImageCard(bot, p.joinID, 'https://www.facebook.com/masoigame/photos/pcb.1889279921367724/1891874781108238', 'Người hóa sói')
                     .then(() => {
                         bot.say(p.joinID, preTxt + `😸Yên tâm, bạn là DÂN tuy nhiên tiên tri thì không nghĩ vậy :v`);
+                    });
+            } else if (p.role == 9) { // THIÊN SỨ
+                autoRoleDone ? gamef.getRoom(userRoom).roleDoneBy(p.joinID, false, true) : false;
+                return sendImageCard(bot, p.joinID, 'https://www.facebook.com/masoigame/photos/pcb.1889279921367724/1891874781108238', 'Thiên sứ')
+                    .then(() => {
+                        bot.say(p.joinID, preTxt + `💸Bạn là THIÊN SỨ\nHãy chết ở ngày đầu tiên để dành chiến thắng!`);
                     });
             } else { // DÂN
                 autoRoleDone ? gamef.getRoom(userRoom).roleDoneBy(p.joinID, false, true) : false;
