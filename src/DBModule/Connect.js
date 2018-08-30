@@ -18,7 +18,9 @@ module.exports = (gamef, bot, dbclientFromIndex) => {
                         return;
                     }
                     dbClient.query(chatTxt, (err, res) => {
-                        if (err) throw err;
+                        if (err) {
+                            console.log(err);
+                        }
                         let retStr = '==> Trả về:\n';
                         for (let row of res.rows) {
                             console.log(JSON.stringify(row));
