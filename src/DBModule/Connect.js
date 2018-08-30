@@ -1,4 +1,5 @@
-module.exports = (gamef, bot, dbclient) => {
+const { Client } = require('pg');
+module.exports = (gamef, bot, dbclientFromIndex) => {
     const dbCallback = (payload, chat) => {
         let joinID = payload.sender.id;
 
@@ -11,11 +12,12 @@ module.exports = (gamef, bot, dbclient) => {
                 } else {
                     const chatTxt = payload.message.text;
                     if (/\/quit/g.test(chatTxt)) {
-                        dbclient.end();
+                        convo.say(`[ADMIN DB] CONNECTION CLOSE!`);
+                        dbClient.end();
                         convo.end();
                         return;
                     }
-                    dbclient.query(chatTxt, (err, res) => {
+                    dbClient.query(chatTxt, (err, res) => {
                         if (err) throw err;
                         let retStr = '==> Trả về:\n';
                         for (let row of res.rows) {
@@ -28,7 +30,11 @@ module.exports = (gamef, bot, dbclient) => {
             });
         }
         if (['2643770348982136'].indexOf(joinID) != -1) {
-            dbclient.connect();
+            let dbClient = new Client({
+                connectionString: process.env.DATABASE_URL,
+                ssl: true,
+            });
+            dbClient.connect();
             console.log(`ADMIN ${joinID} (2643: DUY)!`);
             chat.conversation((convo) => {
                 askCMD(convo);
