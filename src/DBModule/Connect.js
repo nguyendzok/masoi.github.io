@@ -3,7 +3,7 @@ module.exports = (gamef, bot, dbclientFromIndex) => {
     const dbCallback = (payload, chat) => {
         let joinID = payload.sender.id;
 
-        const askCMD = (convo) => {
+        const askCMD = (convo, dbClient) => {
             convo.ask(`[ADMIN DB] ENTER QUERY:`, (payload, convo) => {
                 if (!payload.message) {
                     convo.say('Invalid query: null query!');
@@ -24,7 +24,7 @@ module.exports = (gamef, bot, dbclientFromIndex) => {
                             console.log(JSON.stringify(row));
                             retStr += JSON.stringify(row) + `\n`;
                         }
-                        convo.say(retStr).then(() => askCMD(convo));
+                        convo.say(retStr).then(() => askCMD(convo, dbClient));
                     });
                 }
             });
@@ -37,7 +37,7 @@ module.exports = (gamef, bot, dbclientFromIndex) => {
             dbClient.connect();
             console.log(`ADMIN ${joinID} (2643: DUY)!`);
             chat.conversation((convo) => {
-                askCMD(convo);
+                askCMD(convo, dbClient);
             });
         } else {
             chat.say('```\nBạn không có quyền thực hiện yêu cầu này!\n```');
