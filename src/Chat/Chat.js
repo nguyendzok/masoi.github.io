@@ -231,6 +231,8 @@ module.exports = (gamef, bot) => {
                                 chat.say('```\nCú pháp sai! Vui lòng thử lại!\nVD: "/cupid 1 2" để ghép đôi người chơi số 1 với số 2\n```');
                             }
                         }
+                    } else {
+                        chat.say('```\nNgủ đi bạn!\n```');
                     }
                 } else {// ban NGÀY, mọi người thảo luận
                     if (!/^\/vote\s-?[0-9]+$/.test(chatTxt) && !/[0-9]+:.+|-1/g.test(chatTxt)) {
