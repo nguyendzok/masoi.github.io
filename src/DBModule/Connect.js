@@ -22,7 +22,6 @@ module.exports = (gamef, bot, dbclient) => {
                             console.log(JSON.stringify(row));
                             retStr += JSON.stringify(row) + `\n`;
                         }
-                        done();
                         convo.say(retStr).then(() => askCMD(convo));
                     });
                 }
