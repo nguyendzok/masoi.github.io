@@ -8,9 +8,9 @@ module.exports = (gamef, bot, userRoom, callback) => {
       callback();
     } else {
       ret = false;
-      console.log(`$ ROOM ${userRoom + 1} > END GAME > ${winner === -1 ? '🐺SÓI' : winner === 1 ? '💩DÂN' : '💞CẶP ĐÔI'} thắng!`);
-      gamef.getRoom(userRoom).newLog(`${winner === -1 ? '🐺SÓI' : winner === 1 ? '💩DÂN' : '💞CẶP ĐÔI'} thắng!`);
-      await roomChatAll(bot, gamef.getRoom(userRoom).players, 0, [`\`\`\`\n🏆Trò chơi đã kết thúc...\n${winner === -1 ? '🐺SÓI' : winner === 1 ? '💩DÂN' : winner === 3 ? '💞CẶP ĐÔI' : '🧚‍THIÊN SỨ'} thắng!\n\`\`\``, `🎮Bạn có thể sẵn sàng để bắt đầu chơi lại, hoặc tiếp tục trò chuyện với các người chơi khác trong phòng!`]);
+      console.log(`$ ROOM ${userRoom + 1} > END GAME > ${winner === -1 ? '🐺SÓI' : winner === 1 ? '🎅DÂN' : '💞CẶP ĐÔI'} thắng!`);
+      gamef.getRoom(userRoom).newLog(`${winner === -1 ? '🐺SÓI' : winner === 1 ? '🎅DÂN' : '💞CẶP ĐÔI'} thắng!`);
+      await roomChatAll(bot, gamef.getRoom(userRoom).players, 0, [`\`\`\`\n🏆Trò chơi đã kết thúc...\n${winner === -1 ? '🐺SÓI' : winner === 1 ? '🎅DÂN' : winner === 3 ? '💞CẶP ĐÔI' : '🧚‍THIÊN SỨ'} thắng!\n\`\`\``, `🎮Bạn có thể sẵn sàng để bắt đầu chơi lại, hoặc tiếp tục trò chuyện với các người chơi khác trong phòng!`]);
       gamef.getRoom(userRoom).newLog(`🏆Trò chơi đã kết thúc với: ${gamef.getRoom(userRoom).wolfsCount} SÓI/ ${gamef.getRoom(userRoom).villagersCount} DÂN!`)
       await roomChatAll(bot, gamef.getRoom(userRoom).players, 0, gamef.getRoom(userRoom).logs.join(`\n`));
       //subscriber

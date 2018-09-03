@@ -8,7 +8,7 @@ module.exports = async (gamef, bot, userRoom) => {
         let deathID = gamef.getRoom(userRoom).deathID;
 
         if (!gamef.getRoom(userRoom).players[deathID]) {
-            roomChatAll(bot, gamef.getRoom(userRoom).players, 0, '```\nNgười chơi bị vote đã thoát!\n```');
+            roomChatAll(bot, gamef.getRoom(userRoom).players, 0, '```\nℹ️ Người chơi bị vote đã thoát!\n```');
         } else {
             let deathRole = gamef.getRoom(userRoom).players[deathID].role;
             let deathRoleTxt = gamef.roleTxt[deathRole];
@@ -25,16 +25,16 @@ module.exports = async (gamef, bot, userRoom) => {
                     let die1Index = gamef.getRoom(userRoom).cupidsID.indexOf(gamef.getRoom(userRoom).players[deathID].joinID); // index trong mảng cupidsID
                     let die2JoinID = gamef.getRoom(userRoom).cupidsID[die1Index == 1 ? 0 : 1];
                     let die2User = gamef.getRoom(userRoom).getPlayer(die2JoinID);
-                    chatAllTxt += `\n👻 *${die2User.first_name}* đã CHẾT!`;
-                    gamef.getRoom(userRoom).newLog(`👻Tình yêu đã giết chết ${gamef.roleTxt[gamef.getRoom(userRoom).getRoleByID(die2User.id)]} *${die2User.id}: ${die2User.first_name}*`);
+                    chatAllTxt += `\n💀 *${die2User.first_name}* đã CHẾT!`;
+                    gamef.getRoom(userRoom).newLog(`💀Tình yêu đã giết chết ${gamef.roleTxt[gamef.getRoom(userRoom).getRoleByID(die2User.id)]} *${die2User.id}: ${die2User.first_name}*`);
                     console.log(`$ ROOM ${userRoom + 1} > ${die2User.first_name} DIED!`);
                 }
-                chatAllTxt += '\nMọi người đi ngủ!\n```';
+                chatAllTxt += '\n💤Mọi người đi ngủ!\n```';
                 await roomChatAll(bot, gamef.getRoom(userRoom).players, 0, chatAllTxt);
 
             } else {
-                gamef.getRoom(userRoom).newLog(`😇Tha chết ${deathRoleTxt} *${deathTxt}* (tha-treo=${gamef.getRoom(userRoom).saveOrKill})`);
-                await roomChatAll(bot, gamef.getRoom(userRoom).players, 0, `\`\`\`\n😇Đã tha chết cho ${deathTxt}! Mọi người đi ngủ\n\`\`\``);
+                gamef.getRoom(userRoom).newLog(`🤝Tha chết ${deathRoleTxt} *${deathTxt}* (tha-treo=${gamef.getRoom(userRoom).saveOrKill})`);
+                await roomChatAll(bot, gamef.getRoom(userRoom).players, 0, `\`\`\`\n🤝Đã tha chết cho ${deathTxt}! Mọi người đi ngủ\n\`\`\``);
             }
         }
 

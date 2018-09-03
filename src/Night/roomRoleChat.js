@@ -98,12 +98,12 @@ module.exports = async function (gamef, bot, userRoom) {
 
             if (gamef.getRoom(userRoom).cupidsID.indexOf(p.joinID) != -1) {
                 if (gamef.getRoom(userRoom).cupidTeam) {
-                    preTxt += `👼Bạn thuộc PHE CẶP ĐÔI (thứ 3)!\n👼Bảo vệ tình yêu của mình và tiêu diệt các người chơi khác để dành chiến thắng!\n`;
+                    preTxt += `💘Bạn thuộc PHE CẶP ĐÔI (thứ 3)!\n💘Bảo vệ tình yêu của mình và tiêu diệt các người chơi khác để dành chiến thắng!\n`;
                 }
                 preTxt += `💞ID CẶP ĐÔI:\n${gamef.getRoom(userRoom).cupidsTxt.join(' ; ')}\n\n`;
             }
 
-            preTxt += `Uy tín của bạn là: ${(6 - p.afkCount) * 10}/60\n\n`;
+            preTxt += `💎Uy tín của bạn là: ${(6 - p.afkCount) * 10}/60\n\n`;
 
             let autoRoleDone = true;
             if (gamef.getRoom(userRoom).nguyenID == p.joinID) {
@@ -119,7 +119,7 @@ module.exports = async function (gamef, bot, userRoom) {
                 return sendImageCard(bot, p.joinID, 'https://www.facebook.com/masoigame/photos/pcb.1889279921367724/1889278418034541', 'Ma sói')
                     .then(() => {
                         bot.say(p.joinID, {
-                            text: preTxt + `🐺Sói ơi dậy đi! Đêm nay sói muốn cắn ai?\n"/vote <số ID>" để cắn ai đó\nVD: "/vote 1" để cắn ${gamef.getRoom(userRoom).players[1].first_name}\n👨‍👩‍👦‍👦ID CẢ LÀNG:\n${playersListTxt}\n🐺ID TEAM SÓI:\n${wolfListTxt}\n💩ID TEAM DÂN:\n${villagersListTxt}`,
+                            text: preTxt + `🐺Sói ơi dậy đi! Đêm nay sói muốn cắn ai?\n"/vote <số ID>" để cắn ai đó\nVD: "/vote 1" để cắn ${gamef.getRoom(userRoom).players[1].first_name}\n👥ID TẤT CẢ:\n${playersListTxt}\n🐺ID TEAM SÓI:\n${wolfListTxt}\n🎅ID TEAM DÂN:\n${villagersListTxt}`,
                             quickReplies: playerList,
                         });
                     });
@@ -133,7 +133,7 @@ module.exports = async function (gamef, bot, userRoom) {
                 return sendImageCard(bot, p.joinID, 'https://www.facebook.com/masoigame/photos/pcb.1889279921367724/1897745170521199', 'Sói nguyền')
                     .then(() => {
                         bot.say(p.joinID, {
-                            text: preTxt + nguyenTxt + `Đêm nay sói muốn cắn ai?\n"/vote <số ID>" để cắn ai đó\nVD: "/vote 1" để cắn ${gamef.getRoom(userRoom).players[1].first_name}\n👨‍👩‍👦‍👦ID CẢ LÀNG:\n${playersListTxt}\n🐺ID TEAM SÓI:\n${wolfListTxt}\n💩ID TEAM DÂN:\n${villagersListTxt}`,
+                            text: preTxt + nguyenTxt + `Đêm nay sói muốn cắn ai?\n"/vote <số ID>" để cắn ai đó\nVD: "/vote 1" để cắn ${gamef.getRoom(userRoom).players[1].first_name}\n👥ID TẤT CẢ:\n${playersListTxt}\n🐺ID TEAM SÓI:\n${wolfListTxt}\n🎅ID TEAM DÂN:\n${villagersListTxt}`,
                             quickReplies: playerList,
                         });
                     });
@@ -186,7 +186,7 @@ module.exports = async function (gamef, bot, userRoom) {
                 autoRoleDone ? gamef.getRoom(userRoom).roleDoneBy(p.joinID, false, true) : false;
                 return sendImageCard(bot, p.joinID, 'https://www.facebook.com/masoigame/photos/pcb.1889279921367724/1889278381367878', 'Già làng')
                     .then(() => {
-                        bot.say(p.joinID, preTxt + `👴Bạn là Già làng! Bảo trọng =))\n👨‍👩‍👦‍👦ID CẢ LÀNG:\n${playersListTxt}`);
+                        bot.say(p.joinID, preTxt + `👴Bạn là Già làng! Bảo trọng =))\n${playersListTxt}`);
                     });
             } else if (p.role == 7) { // THẦN TÌNH YÊU
                 return sendImageCard(bot, p.joinID, 'https://www.facebook.com/masoigame/photos/pcb.1889279921367724/1889278324701217', 'Thần tình yêu')
@@ -200,25 +200,25 @@ module.exports = async function (gamef, bot, userRoom) {
                 autoRoleDone ? gamef.getRoom(userRoom).roleDoneBy(p.joinID, false, true) : false;
                 return sendImageCard(bot, p.joinID, 'https://www.facebook.com/masoigame/photos/pcb.1889279921367724/1891874781108238', 'Người hóa sói')
                     .then(() => {
-                        bot.say(p.joinID, preTxt + `😸Yên tâm, bạn là DÂN tuy nhiên tiên tri thì không nghĩ vậy :v`);
+                        bot.say(p.joinID, preTxt + `👽Yên tâm, bạn là DÂN tuy nhiên tiên tri thì không nghĩ vậy :v`);
                     });
             } else if (p.role == 9) { // THIÊN SỨ
                 autoRoleDone ? gamef.getRoom(userRoom).roleDoneBy(p.joinID, false, true) : false;
                 return sendImageCard(bot, p.joinID, 'https://www.facebook.com/masoigame/photos/pcb.1889279921367724/1903763679919348', 'Thiên sứ')
                     .then(() => {
-                        bot.say(p.joinID, preTxt + `💸Bạn là THIÊN SỨ\nHãy chết ở ngày đầu tiên để dành chiến thắng!`);
+                        bot.say(p.joinID, preTxt + `🧚‍Bạn là THIÊN SỨ\nHãy chết ở ngày đầu tiên để dành chiến thắng!`);
                     });
             } else { // DÂN
                 autoRoleDone ? gamef.getRoom(userRoom).roleDoneBy(p.joinID, false, true) : false;
                 return sendImageCard(bot, p.joinID, 'https://www.facebook.com/masoigame/photos/pcb.1889279921367724/1889278298034553', 'Dân thường')
                     .then(() => {
-                        bot.say(p.joinID, preTxt + `💩Bạn là thường dân! Ngủ tiếp đi :))\n👨‍👩‍👦‍👦ID CẢ LÀNG:\n${playersListTxt}`);
+                        bot.say(p.joinID, preTxt + `🎅Bạn là thường dân! Ngủ tiếp đi :))\n${playersListTxt}`);
                     });
             }
         } else {
             return sendImageCard(bot, p.joinID, 'https://www.facebook.com/masoigame/photos/pcb.1889279921367724/1898943877067995', 'Bạn đã chết')
                 .then(() => {
-                    bot.say(p.joinID, `👻Đêm nay bạn đã chết =))\n👨‍👩‍👦‍👦ID CẢ LÀNG:\n${playersListTxt}`);
+                    bot.say(p.joinID, `💀Đêm nay bạn đã chết =))\n${playersListTxt}`);
                 });
         }
     }) : null;

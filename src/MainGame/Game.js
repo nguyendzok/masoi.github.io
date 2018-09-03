@@ -677,7 +677,7 @@ class Game {
         this.roleTxt[1] = '👁TIÊN TRI';
         this.roleTxt[2] = '🛡BẢO VỆ';
         this.roleTxt[3] = '🏹THỢ SĂN';
-        this.roleTxt[4] = '💩DÂN';
+        this.roleTxt[4] = '🎅DÂN';
         this.roleTxt[5] = '🧙‍PHÙ THỦY';
         this.roleTxt[6] = '👴GIÀ LÀNG';
         this.roleTxt[7] = '👼THẦN TÌNH YÊU';

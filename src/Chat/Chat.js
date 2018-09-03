@@ -97,11 +97,11 @@ module.exports = (gamef, bot) => {
                         if (chatTxt.match(/\/see.[0-9]+/g) || /[0-9]+:.+/g.test(chatTxt)) {//see
                             let voteID = chatTxt.match(/[0-9]+/g)[0];
                             gamef.getRoom(userRoom).see(joinID, voteID, async (role) => {
-                                await chat.say(`✔ ${voteID} là ${(role == -1) ? '🐺SÓI' : role == 1 ? '👁TIÊN TRI, Bạn đùa tớ à :v' : '💩PHE DÂN'}`);
+                                await chat.say(`✔ ${voteID} là ${(role == -1) ? '🐺SÓI' : role == 1 ? '👁TIÊN TRI, Bạn đùa tớ à :v' : '🎅PHE DÂN'}`);
                                 if (gamef.getRoom(userRoom).oldManID != undefined && gamef.getRoom(userRoom).oldManLive <= 0) { // già làng chết
-                                    gamef.getRoom(userRoom).newLog(`👁${user.first_name} soi *${gamef.getRoom(userRoom).playersTxt[voteID]}* ra 💩AUTO DÂN`);
+                                    gamef.getRoom(userRoom).newLog(`👁${user.first_name} soi *${gamef.getRoom(userRoom).playersTxt[voteID]}* ra 🎅AUTO DÂN`);
                                 } else {
-                                    gamef.getRoom(userRoom).newLog(`👁${user.first_name} soi *${gamef.getRoom(userRoom).playersTxt[voteID]}* ra ${(role == -1) ? '🐺SÓI' : role == 1 ? '👁TỰ SOI MÌNH' : '💩PHE DÂN'}`);
+                                    gamef.getRoom(userRoom).newLog(`👁${user.first_name} soi *${gamef.getRoom(userRoom).playersTxt[voteID]}* ra ${(role == -1) ? '🐺SÓI' : role == 1 ? '👁TỰ SOI MÌNH' : '🎅PHE DÂN'}`);
                                 }
                             }, (err) => {
                                 chat.say('```\n🚫Bạn không thể soi 2 lần\n🚫hoặc soi người chơi đã chết!\n```');
