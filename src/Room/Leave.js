@@ -23,7 +23,7 @@ module.exports = (gamef, bot) => {
                 // }, `${user.first_name} đã rời phòng chơi!`]);
 
                 let roomView = gamef.getSimpleRoomPlayerView(userRoom);
-                roomChatAll(bot, gamef.getRoom(userRoom).players, 0, `🌚${roomView.join(`\n`)}\n${user.first_name} đã rời phòng chơi!`);
+                roomChatAll(bot, gamef.getRoom(userRoom).players, 0, `${roomView.join(`\n`)}\n\n📤${user.first_name} đã rời phòng chơi!`);
 
                 gamef.gameIsReady(userRoom, async (gameReady) => {
                     if (gameReady && !gamef.getRoom(userRoom).ingame) {
@@ -31,7 +31,7 @@ module.exports = (gamef, bot) => {
                         gamef.getRoom(userRoom).setInGame();
                         let roleListTxt = gamef.roleRandom(userRoom);
                         gamef.getRoom(userRoom).dayNightSwitch();
-                        await roomChatAll(bot, gamef.getRoom(userRoom).players, 0, `Tất cả mọi người đã sẵn sàng! Game sẽ bắt đầu...\n${roleListTxt}\n🌛Đêm thứ ${gamef.getRoom(userRoom).day}🌛`);
+                        await roomChatAll(bot, gamef.getRoom(userRoom).players, 0, `🌟Tất cả mọi người đã sẵn sàng! Game sẽ bắt đầu...\n${roleListTxt}\n🌛Đêm thứ ${gamef.getRoom(userRoom).day}🌛`);
                         gamef.getRoom(userRoom).newLog(`\n🌛Đêm thứ ${gamef.getRoom(userRoom).day}🌛\n`);
                         gamef.func(roomRoleChat, bot, userRoom);
                     }
@@ -40,9 +40,9 @@ module.exports = (gamef, bot) => {
                 user.cancelSchedule();
                 gamef.getRoom(userRoom).killAction(user.id);
                 leaveRole = user.role;
-                chat.say(`\`\`\`\nBạn đã tự sát!\n\`\`\``);
-                roomChatAll(bot, gamef.getRoom(userRoom).players, joinID, `\`\`\`\n${user.first_name} đã tự sát với vai trò là: ${gamef.roleTxt[leaveRole]}\n\`\`\``);
-                gamef.getRoom(userRoom).newLog(`${user.first_name} đã tự sát với vai trò là: ${gamef.roleTxt[leaveRole]}`);
+                chat.say(`\`\`\`\n💀 Bạn đã tự sát!\n\`\`\``);
+                roomChatAll(bot, gamef.getRoom(userRoom).players, joinID, `\`\`\`\n💀 ${user.first_name} đã tự sát với vai trò là: ${gamef.roleTxt[leaveRole]}\n\`\`\``);
+                gamef.getRoom(userRoom).newLog(`💀 ${gamef.roleTxt[leaveRole]} *${user.first_name}* đã tự sát`);
                 if (gamef.getRoom(userRoom).isNight) {
                     gamef.getRoom(userRoom).roleIsDone((isDone) => {
                         if (isDone) {
@@ -66,15 +66,15 @@ module.exports = (gamef, bot) => {
                 gamef.getRoom(userRoom).justDeletePlayer(user.id);
                 gamef.setUserRoom(joinID, undefined);
 
-                chat.say(`\`\`\`\nBạn đã rời phòng chơi ${userRoom + 1}!\n\`\`\``);
-                roomChatAll(bot, gamef.getRoom(userRoom).players, joinID, `\`\`\`\n🌚${user.first_name} đã rời phòng chơi!\n\`\`\``);
+                chat.say(`\`\`\`\n📤Bạn đã rời phòng chơi ${userRoom + 1}!\n\`\`\``);
+                roomChatAll(bot, gamef.getRoom(userRoom).players, joinID, `\`\`\`\n📤${user.first_name} đã rời phòng chơi!\n\`\`\``);
             }
             console.log(`$ ROOM ${userRoom + 1} > LEAVE > ${joinID} : ${user.first_name}`);
         } else {
-            chat.say('```\nBạn chưa tham gia phòng nào!\n```');
+            chat.say('```\nℹ️ Bạn chưa tham gia phòng nào!\n```');
         }
     };
     // listen LEAVE ROOM message
     bot.on('postback:LEAVE_ROOM', leaveCallback);
-    bot.hear(/\/leave/i, leaveCallback);
+    bot.hear(/^\/leave$/, leaveCallback);
 };

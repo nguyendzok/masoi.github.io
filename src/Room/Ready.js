@@ -25,7 +25,7 @@ module.exports = (gamef, bot) => {
                             gamef.getRoom(userRoom).setInGame();
                             let roleListTxt = gamef.roleRandom(userRoom);
                             gamef.getRoom(userRoom).dayNightSwitch();
-                            await roomChatAll(bot, gamef.getRoom(userRoom).players, 0, `Tất cả mọi người đã sẵn sàng! Game sẽ bắt đầu...\n${roleListTxt}\n🌛Đêm thứ ${gamef.getRoom(userRoom).day}🌛`);
+                            await roomChatAll(bot, gamef.getRoom(userRoom).players, 0, `🌟Tất cả mọi người đã sẵn sàng! Game sẽ bắt đầu...\n${roleListTxt}\n🌛Đêm thứ ${gamef.getRoom(userRoom).day}🌛`);
                             gamef.getRoom(userRoom).newLog(`\n🌛Đêm thứ ${gamef.getRoom(userRoom).day}🌛\n`);
                             gamef.func(roomRoleChat, bot, userRoom);
                         }
@@ -36,10 +36,10 @@ module.exports = (gamef, bot) => {
                 chat.say("```\n🌟Bạn đã sẵn sàng rồi!\n```");
             }
         } else {
-            chat.say("```\nBạn chưa tham gia phòng nào!\n```");
+            chat.say("```\nℹ️ Bạn chưa tham gia phòng nào!\n```");
         }
     };
     //listen for READY
     bot.on('postback:READY_ROOM', readyCallback);
-    bot.hear(/\/ready/i, readyCallback);
+    bot.hear(/^\/ready$/, readyCallback);
 };

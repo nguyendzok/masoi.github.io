@@ -6,7 +6,7 @@ module.exports = (gamef, bot) => {
         let joinID = payload.sender.id;
         let userRoom = gamef.getUserRoom(joinID);
         if (userRoom != undefined) {
-            chat.say(`\`\`\`\nBạn đã tham gia phòng ${(userRoom + 1)} rồi!\nĐể rời phòng chơi, chọn menu Tham gia > Rời phòng chơi!\n\`\`\``);
+            chat.say(`\`\`\`\n⚠️Bạn đã tham gia phòng ${(userRoom + 1)} rồi!\nℹ️ Để rời phòng chơi, chọn menu Tham gia > Rời phòng chơi!\n\`\`\``);
             return;
         }
         let joinUser;
@@ -32,19 +32,19 @@ module.exports = (gamef, bot) => {
                 }
                 let roomIDTxt = payload.message ? payload.message.text.match(/[0-9]+/g) : [];
                 if (!(payload.message) || !roomIDTxt || isNaN(parseInt(roomIDTxt[0])) || !gamef.room[parseInt(roomIDTxt[0]) - 1]) {
-                    convo.say(`\`\`\`\nPhòng bạn vừa nhập không hợp lệ!\n\`\`\``);
+                    convo.say(`\`\`\`\n🚫Phòng bạn vừa nhập không hợp lệ!\n\`\`\``);
                     convo.end();
                     return;
                 }
                 let roomID = parseInt(roomIDTxt[0]) - 1;
 
                 if (gamef.getRoom(roomID).ingame) {
-                    convo.say(`\`\`\`\nPhòng đã vào chơi rồi! Bạn sẽ được thông báo khi trò chơi kết thúc!\n\`\`\``);
+                    convo.say(`\`\`\`\n🎮 Phòng đã vào chơi rồi! 🔔Bạn sẽ được thông báo khi trò chơi kết thúc!\n\`\`\``);
                     gamef.getRoom(roomID).subscribe(joinID);
                     convo.end();
                     return;
                 } if (gamef.getRoom(roomID).players.length >= 11) {
-                    convo.say(`\`\`\`\nPhòng chơi đã quá tải, vui lòng chơi phòng chơi khác!\n\`\`\``);
+                    convo.say(`\`\`\`\n🚫Phòng chơi đã quá tải, vui lòng chơi phòng chơi khác!\n\`\`\``);
                     console.log(`$ ROOM ${roomID + 1} > ROOM TOO CROWDED  ...`)
                     convo.end();
                     return;
@@ -64,16 +64,16 @@ module.exports = (gamef, bot) => {
                     // let playerListView = gamef.getRoomPlayerView(roomID, 0, 3);
                     playerListView = [];
                     playerListView.unshift({
-                        title: `MA SÓI BOT\nPhòng ${roomID + 1}`,
+                        title: `Quản trò Ma Sói BOT`,
                         image_url: `https://scontent.fhan5-5.fna.fbcdn.net/v/t1.0-9/37812890_1872137736415276_2253761986674294784_n.png?_nc_cat=0&oh=c66c9db1a9e5d72edb88931cadeff204&oe=5C07D275`,
-                        subtitle: `🌟${gamef.getRoom(roomID).readyCount}/👥${gamef.getRoom(roomID).players.length}`,
+                        subtitle: `Bot sẽ quản trò cho các bạn! Chúc các bạn chơi vui vẻ trên Quản trò Ma sói Bot.\n-Dev by Phạm Ngọc Duy-`,
                         buttons: [
-                            { type: 'postback', title: '🌚Thoát', payload: 'LEAVE_ROOM' }
+                            { type: 'postback', title: '📤Thoát', payload: 'LEAVE_ROOM' }
                         ]
                     });
                     playerListView.push({
-                        title: `👥Tổng số người chơi: ${gamef.getRoom(roomID).players.length}`,
-                        subtitle: `🌟Sẵn sàng: ${gamef.getRoom(roomID).readyCount}/${gamef.getRoom(roomID).players.length}`,
+                        title: `Phòng ${roomID + 1}`,
+                        subtitle: `👥Tổng số người chơi: ${gamef.getRoom(roomID).players.length}\n🌟Sẵn sàng: ${gamef.getRoom(roomID).readyCount}/${gamef.getRoom(roomID).players.length}`,
                     });
                     let simplePlayerListView = undefined;
                     // if (gamef.getRoom(roomID).players.length > 3) {
@@ -85,7 +85,7 @@ module.exports = (gamef, bot) => {
                         buttons: [
                             { type: 'postback', title: '🌟Sẵn sàng!', payload: 'READY_ROOM' },
                         ]
-                    }, (simplePlayerListView ? `${simplePlayerListView}\n` : ``) + `🌝${joinUser.first_name} đã tham gia phòng!`]);
+                    }, (simplePlayerListView ? `${simplePlayerListView}\n` : ``) + `\n📥${joinUser.first_name} đã tham gia phòng!`]);
 
                     convo.end();
                     console.log(`$ ROOM ${(roomID + 1)} > JOIN > ${joinUser.first_name} > ${joinID}`);
@@ -103,5 +103,5 @@ module.exports = (gamef, bot) => {
     };
     // listen JOIN ROOM
     bot.on('postback:JOIN_ROOM', joinCallback);
-    bot.hear(/\/join/i, joinCallback);
+    bot.hear(/^\/join$/, joinCallback);
 };

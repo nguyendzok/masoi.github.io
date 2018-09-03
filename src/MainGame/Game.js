@@ -681,8 +681,8 @@ class Game {
         this.roleTxt[5] = '🧙‍PHÙ THỦY';
         this.roleTxt[6] = '👴GIÀ LÀNG';
         this.roleTxt[7] = '👼THẦN TÌNH YÊU';
-        this.roleTxt[8] = '😸NGƯỜI HÓA SÓI';
-        this.roleTxt[9] = '💸THIÊN SỨ';
+        this.roleTxt[8] = '👽NGƯỜI HÓA SÓI';
+        this.roleTxt[9] = '🧚‍THIÊN SỨ';
     }
     getUserRoom(joinID) {
         return this.userRoom[joinID];
