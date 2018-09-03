@@ -373,10 +373,10 @@ class Room {
     save(joinID, voteID) {
         if (!this.roleDone[joinID] && this.saveID != voteID && this.players[voteID] && this.alivePlayer[this.players[voteID].joinID]) {
             if (this.oldManID != undefined && this.oldManLive <= 0) { // có GIÀ LÀNG đã chết
-                this.logs.push(`🗿 *${this.getPlayer(joinID).first_name}* không thể bảo vệ *${this.playersTxt[voteID]}*`);
+                this.logs.push(`🛡 *${this.getPlayer(joinID).first_name}* không thể bảo vệ *${this.playersTxt[voteID]}*`);
                 this.saveID = -1;
             } else {
-                this.logs.push(`🗿 *${this.getPlayer(joinID).first_name}* bảo vệ *${this.playersTxt[voteID]}*`);
+                this.logs.push(`🛡 *${this.getPlayer(joinID).first_name}* bảo vệ *${this.playersTxt[voteID]}*`);
                 this.saveID = voteID;
             }
             this.roleDoneBy(joinID);
@@ -674,11 +674,11 @@ class Game {
         this.roleTxt[-3] = '🐺SÓI NGUYỀN';
 
         // PHE DÂN
-        this.roleTxt[1] = '🔍TIÊN TRI';
-        this.roleTxt[2] = '🗿BẢO VỆ';
-        this.roleTxt[3] = '🔫THỢ SĂN';
+        this.roleTxt[1] = '👁TIÊN TRI';
+        this.roleTxt[2] = '🛡BẢO VỆ';
+        this.roleTxt[3] = '🏹THỢ SĂN';
         this.roleTxt[4] = '💩DÂN';
-        this.roleTxt[5] = '🔮PHÙ THỦY';
+        this.roleTxt[5] = '🧙‍PHÙ THỦY';
         this.roleTxt[6] = '👴GIÀ LÀNG';
         this.roleTxt[7] = '👼THẦN TÌNH YÊU';
         this.roleTxt[8] = '😸NGƯỜI HÓA SÓI';

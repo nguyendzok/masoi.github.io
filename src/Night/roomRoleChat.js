@@ -141,7 +141,7 @@ module.exports = async function (gamef, bot, userRoom) {
                 return sendImageCard(bot, p.joinID, 'https://www.facebook.com/masoigame/photos/pcb.1889279921367724/1889278528034530', 'Tiên tri')
                     .then(() => {
                         bot.say(p.joinID, {
-                            text: preTxt + `🔍Tiên tri dậy đi! Tiên tri muốn kiểm tra ai?\n"/see <số ID>" để kiểm tra\n${playersListTxt}`,
+                            text: preTxt + `👁Tiên tri dậy đi! Tiên tri muốn kiểm tra ai?\n"/see <số ID>" để kiểm tra\n${playersListTxt}`,
                             quickReplies: ["/evote"],
                         });
                     });
@@ -149,7 +149,7 @@ module.exports = async function (gamef, bot, userRoom) {
                 return sendImageCard(bot, p.joinID, 'https://www.facebook.com/masoigame/photos/pcb.1889279921367724/1889278331367883', 'Bảo vệ')
                     .then(() => {
                         bot.say(p.joinID, {
-                            text: preTxt + `🗿Bảo vệ dậy đi! Đêm nay bạn muốn bảo vệ ai?\n"/save <số ID>" để bảo vệ\n${playersListTxt}`,
+                            text: preTxt + `🛡Bảo vệ dậy đi! Đêm nay bạn muốn bảo vệ ai?\n"/save <số ID>" để bảo vệ\n${playersListTxt}`,
                             quickReplies: ["/evote"],
                         });
                     });
@@ -157,7 +157,7 @@ module.exports = async function (gamef, bot, userRoom) {
                 return sendImageCard(bot, p.joinID, 'https://www.facebook.com/masoigame/photos/pcb.1889279921367724/1889278518034531', 'Thợ săn')
                     .then(() => {
                         bot.say(p.joinID, {
-                            text: preTxt + `🔫Thợ săn dậy đi! Đêm nay bạn muốn bắn ai?\n"/fire <số ID>" để ghim\n"/kill <số ID>" để bắn chết luôn\n${playersListTxt}`,
+                            text: preTxt + `🏹Thợ săn dậy đi! Đêm nay bạn muốn bắn ai?\n"/fire <số ID>" để ghim\n"/kill <số ID>" để bắn chết luôn\n${playersListTxt}`,
                             quickReplies: ["/evote"],
                         });
                     });
@@ -170,9 +170,9 @@ module.exports = async function (gamef, bot, userRoom) {
             } else if (p.role == 5) { // Phù thủy
                 let sayTxt;
                 if (gamef.getRoom(userRoom).witchKillRemain) {
-                    sayTxt = `🔮Bạn là Phù thủy!\n${gamef.getRoom(userRoom).witchSaveRemain ? '☑Bạn còn quyền cứu' : '⛔Bạn đã dùng quyền cứu!'}\n☑Bạn còn quyền giết\n(Bạn vẫn có thể sử dụng lệnh /kill)\n${playersListTxt}`;
+                    sayTxt = `🧙‍Bạn là Phù thủy!\n${gamef.getRoom(userRoom).witchSaveRemain ? '☑Bạn còn quyền cứu' : '⛔Bạn đã dùng quyền cứu!'}\n☑Bạn còn quyền giết\n(Bạn vẫn có thể sử dụng lệnh /kill)\n${playersListTxt}`;
                 } else {
-                    sayTxt = `🔮Bạn là Phù thủy!\n${gamef.getRoom(userRoom).witchSaveRemain ? '☑Bạn còn quyền cứu' : '⛔Bạn đã dùng quyền cứu!'}\n⛔Bạn đã dùng quyền giết!\n${playersListTxt}`;
+                    sayTxt = `🧙‍Bạn là Phù thủy!\n${gamef.getRoom(userRoom).witchSaveRemain ? '☑Bạn còn quyền cứu' : '⛔Bạn đã dùng quyền cứu!'}\n⛔Bạn đã dùng quyền giết!\n${playersListTxt}`;
                 }
                 autoRoleDone ? gamef.getRoom(userRoom).roleDoneBy(p.joinID, false, true) : false;
                 return sendImageCard(bot, p.joinID, 'https://www.facebook.com/masoigame/photos/pcb.1889279921367724/1889278464701203', 'Phù thủy')

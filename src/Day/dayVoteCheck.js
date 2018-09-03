@@ -13,13 +13,13 @@ module.exports = (gamef, bot, userRoom) => {
       gamef.getRoom(userRoom).afternoonSwitch();
       let deathTxt = gamef.getRoom(userRoom).playersTxt[deathID];
       gamef.getRoom(userRoom).chatOFF();
-      roomChatAll(bot, gamef.getRoom(userRoom).players, 0, `\`\`\`\n🎓Xin mời ${deathTxt} bước lên giá treo cổ!\n⏰Bạn có 1 phút để trăn trối\n\`\`\``);
+      roomChatAll(bot, gamef.getRoom(userRoom).players, 0, `\`\`\`\n☢️Xin mời ${deathTxt} bước lên giá treo cổ!\n⏳Bạn có 1 phút để trăn trối\n\`\`\``);
       // 1 phút trăn trối
       let time = new Date(Date.now() + 1 * 60 * 1000);
       gamef.getRoom(userRoom).addSchedule(time, () => {
         // hết giờ, vote treo cổ nào!
         roomChatAll(bot, gamef.getRoom(userRoom).players, 0, {
-          text: `\`\`\`\n⏰Hết giờ! Mọi người có 30 giây!\n👎TREO CỔ hay 👍THA?\n"/treo" hoặc "/tha"\n\`\`\``,
+          text: `\`\`\`\n⌛️Hết giờ! Mọi người có 30 giây!\n👎TREO CỔ hay 👍THA?\n"/treo" hoặc "/tha"\n\`\`\``,
           quickReplies: ['/treo', '/tha']
         });
         console.log(`$ ROOM ${userRoom + 1} > END OF TRĂN TRỐI :))`);
@@ -28,7 +28,7 @@ module.exports = (gamef, bot, userRoom) => {
           if (p && gamef.getRoom(userRoom).alivePlayer[p.joinID] && !gamef.getRoom(userRoom).roleDone[p.joinID]) {
             let time = new Date(Date.now() + 30 * 1000);
             players[index].addSchedule(time, async () => {
-              roomChatAll(bot, gamef.getRoom(userRoom).players, 0, `*👍👎${p.first_name} đã không kịp vote* (-10 uy tín)`);
+              roomChatAll(bot, gamef.getRoom(userRoom).players, 0, `*ℹ️ ${p.first_name} đã không kịp vote* (-10 uy tín)`);
               gamef.getRoom(userRoom).roleDoneBy(p.joinID, true);
               gamef.func(yesNoVoteCheck, bot, userRoom);
             });
@@ -36,13 +36,13 @@ module.exports = (gamef, bot, userRoom) => {
         });
       });
     } else {
-      gamef.getRoom(userRoom).newLog(`😇Ngày hôm đó không một ai bị treo cổ!`);
-      roomChatAll(bot, gamef.getRoom(userRoom).players, 0, `\`\`\`\n😇Không một ai bị treo cổ\nMọi người đi ngủ\n\`\`\``);
+      gamef.getRoom(userRoom).newLog(`ℹ️ Ngày hôm đó không một ai bị treo cổ!`);
+      roomChatAll(bot, gamef.getRoom(userRoom).players, 0, `\`\`\`\n🔔 Không một ai bị treo cổ\n🔔Mọi người đi ngủ\n\`\`\``);
       gameIsNotEndCheck(gamef, bot, userRoom, async () => {
         // Đêm tiếp theo
         gamef.getRoom(userRoom).dayNightSwitch();
-        gamef.getRoom(userRoom).newLog(`\n🌛Đêm thứ ${gamef.getRoom(userRoom).day}🌛\n`);
-        roomChatAll(bot, gamef.getRoom(userRoom).players, 0, `🌛Đêm thứ ${gamef.getRoom(userRoom).day}🌛`);
+        gamef.getRoom(userRoom).newLog(`\n🌛Đêm thứ ${gamef.getRoom(userRoom).day}\n`);
+        roomChatAll(bot, gamef.getRoom(userRoom).players, 0, `\n🌛Đêm thứ ${gamef.getRoom(userRoom).day}🌛\n`);
         gamef.func(roomRoleChat, bot, userRoom);
       });
     }
