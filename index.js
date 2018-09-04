@@ -27,7 +27,8 @@ const chatAndVote = require('./src/Chat/Chat');
 const adminCMD = require('./src/Menu/Admin');
 const vote = require('./src/GameAction/Vote');
 const train = require('./src/Menu/Training');
-const adminDB = require('./src/DBModule/Connect');
+const adminDB = require('./src/DBModule/Admin');
+const clan = require('./src/Menu/Clan');
 
 const gamef = new Game();
 const bot = new BootBot({
@@ -56,6 +57,8 @@ bot.setGetStartedButton((payload, chat) => {
 bot.module(botSetup);
 // help
 bot.module(menuHelp);
+
+bot.module(clan);
 
 bot.module(train);
 // handle menu > tiện ích khi chơi
