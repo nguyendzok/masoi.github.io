@@ -51,11 +51,12 @@ module.exports = (gamef, bot) => {
                     return;
                 } else {
                     convo.say('🔔 Đang xử lí...');
-                    let userData = await DBTask(`SELECT * FROM USERDATA WHERE joinID = '${joinID}';`)
+                    let userData = await DBTask(`SELECT * FROM USERDATA WHERE joinID = '${joinID}';`);
                     if (userData) {
-                        convo.say('Đã đăng nhập thành công!');
+                        convo.say('ĐÃ ĐĂNG NHẬP!');
                     } else {
-                        convo.say('Bạn CHƯA đăng kí!');
+                        await DBTask(`INSERT INTO USERDATA (joinID, fullName, name, avatar, clan) VALUES ('${joinID}', '${joinUser.last_name+' '+joinUser.first_name}', '${joinUser.first_name}', '${joinUser.profile_pic}', 'UET');`)
+                        convo.say('Bạn đã ĐĂNG KÍ THÀNH CÔNG!');
                     }
 
                     // save room number for user

@@ -1,5 +1,5 @@
-CREATE TABLE USER (
-	ID INT PRIMARY KEY NOT NULL,
+CREATE TABLE USERDATA (
+	ID SERIAL PRIMARY KEY NOT NULL,
 	joinID CHAR(20) NOT NULL,
 	fullName CHAR(40) NOT NULL,
 	name CHAR(20) NOT NULL,
@@ -13,6 +13,7 @@ CREATE TABLE USER (
 	winBeVillager INT NOT NULL DEFAULT 0,
 	loseBeVillager INT NOT NULL DEFAULT 0,
 	winBeThirdParty INT NOT NULL DEFAULT 0,
-	loseBeThirdParty INT NOT NULL DEFAULT 0,
+	loseBeThirdParty INT NOT NULL DEFAULT 0
 );
-INSERT INTO USER (ID, joinID, fullName, name, avatar, clan) VALUES (1,'2643770348982136', 'Phạm Ngọc Duy', 'Duy', 'https://scontent.fhan2-1.fna.fbcdn.net/v/t1.0-1/p80x80/38867411_2226569334240978_7276919719033044992_n.jpg?_nc_cat=0&oh=b1f95173aebf54df39b9dd1aa0a8dcef&oe=5C39CEAF', 'K61CD')
+INSERT INTO USERDATA (joinID, fullName, name, avatar, clan) VALUES ('2643770348982136', 'Phạm Ngọc Duy', 'Duy', 'https://scontent.fhan2-1.fna.fbcdn.net/v/t1.0-1/p80x80/38867411_2226569334240978_7276919719033044992_n.jpg?_nc_cat=0&oh=b1f95173aebf54df39b9dd1aa0a8dcef&oe=5C39CEAF', 'K61CD');
+INSERT INTO USERDATA (joinID, fullName, name, avatar, clan) VALUES ('2643770348982133', 'Phạm Ngọc Duy', 'Duy', 'https://scontent.fhan2-1.fna.fbcdn.net/v/t1.0-1/p80x80/38867411_2226569334240978_7276919719033044992_n.jpg?_nc_cat=0&oh=b1f95173aebf54df39b9dd1aa0a8dcef&oe=5C39CEAF', 'K61CD');
