@@ -7,5 +7,9 @@ module.exports = async (queryTxt) => {
     await dbClient.connect();
     const ret = await dbClient.query(queryTxt);
     await dbClient.end();
-    return ret;
+    if (ret.rowCount === 0) {
+        return null;
+    } else {
+        return ret.rows;
+    }
 };
