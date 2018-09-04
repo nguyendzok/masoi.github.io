@@ -27,11 +27,11 @@ module.exports = (gamef, bot, userRoom, callback) => {
       // thống kê tỉ lệ thắng:
       gamef.openDB();
       if (winner === -1) { //sói thắng
-        gamef.doQuery(gamef.getRoom(userRoom).wolfsID, `UPDATE USERDATA SET beWolf = beWolf+1, winBeWolf = winBeWolf+ 1 WHERE joinid = '$1';`);
-        gamef.doQuery(gamef.getRoom(userRoom).villagersID, `UPDATE USERDATA SET beVillager = beVillager+1 WHERE joinid = '$1';`);
+        gamef.doQuery(gamef.getRoom(userRoom).wolfsID, `UPDATE USERDATA SET beWolf = beWolf+1, winBeWolf = winBeWolf+ 1 WHERE joinid = `);
+        gamef.doQuery(gamef.getRoom(userRoom).villagersID, `UPDATE USERDATA SET beVillager = beVillager+1 WHERE joinid = `);
       } else if (winner === 1) { // dân thắng
-        gamef.doQuery(gamef.getRoom(userRoom).wolfsID, `UPDATE USERDATA SET beWolf = beWolf+1 WHERE joinid = '$1';`);
-        gamef.doQuery(gamef.getRoom(userRoom).villagersID, `UPDATE USERDATA SET beVillager = beVillager+1, winBeVillager = winBeVillager+ 1 WHERE joinid = '$1';`);
+        gamef.doQuery(gamef.getRoom(userRoom).wolfsID, `UPDATE USERDATA SET beWolf = beWolf+1 WHERE joinid = `);
+        gamef.doQuery(gamef.getRoom(userRoom).villagersID, `UPDATE USERDATA SET beVillager = beVillager+1, winBeVillager = winBeVillager+ 1 WHERE joinid = `);
       }
       gamef.closeDB();
 
