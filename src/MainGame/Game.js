@@ -323,6 +323,7 @@ class Room {
             if (!this.isNight || (this.isNight && this.deathID != this.saveID)) { // là ban ngày hoặc ban đêm bảo vệ sai
                 if (this.players[this.deathID].role === -2 && this.isNight) { //là BÁN SÓI
                     this.wolfsID.push(this.players[this.deathID].joinID);
+                    this.villagersID.splice(this.villagersID.indexOf(this.players[this.deathID].joinID), 1);
                     this.wolfsTxt.push(this.playersTxt[this.deathID]);
                     this.wolfsCount++;
                     this.villagersCount--;
@@ -604,6 +605,7 @@ class Room {
         let nguyenUser = this.getPlayer(this.nguyenID);
         if (nguyenUser.role > 0) {
             this.wolfsID.push(this.nguyenID);
+            this.villagersID.splice(this.villagersID.indexOf(this.nguyenID), 1);
             this.wolfsTxt.push(this.playersTxt[nguyenUser.id]);
             this.villagersCount--;
             this.wolfsCount++;
@@ -810,7 +812,7 @@ class Game {
         let setup;
 
         if (len <= 4) {
-            setup = { "1": 1, "2": 0, "3": 0, "4": 1, "5": 0, "6": 0, "7": 0, "8": 0, "9": 1, "-3": 0, "-2": 0, "-1": 1 }; balance = 3;
+            setup = { "1": 1, "2": 0, "3": 0, "4": 0, "5": 0, "6": 0, "7": 1, "8": 0, "9": 1, "-3": 0, "-2": 0, "-1": 1 }; balance = -1;
         } else {
             if (len == 5) {
                 switch (this.random(1, 2)) {

@@ -9,8 +9,8 @@ module.exports = (gamef, bot, userRoom, callback) => {
       callback();
     } else {
       ret = false;
-      console.log(`$ ROOM ${userRoom + 1} > END GAME > ${winner === -1 ? '🐺SÓI' : winner === 1 ? '🎅DÂN' : '💞CẶP ĐÔI'} thắng!`);
-      gamef.getRoom(userRoom).newLog(`${winner === -1 ? '🐺SÓI' : winner === 1 ? '🎅DÂN' : '💞CẶP ĐÔI'} thắng!`);
+      console.log(`$ ROOM ${userRoom + 1} > END GAME > ${winner === -1 ? '🐺SÓI' : winner === 1 ? '🎅DÂN' : winner === 3 ? '💞CẶP ĐÔI' : '🧚‍THIÊN SỨ'} thắng!`);
+      gamef.getRoom(userRoom).newLog(`${winner === -1 ? '🐺SÓI' : winner === 1 ? '🎅DÂN' : winner === 3 ? '💞CẶP ĐÔI' : '🧚‍THIÊN SỨ'} thắng!`);
       await roomChatAll(bot, gamef.getRoom(userRoom).players, 0, [`\`\`\`\n🏆Trò chơi đã kết thúc...\n${winner === -1 ? '🐺SÓI' : winner === 1 ? '🎅DÂN' : winner === 3 ? '💞CẶP ĐÔI' : '🧚‍THIÊN SỨ'} thắng!\n\`\`\``, `🎮Bạn có thể sẵn sàng để bắt đầu chơi lại, hoặc tiếp tục trò chuyện với các người chơi khác trong phòng!`]);
       gamef.getRoom(userRoom).newLog(`🏆Trò chơi đã kết thúc với: ${gamef.getRoom(userRoom).wolfsCount} SÓI/ ${gamef.getRoom(userRoom).villagersCount} DÂN!`)
       await roomChatAll(bot, gamef.getRoom(userRoom).players, 0, gamef.getRoom(userRoom).logs.join(`\n`));
@@ -32,6 +32,29 @@ module.exports = (gamef, bot, userRoom, callback) => {
       } else if (winner === 1) { // dân thắng
         gamef.doQuery(gamef.getRoom(userRoom).wolfsID, `UPDATE USERDATA SET beWolf = beWolf+1 WHERE joinid = `);
         gamef.doQuery(gamef.getRoom(userRoom).villagersID, `UPDATE USERDATA SET beVillager = beVillager+1, winBeVillager = winBeVillager+ 1 WHERE joinid = `);
+      } else if (winner === 3) { // cặp đôi thắng
+        let wolfsID = gamef.getRoom(userRoom).wolfsID.filter((id) => {
+          return gamef.getRoom(userRoom).cupidsID.indexOf(id) === -1;
+        });
+        let villagersID = gamef.getRoom(userRoom).villagersID.filter((id) => {
+          return gamef.getRoom(userRoom).cupidsID.indexOf(id) === -1;
+        });
+        gamef.doQuery(wolfsID, `UPDATE USERDATA SET beWolf = beWolf+1 WHERE joinid = `);
+        gamef.doQuery(villagersID, `UPDATE USERDATA SET beVillager = beVillager+1 WHERE joinid = `);
+        gamef.doQuery(gamef.getRoom(userRoom).cupidsID, `UPDATE USERDATA SET beThirdParty = beThirdParty+1, winBeThirdParty = winBeThirdParty+1 WHERE joinid = `);
+      } else { // winner == 9 // thiên sứ thắng
+        gamef.doQuery(gamef.getRoom(userRoom).wolfsID, `UPDATE USERDATA SET beWolf = beWolf+1 WHERE joinid = `);
+        let thienSuID = null;
+        let villagersID = gamef.getRoom(userRoom).villagersID.filter((id) => {
+          let role = gamef.getRoom(userRoom).getRole(id);
+          if (role != 9) {
+            return true;
+          } else {
+            thienSuID = id;
+          }
+        });
+        gamef.doQuery(villagersID, `UPDATE USERDATA SET beVillager = beVillager+1 WHERE joinid = `);
+        gamef.doQuery([thienSuID], `UPDATE USERDATA SET beThirdParty = beThirdParty+1, winBeThirdParty = winBeThirdParty+1 WHERE joinid = `);
       }
       gamef.closeDB();
 
