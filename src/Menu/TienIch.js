@@ -1,4 +1,5 @@
 const { roomChatAll } = require('../Chat/Utils');
+const DBTask = require('../DBModule/DBTask');
 
 module.exports = (gamef, bot) => {
     const infoCallback = (payload, chat) => {
@@ -60,16 +61,24 @@ module.exports = (gamef, bot) => {
         });
     };
 
-    const profileCallback = (payload, chat) => {
+    const profileCallback = async (payload, chat) => {
         let joinID = payload.sender.id;
+        chat.say('🔔 Đang xử lí...');
+        let userData = await DBTask(`SELECT * FROM USERDATA WHERE joinID = '${joinID}';`);
+        let chatTxt = '';
+        if (userData) {
+            let user = userData[0];
+            chatTxt += `Xin chào ${user.fullname} (${user.id}),\nTên InGame: ${user.name}\nClan: ${user.clan}\n`;
+            chatTxt += `Tỉ lệ SÓI / DÂN / PHE 3 : ${user.bewolf} / ${user.bevillager} / ${user.bethirdparty}\n`;
+            chatTxt += `Tỉ lệ thắng SÓI / DÂN / PHE 3 : ${user.bewolf > 0 ? Math.floor(user.winbewolf / user.bewolf) : '0'}% / ${user.bevillager > 0 ? Math.floor(user.winbevillager / user.bevillager) : '0'}% / ${user.bethirdparty > 0 ? Math.floor(user.winbethirdparty / user.bethirdparty) : '0'}%\n`;
+        }
         let userRoom = gamef.getUserRoom(joinID);
         if (userRoom != undefined) {
             let user = gamef.getRoom(userRoom).getPlayer(joinID);
             let uyTin = (60 - user.afkCount * 10);
-            chat.say(`Xin chào ${user.last_name} ${user.first_name},\nTên InGame: ${user.first_name}\nUy tín của bạn: ${uyTin}/60`);
-        } else {
-            chat.say('```\nBạn chưa tham gia phòng chơi nào!\n```');
+            chatTxt += `Uy tín của bạn: ${uyTin}/60`;
         }
+        chat.say(chatTxt);
     };
 
     // listen VIEW_PLAYER_IN_ROOM message
