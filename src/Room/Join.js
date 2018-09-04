@@ -19,7 +19,7 @@ module.exports = (gamef, bot) => {
             convo.ask({
                 text: enableGreetingTxt ? 'MA SÓI BOT BETA\n🚫: phòng quá tải\n🔥: phòng hot\n👥: phòng đủ người\n👤: phòng ít người\n🎮: phòng đang chơi\n\nDanh sách phòng chơi:' : 'Chọn phòng:',
                 quickReplies: roomListView,
-            }, (payload, convo) => {
+            }, async (payload, convo) => {
                 if (payload.message && payload.message.text.match(/\<|\>/g)) {
                     enableGreetingTxt = false;
                     if (payload.message.text.match(/\>/g)) { //next page
@@ -50,9 +50,10 @@ module.exports = (gamef, bot) => {
                     convo.end();
                     return;
                 } else {
-                    let userData = DBTask(`SELECT * FROM USERDATA WHERE joinID = '${joinID}';`)
+                    convo.say('🔔 Đang xử lí...');
+                    let userData = await DBTask(`SELECT * FROM USERDATA WHERE joinID = '${joinID}';`)
                     if (userData) {
-                        convo.say('Đang đăng nhập...');
+                        convo.say('Đã đăng nhập thành công!');
                     } else {
                         convo.say('Bạn CHƯA đăng kí!');
                     }
