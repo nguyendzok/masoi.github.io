@@ -52,6 +52,7 @@ module.exports = (gamef, bot) => {
                 } else {
                     convo.say('🔔 Đang xử lí...');
                     let userData = await DBTask(`SELECT * FROM USERDATA WHERE joinID = '${joinID}';`);
+                    console.log(JSON.stringify(userData));
                     if (userData) {
                         convo.say('ĐÃ ĐĂNG NHẬP!');
                     } else {
