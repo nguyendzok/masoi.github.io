@@ -68,15 +68,16 @@ module.exports = (gamef, bot) => {
         let chatTxt = '';
         if (userData) {
             let user = userData[0];
-            chatTxt += `Xin chào ${user.fullname} (${user.id}),\nTên InGame: ${user.name}\nClan: ${user.clan}\n`;
-            chatTxt += `Tỉ lệ SÓI / DÂN / PHE 3 : ${user.bewolf} / ${user.bevillager} / ${user.bethirdparty}\n`;
-            chatTxt += `Tỉ lệ thắng SÓI / DÂN / PHE 3 : ${user.bewolf > 0 ? Math.floor(user.winbewolf * 100 / user.bewolf) : '0'}% / ${user.bevillager > 0 ? Math.floor(user.winbevillager * 100 / user.bevillager) : '0'}% / ${user.bethirdparty > 0 ? Math.floor(user.winbethirdparty * 100 / user.bethirdparty) : '0'}%\n`;
+            chatTxt += `✌Xin chào ${user.fullname} (${user.id}),\n✍Tên InGame: ${user.name}\n🚩Clan: ${user.clan}\n`;
+            chatTxt += `🎲Tỉ lệ SÓI / DÂN / PHE 3 : ${user.bewolf} / ${user.bevillager} / ${user.bethirdparty}\n`;
+            chatTxt += `🏆Tỉ lệ thắng SÓI / DÂN / PHE 3 : ${user.bewolf > 0 ? Math.floor(user.winbewolf * 100 / user.bewolf) : '100'}% / ${user.bevillager > 0 ? Math.floor(user.winbevillager * 100 / user.bevillager) : '100'}% / ${user.bethirdparty > 0 ? Math.floor(user.winbethirdparty * 100 / user.bethirdparty) : '100'}%\n`;
         }
         let userRoom = gamef.getUserRoom(joinID);
         if (userRoom != undefined) {
             let user = gamef.getRoom(userRoom).getPlayer(joinID);
             let uyTin = (60 - user.afkCount * 10);
-            chatTxt += `Uy tín của bạn: ${uyTin}/60`;
+            chatTxt += `🚪Bạn đang chơi trong phòng ${userRoom + 1} `
+            chatTxt += `💎Uy tín của bạn: ${uyTin}/60`;
         }
         chat.say(chatTxt);
     };

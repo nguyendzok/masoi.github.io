@@ -1,4 +1,5 @@
 const { roomChatAll } = require('../Chat/Utils');
+// const PoolTask = require('../DBModule/PoolTask');
 
 module.exports = (gamef, bot, userRoom, callback) => {
   let ret = false;
@@ -22,6 +23,18 @@ module.exports = (gamef, bot, userRoom, callback) => {
         bot.say(joinID, `🔔Trò chơi ở phòng ${userRoom + 1} đã kết thúc!\n🔔Hãy nhanh chóng tham gia phòng trước khi trò chơi bắt đầu lại!`);
         console.log(`>>> REMINDER: ${joinID}`);
       });
+
+      // thống kê tỉ lệ thắng:
+      gamef.openDB();
+      if (winner === -1) { //sói thắng
+        gamef.doQuery(gamef.getRoom(userRoom).wolfsID, `UPDATE USERDATA SET beWolf = beWolf+1, winBeWolf = winBeWolf+ 1 WHERE joinid = '$1';`);
+        gamef.doQuery(gamef.getRoom(userRoom).villagersID, `UPDATE USERDATA SET beVillager = beVillager+1 WHERE joinid = '$1';`);
+      } else if (winner === 1) { // dân thắng
+        gamef.doQuery(gamef.getRoom(userRoom).wolfsID, `UPDATE USERDATA SET beWolf = beWolf+1 WHERE joinid = '$1';`);
+        gamef.doQuery(gamef.getRoom(userRoom).villagersID, `UPDATE USERDATA SET beVillager = beVillager+1, winBeVillager = winBeVillager+ 1 WHERE joinid = '$1';`);
+      }
+      gamef.closeDB();
+
       gamef.getRoom(userRoom).resetRoom();
     }
   });

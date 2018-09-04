@@ -1,4 +1,5 @@
 ﻿var schedule = require('node-schedule');
+const { Pool } = require('pg');
 class Player {
     constructor(p) {
         this.id = p.id;
@@ -46,6 +47,7 @@ class Room {
         this.id = id;
         this.players = [];
         this.wolfsID = [];
+        this.villagersID = [];
         this.cupidsID = [];
 
         this.wolfsTxt = [];
@@ -106,6 +108,7 @@ class Room {
     }
     resetRoom() {
         this.wolfsID = [];
+        this.villagersID = [];
         this.cupidsID = [];
 
         this.wolfsTxt = [];
@@ -666,6 +669,7 @@ class Game {
         this.MAX_PER_PAGE = 4;
         this.resetAllRoom();
         this.setRoleTxt();
+        this.dbClient = null;
     }
     setRoleTxt() {
         // PHE SÓI
@@ -884,6 +888,7 @@ class Game {
                 this.room[roomID].wolfsTxt.push(p.id + ': ' + p.first_name);
                 this.room[roomID].wolfsCount++;
             } else {
+                this.room[roomID].villagersID.push(p.joinID);
                 this.room[roomID].villagersTxt.push(p.id + ': ' + p.first_name);
                 this.room[roomID].villagersCount++;
             }
@@ -919,6 +924,20 @@ class Game {
     }
     func(factory, bot, roomID) {
         return factory.apply(this, [this, bot, roomID]);
+    }
+    openDB() {
+        return this.dbClient = new Pool({
+            connectionString: process.env.DATABASE_URL,
+            ssl: true,
+        });
+    }
+    doQuery(itemArr, queryTxt) {
+        return itemArr.forEach(item => {
+            this.dbClient.query(queryTxt, [item]);
+        });
+    }
+    closeDB() {
+        return this.dbClient.end();
     }
 }
 

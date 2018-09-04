@@ -19,18 +19,14 @@ module.exports = (gamef, bot, dbclientFromIndex) => {
                     }
 
                     dbClient.query(chatTxt, (err, res) => {
-                        try {
-                            if (err) throw err;
-                            let retStr = '';
-                            for (let row of res.rows) {
-                                console.log(JSON.stringify(row));
-                                retStr = JSON.stringify(row) + `\n`;
-                            }
-                            retStr = '==> Query DONE! Trả về:\n' + retStr;
-                            convo.say(retStr).then(() => askCMD(convo, dbClient));
-                        } catch (err) {
-                            console.log(err);
+                        if (err) throw err;
+                        let retStr = '';
+                        for (let row of res.rows) {
+                            console.log(JSON.stringify(row));
+                            retStr = JSON.stringify(row) + `\n`;
                         }
+                        retStr = '==> Query DONE! Trả về:\n' + retStr;
+                        convo.say(retStr).then(() => askCMD(convo, dbClient));
                     });
 
 
