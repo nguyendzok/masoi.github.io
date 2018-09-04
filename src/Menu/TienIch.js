@@ -63,14 +63,14 @@ module.exports = (gamef, bot) => {
 
     const profileCallback = async (payload, chat) => {
         let joinID = payload.sender.id;
-        chat.say('🔔 Đang xử lí...');
         let userData = await DBTask(`SELECT * FROM USERDATA WHERE joinID = '${joinID}';`);
         let chatTxt = '';
         if (userData) {
             let user = userData[0];
             chatTxt += `✌Xin chào ${user.fullname} (${user.id}),\n✍Tên InGame: ${user.name}\n🚩Clan: ${user.clan}\n`;
-            chatTxt += `🎲Tỉ lệ SÓI / DÂN / PHE 3 : ${user.bewolf} / ${user.bevillager} / ${user.bethirdparty}\n`;
-            chatTxt += `🏆Tỉ lệ thắng SÓI / DÂN / PHE 3 : ${user.bewolf > 0 ? Math.floor(user.winbewolf * 100 / user.bewolf) : '100'}% / ${user.bevillager > 0 ? Math.floor(user.winbevillager * 100 / user.bevillager) : '100'}% / ${user.bethirdparty > 0 ? Math.floor(user.winbethirdparty * 100 / user.bethirdparty) : '100'}%\n`;
+            chatTxt += `🎮Bạn đã chơi tổng cộng: ${user.bewolf + user.bevillager + user.bethirdparty} GAME\n`;
+            chatTxt += `🎲Tỉ lệ SÓI / DÂN / PHE_3 : ${user.bewolf} / ${user.bevillager} / ${user.bethirdparty}\n`;
+            chatTxt += `🏆Tỉ lệ thắng SÓI: ${user.bewolf > 0 ? Math.floor(user.winbewolf * 100 / user.bewolf) : '0'}% / DÂN: ${user.bevillager > 0 ? Math.floor(user.winbevillager * 100 / user.bevillager) : '0'}% / PHE_3: ${user.bethirdparty > 0 ? Math.floor(user.winbethirdparty * 100 / user.bethirdparty) : '0'}%\n`;
         }
         let userRoom = gamef.getUserRoom(joinID);
         if (userRoom != undefined) {
