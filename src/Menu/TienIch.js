@@ -76,7 +76,7 @@ module.exports = (gamef, bot) => {
         if (userRoom != undefined) {
             let user = gamef.getRoom(userRoom).getPlayer(joinID);
             let uyTin = (60 - user.afkCount * 10);
-            chatTxt += `🚪Bạn đang chơi trong phòng ${userRoom + 1} `
+            chatTxt += `🚪Bạn đang chơi trong phòng ${userRoom + 1}\n`;
             chatTxt += `💎Uy tín của bạn: ${uyTin}/60`;
         }
         chat.say(chatTxt);

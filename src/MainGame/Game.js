@@ -932,7 +932,8 @@ class Game {
         });
     }
     doQuery(itemArr, queryTxt) {
-        return itemArr.forEach(item => {
+        itemArr.forEach(item => {
+            console.log(">>> QUERY :" + queryTxt + ">>>" + item);
             this.dbClient.query(queryTxt, [item]);
         });
     }
