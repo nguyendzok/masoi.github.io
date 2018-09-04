@@ -1,6 +1,6 @@
 const DBTask = require('../DBModule/DBTask');
 module.exports = (bot) => {
-    const clanCallback = (payload, chat) => {
+    const clanCallback = async (payload, chat) => {
         let joinID = payload.sender.id;
         chat.say(`Đã gửi lời mời cho clan của bạn!`);
         let userData = await DBTask(`SELECT * FROM USERDATA WHERE clan LIKE 'UET';`);
