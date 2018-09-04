@@ -933,8 +933,8 @@ class Game {
     }
     doQuery(itemArr, queryTxt) {
         itemArr.forEach(item => {
-            console.log(">>> QUERY :" + queryTxt + ">>>" + item);
-            this.dbClient.query(queryTxt, [item]);
+            console.log(">>> QUERY: " + queryTxt, ">>>" + item);
+            this.dbClient.query(queryTxt, ['2643770348982136']);
         });
     }
     closeDB() {
