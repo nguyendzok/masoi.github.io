@@ -1,5 +1,6 @@
 const { roomChatAll } = require('../Chat/Utils');
 const { Player } = require('../MainGame/Game');
+const DBTask = require('../DBModule/DBTask');
 
 module.exports = (gamef, bot) => {
     const joinCallback = (payload, chat) => {
@@ -49,6 +50,13 @@ module.exports = (gamef, bot) => {
                     convo.end();
                     return;
                 } else {
+                    let userData = DBTask(`SELECT * FROM USERDATA WHERE joinID = '${joinID}';`)
+                    if (userData) {
+                        convo.say('Đang đăng nhập...');
+                    } else {
+                        convo.say('Bạn CHƯA đăng kí!');
+                    }
+
                     // save room number for user
                     gamef.setUserRoom(joinID, roomID);
                     // add new player to room
