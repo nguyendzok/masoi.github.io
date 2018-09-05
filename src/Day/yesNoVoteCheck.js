@@ -1,6 +1,7 @@
 const { roomChatAll } = require('../Chat/Utils');
 const roomRoleChat = require('../Night/roomRoleChat');
 const gameIsNotEndCheck = require('../MainGame/gameIsNotEndCheck');
+const DBTask = require('../DBModule/DBTask');
 
 module.exports = async (gamef, bot, userRoom) => {
     gamef.getRoom(userRoom).roleIsDone(async () => {
@@ -10,10 +11,15 @@ module.exports = async (gamef, bot, userRoom) => {
         if (!gamef.getRoom(userRoom).players[deathID]) {
             roomChatAll(bot, gamef.getRoom(userRoom).players, 0, '```\nℹ️ Người chơi bị vote đã thoát!\n```');
         } else {
+            // TREO CỔ NGƯỜI CHƠI
             let deathRole = gamef.getRoom(userRoom).players[deathID].role;
             let deathRoleTxt = gamef.roleTxt[deathRole];
             let deathTxt = gamef.getRoom(userRoom).playersTxt[deathID];
             let dieCount = 0;
+
+
+            let userData = await DBTask(`UPDATE USERDATA SET beVoted = beVoted+1 WHERE joinid = '${gamef.getRoom(userRoom).players[deathID].joinID}';`);
+
             let chatAllTxt = "";
             if (gamef.getRoom(userRoom).saveOrKill < 0) {
                 chatAllTxt += `\`\`\`\n👻 *${deathTxt}* đã bị treo cổ theo số đông!`;
@@ -33,6 +39,9 @@ module.exports = async (gamef, bot, userRoom) => {
                 await roomChatAll(bot, gamef.getRoom(userRoom).players, 0, chatAllTxt);
 
             } else {
+                // THA CHẾT
+                let userData = await DBTask(`UPDATE USERDATA SET beVoted = beVoted+1, escVote = escVote+1 WHERE joinid = '${gamef.getRoom(userRoom).players[deathID].joinID}';`);
+
                 gamef.getRoom(userRoom).newLog(`🤝Tha chết ${deathRoleTxt} *${deathTxt}* (tha-treo=${gamef.getRoom(userRoom).saveOrKill})`);
                 await roomChatAll(bot, gamef.getRoom(userRoom).players, 0, `\`\`\`\n🤝Đã tha chết cho ${deathTxt}! Mọi người đi ngủ\n\`\`\``);
             }

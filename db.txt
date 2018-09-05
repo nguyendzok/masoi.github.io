@@ -11,7 +11,9 @@ CREATE TABLE USERDATA (
 	winBeWolf INT NOT NULL DEFAULT 0,
 	winBeVillager INT NOT NULL DEFAULT 0,
 	winBeThirdParty INT NOT NULL DEFAULT 0,
-	dieDay REAL NOT NULL DEFAULT 0.0
+	dieDay REAL NOT NULL DEFAULT 0.0,
+	beVoted INT NOT NULL DEFAULT 0,
+	escVote INT NOT NULL DEFAULT 0
 );
 INSERT INTO USERDATA (joinID, fullName, name, avatar, clan) VALUES ('2643770348982136', 'Phạm Ngọc Duy', 'Duy', 'https://scontent.fhan2-1.fna.fbcdn.net/v/t1.0-1/p80x80/38867411_2226569334240978_7276919719033044992_n.jpg?_nc_cat=0&oh=b1f95173aebf54df39b9dd1aa0a8dcef&oe=5C39CEAF', 'UET');
 INSERT INTO USERDATA (joinID, fullName, name, avatar, clan) VALUES ('2643770348982133', 'Phạm Ngọc Duy', 'Duy', 'https://scontent.fhan2-1.fna.fbcdn.net/v/t1.0-1/p80x80/38867411_2226569334240978_7276919719033044992_n.jpg?_nc_cat=0&oh=b1f95173aebf54df39b9dd1aa0a8dcef&oe=5C39CEAF', 'UET');

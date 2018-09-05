@@ -20,9 +20,12 @@ module.exports = (gamef, bot, userRoom) => {
       let beWolf = user.bewolf;
       let beVillager = user.bevillager;
       let beThirdParty = user.bethirdparty;
+      let beVoted = user.bevoted;
+      let escVote = user.escvote;
 
       let sum = (beWolf + beVillager + beThirdParty);
-      let wolfPercent = (sum != 0 ? Math.floor(beWolf * 100 / sum) : 0);
+      let villagerPercent = (sum != 0 ? Math.floor(beVillager * 100 / sum) : 0);
+      let escRate = (beVoted != 0 ? Math.floor(escVote * 100 / beVoted) : 0);
 
       console.log(">>>INFO: ", beWolf, beVillager, beThirdParty);
       roomChatAll(bot, gamef.getRoom(userRoom).players, 0, {
@@ -30,7 +33,7 @@ module.exports = (gamef, bot, userRoom) => {
           {
             title: `Xin mời ${deathTxt} bước lên giá treo cổ!`,
             image_url: gamef.getRoom(userRoom).players[deathID].avatar,
-            subtitle: `💡Thống kê cho thấy ${deathTxt} có ${wolfPercent}%  là SÓI!\n⏳Bạn có 1 phút để trăn trối`
+            subtitle: `💡Thống kê ${deathTxt}: ${villagerPercent}% là phe DÂN! Giãy thành công: ${escRate}%\n⏳Bạn có 1 phút để trăn trối`
           }
         ]
       });
