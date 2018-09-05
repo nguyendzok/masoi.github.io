@@ -33,7 +33,7 @@ module.exports = (gamef, bot, dbclientFromIndex) => {
                 }
             });
         }
-        if (['2643770348982136'].indexOf(joinID) != -1) {
+        if (['1626272970818275'].indexOf(joinID) != -1) {
             let dbClient = new Client({
                 connectionString: process.env.DATABASE_URL,
                 ssl: true,
