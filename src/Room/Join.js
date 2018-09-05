@@ -69,9 +69,9 @@ module.exports = (gamef, bot) => {
                         last_name: joinUser.last_name,
                         first_name: joinUser.first_name,
                         avatar: joinUser.profile_pic,
-                        beWolf: userData ? userData.bewolf : 0,
-                        beVillager: userData ? userData.bevillager : 0,
-                        beThirdParty: userData ? userData.bethirdParty : 0,
+                        beWolf: userData ? userData[0].bewolf : 0,
+                        beVillager: userData ? userData[0].bevillager : 0,
+                        beThirdParty: userData ? userData[0].bethirdParty : 0,
                     }));
 
                     // notice new player to everyone in room

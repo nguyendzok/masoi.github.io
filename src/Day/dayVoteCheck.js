@@ -2,6 +2,7 @@ const { roomChatAll } = require('../Chat/Utils');
 const roomRoleChat = require('../Night/roomRoleChat');
 const gameIsNotEndCheck = require('../MainGame/gameIsNotEndCheck');
 const yesNoVoteCheck = require('../Day/yesNoVoteCheck');
+const DBTask = require('../DBModule/DBTask');
 
 // module này thực hiện khi vote xong!
 module.exports = (gamef, bot, userRoom) => {
@@ -13,9 +14,12 @@ module.exports = (gamef, bot, userRoom) => {
       gamef.getRoom(userRoom).afternoonSwitch();
       let deathTxt = gamef.getRoom(userRoom).playersTxt[deathID];
       gamef.getRoom(userRoom).chatOFF();
-      let beWolf = gamef.getRoom(userRoom).players[deathID].beWolf;
-      let beVillager = gamef.getRoom(userRoom).players[deathID].beVillager;
-      let beThirdParty = gamef.getRoom(userRoom).players[deathID].beThirdParty;
+
+      let userData = await DBTask(`SELECT * FROM USERDATA WHERE joinID = '${joinID}';`);
+      let user = userData[0];
+      let beWolf = user.beWolf;
+      let beVillager = user.beVillager;
+      let beThirdParty = user.beThirdParty;
 
       let sum = (beWolf + beVillager + beThirdParty);
       let wolfPercent = sum == 0 ? Math.floor(beWolf * 100 / sum) : 0;
