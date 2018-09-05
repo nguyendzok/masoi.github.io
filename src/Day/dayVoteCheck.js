@@ -22,9 +22,9 @@ module.exports = (gamef, bot, userRoom) => {
       let beThirdParty = user.bethirdparty;
 
       let sum = (beWolf + beVillager + beThirdParty);
-      let wolfPercent = sum == 0 ? Math.floor(beWolf * 100 / sum) : 0;
+      let wolfPercent = (sum != 0 ? Math.floor(beWolf * 100 / sum) : 0);
 
-      console.log(">>>INFO: ", beWolf, beVillager, beThirdParty, "SUM=" + sum);
+      console.log(">>>INFO: ", beWolf, beVillager, beThirdParty);
       roomChatAll(bot, gamef.getRoom(userRoom).players, 0, {
         cards: [
           {
