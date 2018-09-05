@@ -56,7 +56,7 @@ module.exports = (gamef, bot) => {
                     if (userData) {
                         convo.say('ĐÃ ĐĂNG NHẬP!');
                     } else {
-                        await DBTask(`INSERT INTO USERDATA (joinID, fullName, name, avatar, clan) VALUES ('${joinID}', '${joinUser.last_name+' '+joinUser.first_name}', '${joinUser.first_name}', '${joinUser.profile_pic}', 'UET');`)
+                        await DBTask(`INSERT INTO USERDATA (joinID, fullName, name, avatar, clan) VALUES ('${joinID}', '${joinUser.last_name + ' ' + joinUser.first_name}', '${joinUser.first_name}', '${joinUser.profile_pic}', 'UET');`)
                         convo.say('Bạn đã ĐĂNG KÍ THÀNH CÔNG!');
                     }
 
@@ -68,7 +68,10 @@ module.exports = (gamef, bot) => {
                         joinID: joinID,
                         last_name: joinUser.last_name,
                         first_name: joinUser.first_name,
-                        avatar: joinUser.profile_pic
+                        avatar: joinUser.profile_pic,
+                        beWolf: userData ? userData.bewolf : 0,
+                        beVillager: userData ? userData.bevillager : 0,
+                        beThirdParty: userData ? userData.bethirdParty : 0,
                     }));
 
                     // notice new player to everyone in room

@@ -11,8 +11,11 @@ class Player {
         this.ready = false;
         this.role = 4; // -1: SÓI / 4: DÂN / 1: tiên tri / 2: bảo vệ
         this.timerSchedule = null; // đếm giờ
-        this.convoTimer = null; //convo
         this.afkCount = 0;
+
+        this.beWolf = p.beWolf;
+        this.beVillager = p.beVillager;
+        this.beThirdParty = p.beThirdParty;
     }
     getReady() {
         this.ready = true;
