@@ -29,7 +29,7 @@ module.exports = async (gamef, bot, userRoom) => {
                     gamef.getRoom(userRoom).newLog(`💀Tình yêu đã giết chết ${gamef.roleTxt[gamef.getRoom(userRoom).getRoleByID(die2User.id)]} *${die2User.id}: ${die2User.first_name}*`);
                     console.log(`$ ROOM ${userRoom + 1} > ${die2User.first_name} DIED!`);
                 }
-                chatAllTxt += '\n💤Mọi người đi ngủ!\n```';
+                chatAllTxt += '\n💤 Mọi người đi ngủ!\n```';
                 await roomChatAll(bot, gamef.getRoom(userRoom).players, 0, chatAllTxt);
 
             } else {

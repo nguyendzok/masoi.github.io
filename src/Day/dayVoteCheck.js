@@ -16,8 +16,11 @@ module.exports = (gamef, bot, userRoom) => {
       let beWolf = gamef.getRoom(userRoom).players[deathID].beWolf;
       let beVillager = gamef.getRoom(userRoom).players[deathID].beVillager;
       let beThirdParty = gamef.getRoom(userRoom).players[deathID].beThirdParty;
+
       let sum = (beWolf + beVillager + beThirdParty);
       let wolfPercent = sum == 0 ? Math.floor(beWolf * 100 / sum) : 0;
+
+      console.log(">>>INFO: ", beWolf, beVillager, beThirdParty, "SUM=" + sum);
       roomChatAll(bot, gamef.getRoom(userRoom).players, 0, {
         cards: [
           {
@@ -50,7 +53,7 @@ module.exports = (gamef, bot, userRoom) => {
       });
     } else {
       gamef.getRoom(userRoom).newLog(`ℹ️ Ngày hôm đó không một ai bị treo cổ!`);
-      roomChatAll(bot, gamef.getRoom(userRoom).players, 0, `\`\`\`\n🔔 Không một ai bị treo cổ\n🔔Mọi người đi ngủ\n\`\`\``);
+      roomChatAll(bot, gamef.getRoom(userRoom).players, 0, `\`\`\`\n🔔Không một ai bị treo cổ\n🔔Mọi người đi ngủ\n\`\`\``);
       gameIsNotEndCheck(gamef, bot, userRoom, async () => {
         // Đêm tiếp theo
         gamef.getRoom(userRoom).dayNightSwitch();
