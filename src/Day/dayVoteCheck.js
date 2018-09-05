@@ -17,9 +17,9 @@ module.exports = (gamef, bot, userRoom) => {
 
       let userData = await DBTask(`SELECT * FROM USERDATA WHERE joinID = '${gamef.getRoom(userRoom).players[deathID].joinID}';`);
       let user = userData[0];
-      let beWolf = user.beWolf;
-      let beVillager = user.beVillager;
-      let beThirdParty = user.beThirdParty;
+      let beWolf = user.bewolf;
+      let beVillager = user.bevillager;
+      let beThirdParty = user.bethirdparty;
 
       let sum = (beWolf + beVillager + beThirdParty);
       let wolfPercent = sum == 0 ? Math.floor(beWolf * 100 / sum) : 0;
