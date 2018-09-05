@@ -15,7 +15,7 @@ module.exports = (gamef, bot, userRoom) => {
       let deathTxt = gamef.getRoom(userRoom).playersTxt[deathID];
       gamef.getRoom(userRoom).chatOFF();
 
-      let userData = await DBTask(`SELECT * FROM USERDATA WHERE joinID = '${joinID}';`);
+      let userData = await DBTask(`SELECT * FROM USERDATA WHERE joinID = '${gamef.getRoom(userRoom).players[deathID].joinID}';`);
       let user = userData[0];
       let beWolf = user.beWolf;
       let beVillager = user.beVillager;
