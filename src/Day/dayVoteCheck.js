@@ -20,7 +20,11 @@ module.exports = (gamef, bot, userRoom) => {
       let wolfPercent = sum == 0 ? Math.floor(beWolf * 100 / sum) : 0;
       roomChatAll(bot, gamef.getRoom(userRoom).players, 0, {
         cards: [
-          { title: `Xin mời ${deathTxt} bước lên giá treo cổ!`, subtitle: `💡Thống kê cho thấy ${deathTxt} có ${wolfPercent}%  là SÓI!\n⏳Bạn có 1 phút để trăn trối`, image_url: gamef.getRoom(userRoom).players[deathID].avatar, default_action: {} }
+          {
+            title: `Xin mời ${deathTxt} bước lên giá treo cổ!`,
+            image_url: gamef.getRoom(userRoom).players[deathID].avatar,
+            subtitle: `💡Thống kê cho thấy ${deathTxt} có ${wolfPercent}%  là SÓI!\n⏳Bạn có 1 phút để trăn trối`
+          }
         ]
       });
       // 1 phút trăn trối
