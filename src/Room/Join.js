@@ -79,7 +79,7 @@ module.exports = (gamef, bot) => {
                     playerListView = [];
                     playerListView.unshift({
                         title: `Quản trò Ma Sói BOT`,
-                        image_url: `https://scontent.fhan5-5.fna.fbcdn.net/v/t1.0-9/37812890_1872137736415276_2253761986674294784_n.png?_nc_cat=0&oh=c66c9db1a9e5d72edb88931cadeff204&oe=5C07D275`,
+                        image_url: `https://scontent.fhan2-1.fna.fbcdn.net/v/t1.0-9/41158199_504371260007690_7229233697872936960_n.png?_nc_cat=0&oh=c296ffad8c94ce15518bc1c8e8cac42b&oe=5C291C2B`,
                         subtitle: `Bot sẽ quản trò cho các bạn! Chúc các bạn chơi vui vẻ trên Quản trò Ma sói Bot.\n-Dev by Phạm Ngọc Duy-`,
                         buttons: [
                             { type: 'postback', title: '📤Thoát', payload: 'LEAVE_ROOM' }
