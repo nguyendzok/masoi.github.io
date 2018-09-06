@@ -3,9 +3,9 @@ module.exports = (bot) => {
         {
             type: 'nested', title: '🎮Chơi...',
             call_to_actions: [
-                { type: 'postback', title: '🌝Tham gia phòng /join', payload: 'JOIN_ROOM' },
+                { type: 'postback', title: '📥Tham gia phòng /join', payload: 'JOIN_ROOM' },
                 { type: 'postback', title: '🌟Sẵn sàng! /ready', payload: 'READY_ROOM' },
-                { type: 'postback', title: '🌚Rời phòng/Tự sát /leave', payload: 'LEAVE_ROOM' },
+                { type: 'postback', title: '📤Rời phòng/Tự sát /leave', payload: 'LEAVE_ROOM' },
             ]
         },
         {
