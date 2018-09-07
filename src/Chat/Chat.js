@@ -54,10 +54,8 @@ module.exports = (gamef, bot) => {
                                 } else {
                                     chat.say('```\n🚫Bạn chỉ có thể cắn 1 LẦN 1 người còn sống!\n```');
                                 }
-                            } else {
-                                chat.say('```\n🚫Bạn chỉ có thể cắn khi là con sói cuối cùng còn sống sót!\n```');
+                                return true;
                             }
-                            return true;
                         }
                     }
 
