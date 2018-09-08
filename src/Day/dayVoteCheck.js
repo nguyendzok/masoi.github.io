@@ -33,7 +33,7 @@ module.exports = (gamef, bot, userRoom) => {
           {
             title: `Xin mời ${deathTxt} lên giá treo cổ!`,
             image_url: gamef.getRoom(userRoom).players[deathID].avatar,
-            subtitle: `💡${villagerPercent}% Phe DÂN! Thoát chết: ${escRate}%\n⏳Bạn có 1 phút để trăn trối`
+            subtitle: `💡Thoát chết: ${escRate}%\n⏳Bạn có 1 phút để trăn trối`
           }
         ]
       });

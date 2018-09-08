@@ -43,7 +43,7 @@ module.exports = async (gamef, bot, userRoom) => {
                 let userData = await DBTask(`UPDATE USERDATA SET beVoted = beVoted+1, escVote = escVote+1 WHERE joinid = '${gamef.getRoom(userRoom).players[deathID].joinID}';`);
 
                 gamef.getRoom(userRoom).newLog(`🤝Tha chết ${deathRoleTxt} *${deathTxt}* (tha-treo=${gamef.getRoom(userRoom).saveOrKill})`);
-                await roomChatAll(bot, gamef.getRoom(userRoom).players, 0, `\`\`\`\n🤝Đã tha chết cho ${deathTxt}! Mọi người đi ngủ\n\`\`\``);
+                await roomChatAll(bot, gamef.getRoom(userRoom).players, 0, `\`\`\`\n🤝Đã tha chết cho ${deathTxt}!\n💤 Mọi người đi ngủ\n\`\`\``);
             }
         }
 
