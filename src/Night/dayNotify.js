@@ -149,7 +149,7 @@ module.exports = async (gamef, bot, userRoom, witchSaved) => {
     if (secondLeft <= 0) {
         secondLeft = 30;
     }
-    let playersAliveTxt = gamef.getRoom(userRoom).getAlivePlayerList().join(' - ');
+    let playersAliveTxt = gamef.getRoom(userRoom).getAlivePlayerList().join(' / ');
     chatAllTxt += `\n${playersAliveTxt}`
     chatAllTxt += `\n⏰Mọi người có ${Math.floor(secondLeft / 60)} phút ${secondLeft - Math.floor(secondLeft / 60) * 60} giây thảo luận!`;
 

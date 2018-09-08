@@ -43,7 +43,7 @@ module.exports = (gamef, bot, userRoom) => {
         // hết giờ, vote treo cổ nào!
         roomChatAll(bot, gamef.getRoom(userRoom).players, 0, {
           text: `\`\`\`\n⌛️Hết giờ! Mọi người có 30 giây!\n👎TREO CỔ hay 👍THA?\n"/treo" hoặc "/tha"\n\`\`\``,
-          quickReplies: ['/treo', '/tha']
+          quickReplies: ["/treo", "/tha", "/skip"]
         });
         console.log(`$ ROOM ${userRoom + 1} > END OF TRĂN TRỐI :))`);
         // timer để vote treo cổ
