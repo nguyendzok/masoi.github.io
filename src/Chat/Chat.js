@@ -234,7 +234,7 @@ module.exports = (gamef, bot) => {
                     }
                 } else {// ban NGÀY, mọi người thảo luận
                     if (!/^\/vote\s-?[0-9]+$/.test(chatTxt) && !/[0-9]+:.+|-1/g.test(chatTxt)) {
-                        if (!chatTxt.match(/\/treo/g) && !chatTxt.match(/\/tha/g)) {
+                        if (!chatTxt.match(/\/treo/g) && !chatTxt.match(/\/tha/g) && !chatTxt.match(/\/skip/g)) {
                             if (gamef.getRoom(userRoom).chatON || (gamef.getRoom(userRoom).deathID != -1 && gamef.getRoom(userRoom).deathID == gamef.getRoom(userRoom).getPlayer(joinID).id)) { //check xem còn bật chat không?
                                 roomChatAll(bot, gamef.getRoom(userRoom).players, joinID, '*' + user.first_name + '*: ' + chatTxt);
                                 bot.sendAction(joinID, 'mark_seen');
@@ -287,7 +287,7 @@ module.exports = (gamef, bot) => {
                                 let voteKill = gamef.getRoom(userRoom).playersTxt[voteID];
                                 await chat.say(`✔ *${voteKill}* (${gamef.getRoom(userRoom).voteList[voteID]} phiếu)`);
                                 roomChatAll(bot, gamef.getRoom(userRoom).players, joinID, {
-                                    text: `🔱*${voteKill}* (${gamef.getRoom(userRoom).voteList[voteID]} phiếu) <== *${user.first_name}* đã bỏ phiếu`,
+                                    text: `🔱 *${voteKill}* (${gamef.getRoom(userRoom).voteList[voteID]} phiếu) <== *${user.first_name}* đã bỏ phiếu`,
                                     quickReplies: playerList,
                                 });
                             }
