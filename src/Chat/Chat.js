@@ -261,6 +261,7 @@ module.exports = (gamef, bot) => {
                                         quickReplies: ["/treo", "/tha", "/skip"],
                                     });
                                 } else if (chatTxt.match(/\/skip/g)) {
+                                    gamef.getRoom(userRoom).roleDoneBy(joinID);
                                     await chat.say(`✖️Bạn đã không bỏ phiếu!`);
                                     roomChatAll(bot, gamef.getRoom(userRoom).players, joinID, {
                                         text: `✖️(${gamef.getRoom(userRoom).saveOrKill}) *${user.first_name}* phiếu trống!`,
