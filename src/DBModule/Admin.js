@@ -1,5 +1,5 @@
 const { Client } = require('pg');
-module.exports = (gamef, bot, dbclientFromIndex) => {
+module.exports = (gamef, bot) => {
     const dbCallback = (payload, chat) => {
         let joinID = payload.sender.id;
 

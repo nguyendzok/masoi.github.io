@@ -36,10 +36,6 @@ const bot = new BootBot({
   verifyToken: process.env.VERIFY_TOKEN,
   appSecret: process.env.APP_SECRET
 })
-const dbclient = new Client({
-  connectionString: process.env.DATABASE_URL,
-  ssl: true,
-});
 // bot config
 bot.setGreetingText("Chào mừng bạn đến với Phạm Ngọc Duy GAME bot, hãy bắt đầu trò chơi :3")
 bot.setGetStartedButton((payload, chat) => {
@@ -80,6 +76,6 @@ gamef.module(chatAndVote, bot);
 gamef.module(vote, bot);
 
 //db admin
-gamef.moduleWithDB(adminDB, bot, dbclient);
+gamef.module(adminDB, bot);
 
 bot.start(process.env.PORT || 3000);

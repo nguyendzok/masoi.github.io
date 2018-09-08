@@ -9,7 +9,7 @@ module.exports = (gamef, bot) => {
             if (gamef.getRoom(userRoom).ingame) {
                 let playersInRoomTxt = gamef.getRoom(userRoom).playersTxt.join('\n');
                 let roleListTxt = gamef.getRoom(userRoom).roleListTxt;
-                chat.say(`👨‍👩‍👦‍👦Danh sách người chơi phòng ${userRoom + 1}:\n${playersInRoomTxt}\n\nSET-UP: ${roleListTxt}`);
+                chat.say(`👥Phòng ${userRoom + 1}:\n${playersInRoomTxt}\n\n🎲${roleListTxt}`);
             } else {
                 let roomView = gamef.getSimpleRoomPlayerView(userRoom);
                 chat.say(roomView.join(`\n`));
@@ -68,9 +68,13 @@ module.exports = (gamef, bot) => {
         if (userData) {
             let user = userData[0];
             chatTxt += `✌Xin chào ${user.fullname} (${user.id}),\n✍Tên InGame: ${user.name}\n🚩Clan: ${user.clan}\n`;
-            chatTxt += `🎮Bạn đã chơi tổng cộng: ${user.bewolf + user.bevillager + user.bethirdparty} GAME\n`;
-            chatTxt += `🎲Tỉ lệ SÓI / DÂN / PHE_3 : ${user.bewolf} / ${user.bevillager} / ${user.bethirdparty}\n`;
-            chatTxt += `🏆Tỉ lệ thắng SÓI: ${user.bewolf > 0 ? Math.floor(user.winbewolf * 100 / user.bewolf) : '0'}% / DÂN: ${user.bevillager > 0 ? Math.floor(user.winbevillager * 100 / user.bevillager) : '0'}% / PHE_3: ${user.bethirdparty > 0 ? Math.floor(user.winbethirdparty * 100 / user.bethirdparty) : '0'}%\n`;
+            chatTxt += `🎮Bạn đã chơi: ${user.bewolf + user.bevillager + user.bethirdparty} GAME\n`;
+            chatTxt += `🎲Tỉ lệ SÓI / DÂN / PHE_3 :\n==>${user.bewolf} / ${user.bevillager} / ${user.bethirdparty}\n`;
+            chatTxt += `🏆Tỉ lệ thắng SÓI: ${user.bewolf > 0 ? Math.floor(user.winbewolf * 100 / user.bewolf) : '0'}%\n`;
+            chatTxt += `🏆Tỉ lệ thắng DÂN: ${user.bevillager > 0 ? Math.floor(user.winbevillager * 100 / user.bevillager) : '0'}%\n`;
+            chatTxt += `🏆Tỉ lệ thắng PHE_3: ${user.bethirdparty > 0 ? Math.floor(user.winbethirdparty * 100 / user.bethirdparty) : '0'}%\n`;
+        } else {
+            chatTxt += `Bạn chưa đăng kí, Hãy tham gia 1 phòng!`;
         }
         let userRoom = gamef.getUserRoom(joinID);
         if (userRoom != undefined) {

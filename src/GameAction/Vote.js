@@ -1,44 +1,7 @@
-const { roomChatAll } = require('../Chat/Utils');
-const { wolfVote, seerAction, saveAction, fireAction, cupidAction, dayVote } = require('./VoteAction');
+const { voteConvo } = require('../Chat/Utils');
+const { fireAction, cupidAction } = require('./VoteAction');
 
 module.exports = (gamef, bot) => {
-    const startConvo = (convo, askItem, index, askSeq) => {
-        convo.ask(askItem.qreply ? {
-            text: askItem.txt,
-            quickReplies: askItem.qreply,
-        } : askItem.txt, (payload, convo) => {
-            let resTxt = payload.message ? payload.message.text : undefined;
-            if (resTxt) {
-                let result = askItem.callback(convo, index, resTxt);
-                if (result) {
-                    convo.set(`data[${index}]`, result);
-                    if (index + 1 < askSeq.length) {
-                        startConvo(convo, askSeq[index + 1], index + 1, askSeq);
-                    }
-                } else {
-                    convo.say(`Thao tác sai! Vui lòng thử lại!`);
-                    convo.end();
-                }
-            } else {
-                convo.say(`Vui lòng thử lại!`);
-                convo.end();
-            }
-        })
-    }
-    const voteConvo = (chat, askSeq) => {
-        chat.conversation((convo) => {
-            let len = askSeq.length;
-            if (len <= 0) return;
-            startConvo(convo, askSeq[0], 0, askSeq)
-
-            // askSeq.reduce((promise, askItem, index) => {
-            //     return promise.then(() => 
-
-            // );
-            // }, Promise.resolve());
-            // convo.end();
-        });
-    }
     const voteCallback = (payload, chat) => {
         let joinID = payload.sender.id;
         let userRoom = gamef.getUserRoom(joinID);
@@ -128,7 +91,7 @@ module.exports = (gamef, bot) => {
                                     return null;
                                 }
                                 let user2ID;
-                                if (/[0-9]+:.+|-1/g.test(resTxt)) {
+                                if (/[0-9]+:.+/g.test(resTxt)) {
                                     user2ID = resTxt.match(/[0-9]+/g)[0];
                                     cupidAction(gamef, bot, chat, userRoom, joinID, user1ID, user2ID);
                                     return true;

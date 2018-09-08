@@ -1,3 +1,41 @@
+function startConvo(convo, askItem, index, askSeq) {
+    convo.ask(askItem.qreply ? {
+        text: askItem.txt,
+        quickReplies: askItem.qreply,
+    } : askItem.txt, (payload, convo) => {
+        let resTxt = payload.message ? payload.message.text : undefined;
+        if (resTxt) {
+            let result = askItem.callback(convo, index, resTxt);
+            if (result) {
+                convo.set(`data[${index}]`, result);
+                if (index + 1 < askSeq.length) {
+                    startConvo(convo, askSeq[index + 1], index + 1, askSeq);
+                }
+            } else {
+                convo.say(`Thao tác sai! Vui lòng thử lại!`);
+                convo.end();
+            }
+        } else {
+            convo.say(`Vui lòng thử lại!`);
+            convo.end();
+        }
+    })
+}
+function voteConvo(chat, askSeq) {
+    chat.conversation((convo) => {
+        let len = askSeq.length;
+        if (len <= 0) return;
+        startConvo(convo, askSeq[0], 0, askSeq)
+
+        // askSeq.reduce((promise, askItem, index) => {
+        //     return promise.then(() => 
+
+        // );
+        // }, Promise.resolve());
+        // convo.end();
+    });
+}
+
 async function asyncForEach(array, mapCallback, /*callback*/) {
     // for (let index = 0; index < array.length; index++) {
     //     await callback(array[index], index, array)
@@ -55,11 +93,11 @@ function sendImageCard(bot, joinID, imageURL, buttonTxt = "Ma sói card") {
                         url: imageURL,
                         buttons: [
                             {
-                               type: "web_url",
-                               url: imageURL,
-                               title: buttonTxt,
+                                type: "web_url",
+                                url: imageURL,
+                                title: buttonTxt,
                             }
-                         ]
+                        ]
                     }
                 ]
             }
@@ -68,6 +106,7 @@ function sendImageCard(bot, joinID, imageURL, buttonTxt = "Ma sói card") {
 }
 
 module.exports = {
+    voteConvo: voteConvo,
     asyncForEach: asyncForEach,
     roomChatAll: roomChatAll,
     roomWolfChatAll: roomWolfChatAll,

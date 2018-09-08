@@ -248,16 +248,22 @@ module.exports = (gamef, bot) => {
                             if (gamef.getRoom(userRoom).deathID != -1 && !gamef.getRoom(userRoom).roleDone[joinID]) {
                                 if (chatTxt.match(/\/treo/g)) { //vote treo cổ
                                     gamef.getRoom(userRoom).killOrSaveVote(joinID, true);
-                                    await chat.say(`*👎Bạn đã vote treo! (${gamef.getRoom(userRoom).saveOrKill})*`);
+                                    await chat.say(`👎Bạn đã vote treo! (${gamef.getRoom(userRoom).saveOrKill})`);
                                     roomChatAll(bot, gamef.getRoom(userRoom).players, joinID, {
-                                        text: `*👎${user.first_name} đã vote treo! (${gamef.getRoom(userRoom).saveOrKill})*`,
+                                        text: `👎(${gamef.getRoom(userRoom).saveOrKill}) *${user.first_name}* muốn treo!`,
                                         quickReplies: ["/treo", "/tha"],
                                     });
-                                } else { //vote tha
+                                } if (chatTxt.match(/\/tha/g)) { //vote tha
                                     gamef.getRoom(userRoom).killOrSaveVote(joinID, false);
-                                    await chat.say(`*👍Bạn đã vote tha! (${gamef.getRoom(userRoom).saveOrKill})*`);
+                                    await chat.say(`👍Bạn đã vote tha! (${gamef.getRoom(userRoom).saveOrKill})`);
                                     roomChatAll(bot, gamef.getRoom(userRoom).players, joinID, {
-                                        text: `*👍${user.first_name} đã vote tha! (${gamef.getRoom(userRoom).saveOrKill})*`,
+                                        text: `👍(${gamef.getRoom(userRoom).saveOrKill}) *${user.first_name}*muốn tha!`,
+                                        quickReplies: ["/treo", "/tha"],
+                                    });
+                                } else {
+                                    await chat.say(`✖️Bạn đã không bỏ phiếu!`);
+                                    roomChatAll(bot, gamef.getRoom(userRoom).players, joinID, {
+                                        text: `✖️(${gamef.getRoom(userRoom).saveOrKill}) *${user.first_name}* phiếu trống!`,
                                         quickReplies: ["/treo", "/tha"],
                                     });
                                 }
@@ -272,16 +278,16 @@ module.exports = (gamef, bot) => {
                         let playerList = gamef.getRoom(userRoom).getAlivePlayerList();
                         if (gamef.getRoom(userRoom).vote(joinID, voteID)) {
                             if (voteID == -1) {
-                                await chat.say(`*✔Bạn đã từ chối bỏ phiếu!*`);
+                                await chat.say(`✔Bạn đã từ chối bỏ phiếu!`);
                                 roomChatAll(bot, gamef.getRoom(userRoom).players, joinID, {
-                                    text: `*✖️${user.first_name} đã từ chối bỏ phiếu*`,
+                                    text: `✖️*${user.first_name}* đã bỏ phiếu trống`,
                                     quickReplies: playerList,
                                 });
                             } else {
                                 let voteKill = gamef.getRoom(userRoom).playersTxt[voteID];
-                                await chat.say(`*✊Bạn đã vote treo cổ ${voteKill} (${gamef.getRoom(userRoom).voteList[voteID]} phiếu)*`);
+                                await chat.say(`✔Bạn đã vote treo cổ ${voteKill} (${gamef.getRoom(userRoom).voteList[voteID]} phiếu)`);
                                 roomChatAll(bot, gamef.getRoom(userRoom).players, joinID, {
-                                    text: `*✊${user.first_name} đã vote treo cổ ${voteKill} (${gamef.getRoom(userRoom).voteList[voteID]} phiếu)*`,
+                                    text: `*🔱${user.first_name}* muốn treo cổ *${voteKill}* (${gamef.getRoom(userRoom).voteList[voteID]} phiếu)`,
                                     quickReplies: playerList,
                                 });
                             }

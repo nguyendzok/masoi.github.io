@@ -31,9 +31,9 @@ module.exports = (gamef, bot, userRoom) => {
       roomChatAll(bot, gamef.getRoom(userRoom).players, 0, {
         cards: [
           {
-            title: `Xin mời ${deathTxt} bước lên giá treo cổ!`,
+            title: `Xin mời ${deathTxt} lên giá treo cổ!`,
             image_url: gamef.getRoom(userRoom).players[deathID].avatar,
-            subtitle: `💡Thống kê ${deathTxt}: ${villagerPercent}% là phe DÂN! Giãy thành công: ${escRate}%\n⏳Bạn có 1 phút để trăn trối`
+            subtitle: `💡${villagerPercent}% Phe DÂN! Thoát chết: ${escRate}%\n⏳Bạn có 1 phút để trăn trối`
           }
         ]
       });

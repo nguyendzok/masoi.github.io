@@ -36,60 +36,82 @@ class Player {
         }
     }
     afk(afkLever = 2) {
-        this.afkCount += afkLever;
+        this.afkCount += afkLever; // trừ afkLever*10 uy tín
     }
     backToGame() {
         if (this.afkCount > 0) {
-            this.afkCount -= 0.5;
+            this.afkCount -= 0.5;  // hồi 5 uy tín
         }
     }
 }
 class Room {
     constructor(id) {
-        //info
         this.id = id;
+
+        // player được biểu thị bằng 2 mảng:
         this.players = [];
+        this.alivePlayer = [];
+
+        this.subscriberList = [];
+        this.newRoom();
+    }
+    newRoom() {
+        //TEAM ID LIST
         this.wolfsID = [];
         this.villagersID = [];
         this.cupidsID = [];
 
+        //TEAM TXT LIST
         this.wolfsTxt = [];
         this.cupidsTxt = [];
         this.villagersTxt = [];
         this.playersTxt = [];
-        this.playersRole = [];
 
+        //ROLE
+        this.playersRole = [];
+        this.roleListTxt = '';
+
+        //Utils
         this.timerSchedule = null;
         this.logs = ['Tóm tắt game:\n*************************'];
-        this.roleListTxt = '';
+
         //status
-        this.cupidTeam = false;
-        this.readyCount = 0;
         this.ingame = false;
+        this.chatON = true;
+
         this.day = 0;
         this.isNight = false;
         this.isMorning = true;
-        this.chatON = true;
+
+        //counting
+        this.readyCount = 0;
         this.wolfsCount = 0;
         this.villagersCount = 0;
         this.roleDoneCount = 0;
         this.roleDone = [];
         this.voteList = [];
-        this.alivePlayer = [];
+        this.saveOrKill = 0; // nếu vote cứu thì +1, vote treo cổ thì -1.  nhỏ hơn 0 thì treo
+
+        // người bị cắn và bảo vệ
+        this.deathID = -1; // sói cắn ai?
+        this.saveID = -1; // bảo vệ ai?
+
+        //cặp đôi
+        this.cupidTeam = false;
 
         //thiên sứ
         this.thienSuWin = undefined;
 
         // phù thủy
-        this.witchID = undefined;
+        this.witchID = undefined; //join của phù
         this.witchSaveRemain = true;
         this.witchKillRemain = true;
-        this.witchKillID = undefined;
+        this.witchKillID = undefined; //id người phù muốn giết
 
         //sói nguyền
         this.soiNguyen = false;
-        this.soiNguyenID = undefined;
-        this.nguyenID = undefined;
+        this.soiNguyenID = undefined; //joinid sói nguyền
+        this.nguyenID = undefined; //id người sói muốn nguyền
 
         //Già làng
         this.oldManID = undefined;
@@ -99,67 +121,10 @@ class Room {
         this.hunterID = undefined; //thợ săn là ai?
         this.fireID = -1; // ghim ai?
         this.fireKill = false; // chủ động hay không? (mặc định:  bị động)
-
-        // người bị cắn và bảo vệ
-        this.deathID = -1; // sói cắn ai?
-        this.saveID = -1; // bảo vệ ai?
-
-        this.saveOrKill = 0; // nếu vote cứu thì +1, vote treo cổ thì -1.  nhỏ hơn 0 thì treo
-
-        // danh sách subscriber
-        this.subscriberList = [];
     }
     resetRoom() {
-        this.wolfsID = [];
-        this.villagersID = [];
-        this.cupidsID = [];
-
-        this.wolfsTxt = [];
-        this.cupidsTxt = [];
-        this.villagersTxt = [];
-        this.playersTxt = [];
-        this.playersRole = [];
-
-        this.timerSchedule = null;
-        this.logs = ['Tóm tắt game:\n************************'];
-        this.roleListTxt = '';
-
-        this.cupidTeam = false;
-        this.readyCount = 0;
-        this.ingame = false;
-        this.day = 0;
-        this.isNight = false;
-        this.isMorning = true;
-        this.chatON = true;
-        this.wolfsCount = 0;
-        this.villagersCount = 0;
-        this.roleDoneCount = 0;
-        this.roleDone = [];
-        this.voteList = [];
-
-        this.thienSuWin = undefined;
-
-        this.witchID = undefined;
-        this.witchSaveRemain = true;
-        this.witchKillRemain = true;
-        this.witchKillID = undefined;
-
-        this.soiNguyen = false;
-        this.soiNguyenID = undefined;
-        this.nguyenID = undefined;
-
-        this.oldManID = undefined;
-        this.oldManLive = 2;
-
-        this.hunterID = undefined;
-        this.fireID = -1;
-        this.fireKill = false;
-
-        this.deathID = -1;
-        this.saveID = -1;
-
-        this.saveOrKill = 0; // nếu vote cứu thì +1, vote treo cổ thì -1.  nhỏ hơn 0 thì treo
-
+        this.newRoom();
+        // CẬP NHẬT LẠI DỮ LIỆU PHÒNG CHƠI
         let len = this.players.length;
         console.log(`# ROOM ${this.id + 1} > PLAYERS COUNT : ${len}`);
         for (let index = 0; index < len; index++) {
@@ -182,19 +147,12 @@ class Room {
         this.players.push(player);
         this.alivePlayer[player.joinID] = true;
     }
-    deletePlayer(joinID) {
+    deletePlayer(joinID) { // rời sảnh chờ
         let player = this.getPlayer(joinID);
         let playerID = player.id;
-        let len = this.players.length;
-        if (player.ready) {
-            this.readyCount--;
-        }
-        this.players.splice(playerID, 1);
-        for (let i = playerID; i < len - 1; i++) {
-            this.players[i].id--;
-        }
+        this.deletePlayerByID(playerID);
     }
-    justDeletePlayer(playerID) {
+    justDeletePlayer(playerID) { // rời phòng lúc phòng đang chơi
         this.players[playerID] = undefined;
     }
     deletePlayerByID(id) {
@@ -767,7 +725,7 @@ class Game {
         // create message
         for (let i = start; (i < len && (i - start) < limit); i++) {
             let m = this.room[roomID].players[i];
-            playerListView.push(`${m.id + 1}: ${m.first_name} (${m.last_name} ${m.first_name}) ${m.ready ? '🌟' : '💤'}`);
+            playerListView.push(`${m.ready ? '🌟' : '💤'}${m.id + 1}: ${m.first_name} (${m.last_name} ${m.first_name})`);
         }
         return playerListView;
     }
@@ -784,9 +742,6 @@ class Game {
                 callback(true);
             }
         }
-    }
-    trueFalseRandom() {
-        return Math.random() >= 0.5;
     }
     random(min, max) {
         return Math.floor(Math.random() * max) + min;
@@ -815,7 +770,7 @@ class Game {
         let setup;
 
         if (len <= 4) {
-            setup = { "1": 1, "2": 0, "3": 0, "4": 2, "5": 0, "6": 0, "7": 0, "8": 0, "9": 0, "-3": 0, "-2": 0, "-1": 1 }; balance = -1;
+            setup = { "1": 0, "2": 0, "3": 0, "4": 2, "5": 1, "6": 0, "7": 0, "8": 0, "9": 0, "-3": 0, "-2": 0, "-1": 1 }; balance = 0;
         } else {
             if (len == 5) {
                 switch (this.random(1, 2)) {
@@ -941,6 +896,9 @@ class Game {
             //console.log(">>> QUERY: " + queryTxt, ">>>" + item);
             this.dbClient.query(queryTxt + `'${item}';`);
         });
+    }
+    doSingleQuery(queryTxt) {
+        return this.dbClient.query(queryTxt);
     }
     closeDB() {
         return this.dbClient.end();
