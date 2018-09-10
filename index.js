@@ -29,7 +29,7 @@ const vote = require('./src/GameAction/Vote');
 const train = require('./src/Menu/Training');
 const adminDB = require('./src/DBModule/Admin');
 const clan = require('./src/Menu/Clan');
-
+const webView = require('./src/WebView/view');
 const gamef = new Game();
 const bot = new BootBot({
   accessToken: process.env.ACCESS_TOKEN,
@@ -54,6 +54,8 @@ bot.module(botSetup);
 bot.module(menuHelp);
 
 bot.module(clan);
+
+bot.module(webView);
 
 bot.module(train);
 // handle menu > tiện ích khi chơi
