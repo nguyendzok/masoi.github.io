@@ -10,11 +10,11 @@ module.exports = (bot) => {
                     "subtitle": "Webview beta",
                     "buttons": [{
                         "type": "web_url",
-                        "url": "https://bautroixa.cf/Web/maSoiBotSetup/",
+                        "url": "https://hoangngocnguyen.me/Web/maSoiBotSetup/",
                         "title": "Select date",
                         "webview_height_ratio": "compact",
                         "messenger_extensions": true,
-                        "fallback_url": "https://bautroixa.cf/Web/maSoiBotSetup/?players=5&uid=" + convo.userId,
+                        "fallback_url": "https://hoangngocnguye.me/Web/maSoiBotSetup/?players=5&uid=" + convo.userId,
                         "webview_share_button": "hide"
                     }]
                 }]);
