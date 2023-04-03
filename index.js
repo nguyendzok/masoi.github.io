@@ -37,7 +37,7 @@ const bot = new BootBot({
   appSecret: process.env.APP_SECRET
 })
 // bot config
-bot.setGreetingText("Chào mừng bạn đến với Phạm Ngọc Duy GAME bot, hãy bắt đầu trò chơi :3")
+bot.setGreetingText("Chào mừng bạn đến với game bot, hãy bắt đầu trò chơi :3")
 bot.setGetStartedButton((payload, chat) => {
   chat.say('🐺MA SÓI GAME').then(() => {
     chat.say({
